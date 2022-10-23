@@ -22,16 +22,6 @@ public class RecipeActivity extends AppCompatActivity {
 
         recipeList = findViewById(R.id.recipeListView);
         recipeDataList = new ArrayList<>();
-        String[] recipestitle = {"Curry", "NOODLES"};
-        int[] servings = {1, 2};
-        String[] categories = {"Lunch", "Dinner"};
-
-
-        //Test Data
-        for (int i = 0; i < recipestitle.length; i++) {
-            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(), 2.0f, "Lunch", "HAHA", new ArrayList<String>(Arrays.asList(new String[]{"Nidal", "Nasemm"}))));
-        }
-
 
         recipeArrayAdapter = new RecipeAdapter(this, recipeDataList);
         recipeList.setAdapter(recipeArrayAdapter);
