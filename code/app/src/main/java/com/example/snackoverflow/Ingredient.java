@@ -1,17 +1,19 @@
 package com.example.snackoverflow;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Ingredient {
+public class Ingredient implements Serializable {
     private String description;
     private Date bestBefore;
     private String location;
     private int amount;
     private int unit;
+    private String category;
 
-    public Ingredient(String description, String dt, String location, int amount, int unit) {
+    public Ingredient(String description, String dt, String location, int amount, int unit, String category) {
         this.description = description;
         try {
             this.bestBefore = new SimpleDateFormat("dd/MM/yyyy").parse(dt);
@@ -22,6 +24,7 @@ public class Ingredient {
         this.location = location;
         this.amount = amount;
         this.unit = unit;
+        this.category = category;
     }
 
     public String getDescription() {
@@ -62,5 +65,13 @@ public class Ingredient {
 
     public void setUnit(int unit) {
         this.unit = unit;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
