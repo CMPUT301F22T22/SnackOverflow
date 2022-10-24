@@ -4,19 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/addPhoto"
-        android:shape="ring"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         android:paddingLeft="4dp"
         android:paddingRight="6dp"
-        android:paddingTop="10dp"
+        android:paddingTop="7dp"
         android:paddingBottom="10dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="Add photo image"
         android:src="@drawable/ic_baseline_add_a_photo_24"
         android:background="@drawable/circle_bg"
         app:layout_constraintBottom_toTopOf="@id/title"
@@ -80,6 +76,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -95,6 +92,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -113,6 +111,7 @@
             android:inputType="textMultiLine"
             android:lines="7"
             android:gravity="top"/>
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -131,6 +130,7 @@
             android:inputType="textMultiLine"
             android:lines="4"
             android:gravity="top"/>
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -146,4 +146,5 @@
         app:layout_constraintTop_toBottomOf="@+id/comments"
         android:hint="Add"
         android:textColor="@color/white"/>
+    
 </androidx.constraintlayout.widget.ConstraintLayout>
