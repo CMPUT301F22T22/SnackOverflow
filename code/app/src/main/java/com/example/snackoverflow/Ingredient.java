@@ -10,6 +10,7 @@ public class Ingredient {
     private String location;
     private int amount;
     private int unit;
+    private String category;
 
     public Ingredient(String description, String dt, String location, int amount, int unit) {
         this.description = description;
@@ -22,6 +23,14 @@ public class Ingredient {
         this.location = location;
         this.amount = amount;
         this.unit = unit;
+    }
+
+    // For Recipe
+    public Ingredient(String description, Integer amount, Integer unit, String category) {
+        this.description = description;
+        this.amount = amount;
+        this.unit = unit;
+        this.category = category;
     }
 
     public String getDescription() {
@@ -62,5 +71,13 @@ public class Ingredient {
 
     public void setUnit(int unit) {
         this.unit = unit;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
