@@ -2,14 +2,14 @@ package com.example.snackoverflow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,10 +36,17 @@ public class MainActivity extends AppCompatActivity implements add_ingredient_fr
             recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA",new ArrayList<String>(Arrays.asList(new String[]{"Nidal","Nasemm"}))));
         }
 
-
-
         recipeArrayAdapter = new RecipeAdapter(this,recipeDataList);
         recipeList.setAdapter(recipeArrayAdapter);
+        Button storageActivity = findViewById(R.id.storage_activity);
+        storageActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, IngredientStorageActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         // TEST FOR INGREDIENT ADD
         recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
