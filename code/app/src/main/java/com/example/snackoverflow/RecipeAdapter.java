@@ -27,7 +27,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         this.context = context;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -48,7 +47,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         recipePreptime.setText(recipe.getPreptimeTime().format(DateTimeFormatter.ofPattern("HH:mm")));
         servings.setText(Float.toString(recipe.getServings()));
         category.setText(recipe.getRecipeCategory());
-        //photo.setImageResource(
+        //TODO: photo.setImageResource(
         return view;
     }
 }
