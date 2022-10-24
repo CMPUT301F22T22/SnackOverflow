@@ -11,6 +11,8 @@ import android.view.View;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+// TODO: How to request user permission for gallery access with the new
+// Android API
 public class AddRecipe extends AppCompatActivity {
 
     public CircleImageView imageView;
