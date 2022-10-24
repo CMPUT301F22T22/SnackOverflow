@@ -10,5 +10,7 @@
     <ListView
         android:id="@+id/recipeListView"
         android:layout_width="409dp"
-        android:layout_height="729dp" />
+        android:layout_height="729dp">
+    </ListView>
+
 </RelativeLayout>

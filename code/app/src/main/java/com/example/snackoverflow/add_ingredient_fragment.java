@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
-public class Recipe_add_ingredient extends DialogFragment {
+public class add_ingredient_fragment extends DialogFragment {
     // Check if we are editing data
     private boolean edit;
     // Data storage
@@ -29,10 +29,10 @@ public class Recipe_add_ingredient extends DialogFragment {
     // listener for Recipe fragment
     private OnFragmentInteractionListener listener;
 
-    public Recipe_add_ingredient(){
+    public add_ingredient_fragment(){
         edit = false;
     }
-    public Recipe_add_ingredient(Ingredient ingredient){
+    public add_ingredient_fragment(Ingredient ingredient){
         this.ingredient = ingredient;
         edit = true;
     }
@@ -58,7 +58,7 @@ public class Recipe_add_ingredient extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
         //Inflate the layout
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.recipe_ingredients_fragment_layout, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.reciepe_ingredients_fragment_layout, null);
         text_input_description = view.findViewById(R.id.text_input_description);
         text_input_amount = view.findViewById(R.id.text_input_amount);
         text_input_unit = view.findViewById(R.id.text_input_unit);
@@ -68,9 +68,9 @@ public class Recipe_add_ingredient extends DialogFragment {
             // MAKE CHANGES WHEN INGREDIENT MADE
             // Set data
             text_input_description.getEditText().setText(ingredient.getDescription());
-            text_input_amount.getEditText().setText(ingredient.getAmount().toString());
-            text_input_unit.getEditText().setText(ingredient.getUnit().toString());
-            text_input_category.getEditText().setText(ingredient.getCategory().toString());
+            text_input_amount.getEditText().setText(ingredient.getAmount());
+            text_input_unit.getEditText().setText(ingredient.getUnit());
+            text_input_category.getEditText().setText(ingredient.getCategory());
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

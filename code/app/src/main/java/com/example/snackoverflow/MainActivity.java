@@ -3,14 +3,18 @@ package com.example.snackoverflow;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements add_ingredient_fragment.OnFragmentInteractionListener{
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
@@ -37,6 +41,24 @@ public class MainActivity extends AppCompatActivity {
         recipeArrayAdapter = new RecipeAdapter(this,recipeDataList);
         recipeList.setAdapter(recipeArrayAdapter);
 
+        // TEST FOR INGREDIENT ADD
+        recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                new add_ingredient_fragment().show(getSupportFragmentManager(), "Add_Ingredient");
+            }
+        });
+
+
+    }
+
+    @Override
+    public void Add_food(Ingredient ingredient) {
+
+    }
+
+    @Override
+    public void Edit_food(Ingredient ingredient) {
 
     }
 }
