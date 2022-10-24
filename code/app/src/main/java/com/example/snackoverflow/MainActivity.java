@@ -32,13 +32,22 @@ public class MainActivity extends AppCompatActivity {
         String []categories = {"Lunch","Dinner"};
 
 
-        //Test Data
+        //Recipe test
         for (int i =0;i<recipestitle.length;i++){
             recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA",new ArrayList<String>(Arrays.asList(new String[]{"Nidal","Nasemm"}))));
         }
-
         recipeArrayAdapter = new RecipeAdapter(this,recipeDataList);
         recipeList.setAdapter(recipeArrayAdapter);
+        Button recipeadd = findViewById(R.id.storage_activity2);
+        recipeadd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddRecipe.class);
+                startActivity(intent);
+            }
+        });
+
+        // Ingredients test
         Button storageActivity = findViewById(R.id.storage_activity);
         storageActivity.setOnClickListener(new View.OnClickListener() {
             @Override

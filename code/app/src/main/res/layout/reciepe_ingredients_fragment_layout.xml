@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_bg"
             android:hint="Description"
-            android:textColorHint="#1B5E20" />
+            android:textColorHint="#1B5E20"
+            android:inputType="textPersonName"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -34,14 +35,15 @@
             android:layout_weight="50"
             android:paddingRight="10dp"
             app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#FAF8F8">>
+            app:boxStrokeColor="#FAF8F8">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_bg"
                 android:hint="Amount"
-                android:textColorHint="#757575" />
+                android:textColorHint="#757575"
+                android:inputType="number"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -51,14 +53,15 @@
             android:layout_weight="50"
             android:paddingLeft="10dp"
             app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#FAF8F8">>
+            app:boxStrokeColor="#FAF8F8">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_bg"
                 android:hint="Unit"
-                android:textColorHint="#757575" />
+                android:textColorHint="#757575"
+                android:inputType="number"/>
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
@@ -68,14 +71,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:boxBackgroundColor="#FFFFFF"
-        app:boxStrokeColor="#FAF8F8">>
+        app:boxStrokeColor="#FAF8F8">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_bg"
             android:hint="Category"
-            android:textColorHint="#757575" />
+            android:textColorHint="#757575"
+            android:inputType="textPersonName"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

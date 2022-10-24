@@ -64,7 +64,7 @@ public class add_ingredient_fragment extends DialogFragment {
         text_input_unit = view.findViewById(R.id.text_input_unit);
         text_input_category = view.findViewById(R.id.text_input_category);
 
-        if (ingredient != null){
+        if (edit == true){
             // MAKE CHANGES WHEN INGREDIENT MADE
             // Set data
             text_input_description.getEditText().setText(ingredient.getDescription());

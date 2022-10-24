@@ -19,4 +19,12 @@
         android:layout_marginTop="600dp"
         android:layout_marginLeft="150dp"/>
 
+    <Button
+        android:id="@+id/storage_activity2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="300dp"
+        android:background="#2196F3" />
+
 </RelativeLayout>
