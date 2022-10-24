@@ -26,6 +26,7 @@ public class AddIngredientFragment extends DialogFragment {
     private EditText ingredientUnit;
     private EditText ingredientBestBefore;
     private EditText ingredientLocation;
+    private EditText ingredientCategory;
     private OnFragmentInteractionListener listener;
     private Ingredient selectedIngredient;
 
@@ -36,7 +37,6 @@ public class AddIngredientFragment extends DialogFragment {
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Ingredient selectedIngredient);
-        void calculate();
     }
 
     @Override
@@ -59,6 +59,8 @@ public class AddIngredientFragment extends DialogFragment {
         ingredientLocation = view.findViewById(R.id.ingredient_location_editText);
         ingredientAmount = view.findViewById(R.id.ingredient_amount_editText);
         ingredientUnit = view.findViewById(R.id.ingredient_unit_editText);
+        ingredientCategory = view.findViewById(R.id.ingredient_category_editText);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         ingredientBestBefore.addTextChangedListener(new TextWatcher() {
@@ -111,8 +113,10 @@ public class AddIngredientFragment extends DialogFragment {
                         catch (ParseException e) {
                             e.printStackTrace();
                         }
+
                         String e = ingredientLocation.getText().toString();
-                        listener.onOkPressed(new Ingredient(a, "2022-02-02", e, c, b));
+                        String f = ingredientCategory.getText().toString();
+                        listener.onOkPressed(new Ingredient(a, d, e, c, b, f));
                     }
                 }).create();
 

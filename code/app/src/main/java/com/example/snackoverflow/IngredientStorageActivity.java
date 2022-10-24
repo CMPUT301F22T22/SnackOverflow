@@ -9,12 +9,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class IngredientStorageActivity extends AppCompatActivity {
+public class IngredientStorageActivity extends AppCompatActivity implements AddIngredientFragment.OnFragmentInteractionListener {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
@@ -23,11 +25,11 @@ public class IngredientStorageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient_storage);
-
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         ingredientStorageList = findViewById(R.id.ingredient_storage_list);
         ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Apple", "2022-09-08", "Pantry", 65, 7, "Fresh Produce"));
-        ingredients.add(new Ingredient("Yogurt", "2022-09-08", "Fridge", 12, 2, "Dairy"));
+        //ingredients.add(new Ingredient("Apple", "2022-09-08", "Pantry", 65, 7, "Fresh Produce"));
+        //ingredients.add(new Ingredient("Yogurt", "2022-09-08", "Fridge", 12, 2, "Dairy"));
 
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
 
@@ -48,6 +50,18 @@ public class IngredientStorageActivity extends AppCompatActivity {
             }
         });
 
+        final FloatingActionButton addIngredientButton = findViewById(R.id.add_ingredient_button);
+        addIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AddIngredientFragment().show(getSupportFragmentManager(), "ADD_INGREDIENT");
+            }
+        });
 
+    }
+
+    @Override
+    public void onOkPressed(Ingredient selectedIngredient) {
+        ingredientArrayAdapter.add(selectedIngredient);
     }
 }

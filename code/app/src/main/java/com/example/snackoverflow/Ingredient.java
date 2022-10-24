@@ -13,14 +13,8 @@ public class Ingredient implements Serializable {
     private int unit;
     private String category;
 
-    public Ingredient(String description, String dt, String location, int amount, int unit, String category) {
+    public Ingredient(String description, Date dt, String location, int amount, int unit, String category) {
         this.description = description;
-        try {
-            this.bestBefore = new SimpleDateFormat("dd/MM/yyyy").parse(dt);
-        }
-        catch (ParseException e) {
-            e.printStackTrace();
-        }
         this.location = location;
         this.amount = amount;
         this.unit = unit;
