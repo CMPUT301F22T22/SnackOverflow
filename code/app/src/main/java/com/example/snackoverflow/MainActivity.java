@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Test Data
         for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA",new ArrayList<String>(Arrays.asList(new String[]{"Nidal","Nasemm"}))));
+            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA"));
         }
 
         recipeArrayAdapter = new RecipeAdapter(this,recipeDataList);

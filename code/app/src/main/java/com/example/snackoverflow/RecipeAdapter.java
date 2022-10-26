@@ -25,7 +25,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         this.context = context;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

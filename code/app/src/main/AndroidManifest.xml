@@ -16,15 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SnackOverflow"
         tools:targetApi="31">
-        <activity
-            android:name=".AddRecipe"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".AddRecipe"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".IngredientDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".IngredientStorageActivity"
             android:exported="false" />
+        <activity
+           android:name=".RecipeActivity"
+           android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

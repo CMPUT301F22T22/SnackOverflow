@@ -1,9 +1,9 @@
 package com.example.snackoverflow;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Recipe implements Serializable {
     private String title;
@@ -11,17 +11,17 @@ public class Recipe implements Serializable {
     private float servings;
     private String recipeCategory;
     private String comments;
-    private ArrayList<String> ingriedients;
+    private ArrayList<Ingredient> ingredients ;
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, LocalTime preptime, float servings, String recipeCategory, String comments, ArrayList<String> ingriedients) {
+    public Recipe(String title, LocalTime preptime, float servings, String recipeCategory, String comments) {
         this.title = title;
         this.preptime = preptime;
         this.servings = servings;
         this.recipeCategory = recipeCategory;
         this.comments = comments;
-        this.ingriedients = ingriedients;
+        ingredients = new ArrayList<Ingredient>();
     }
 
     public String getTitle() {
@@ -64,11 +64,23 @@ public class Recipe implements Serializable {
         this.comments = comments;
     }
 
-    public ArrayList<String> getIngriedients() {
-        return ingriedients;
+    public void addIngredient(Ingredient ingredient){
+        if (!ingredients.contains(ingredient)){
+            ingredients.add(ingredient);
+        }
     }
 
-    public void setIngriedients(ArrayList<String> ingriedients) {
-        this.ingriedients = ingriedients;
+    public void removeIngredient(Ingredient ingredient){
+        if(ingredients.contains(ingredient)){
+            ingredients.remove(ingredient);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return title.equals(recipe.title);
     }
 }
