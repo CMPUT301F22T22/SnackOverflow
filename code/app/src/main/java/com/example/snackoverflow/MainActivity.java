@@ -29,29 +29,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recipeList = findViewById(R.id.recipeListView);
-        recipeDataList = new ArrayList<>();
-        String []recipestitle = {"Curry","NOODLES"};
-        int [] servings = {1,2};
-        String []categories = {"Lunch","Dinner"};
-
-
-        //Test Data
-        for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA"));
-        }
-
-        recipeArrayAdapter = new RecipeAdapter(this,recipeDataList);
-        recipeList.setAdapter(recipeArrayAdapter);
-        Button storageActivity = findViewById(R.id.storage_activity);
-        storageActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, IngredientStorageActivity.class);
-                startActivity(intent);
-            }
-        });
-
         NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.mealplanner);
         navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

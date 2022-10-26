@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class RecipeActivity extends AppCompatActivity {
@@ -25,6 +26,15 @@ public class RecipeActivity extends AppCompatActivity {
 
         recipeList = findViewById(R.id.recipe_list);
         recipeDataList = new ArrayList<>();
+
+        String []recipestitle = {"Curry","NOODLES"};
+        int [] servings = {1,2};
+        String []categories = {"Lunch","Dinner"};
+
+        //Test Data
+        for (int i =0;i<recipestitle.length;i++){
+            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA"));
+        }
 
         recipeArrayAdapter = new RecipeAdapter(this, recipeDataList);
         recipeList.setAdapter(recipeArrayAdapter);
@@ -52,7 +62,5 @@ public class RecipeActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
 }
