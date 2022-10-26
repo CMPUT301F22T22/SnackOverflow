@@ -1,11 +1,14 @@
 package com.example.snackoverflow;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Recipe implements Serializable {
+public class Recipe implements Serializable, Parcelable {
     private String title;
     private LocalTime preptime;
     private float servings;
@@ -23,6 +26,26 @@ public class Recipe implements Serializable {
         this.comments = comments;
         this.ingriedients = ingriedients;
     }
+
+    protected Recipe(Parcel in) {
+        title = in.readString();
+        servings = in.readFloat();
+        recipeCategory = in.readString();
+        comments = in.readString();
+        ingriedients = in.createStringArrayList();
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -70,5 +93,17 @@ public class Recipe implements Serializable {
 
     public void setIngriedients(ArrayList<String> ingriedients) {
         this.ingriedients = ingriedients;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(recipeCategory);
+        parcel.writeFloat(servings);
+        parcel.writeString(comments);
     }
 }
