@@ -52,6 +52,7 @@ public class AddRecipe extends AppCompatActivity {
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
                 ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);
+                with.crop(1f, 1f);
                 with.compress(1024) ;        //Final image size will be less than 1 MB
                 with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
                 with.createIntent(new Function1<Intent, Unit>() {
