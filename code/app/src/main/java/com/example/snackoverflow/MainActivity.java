@@ -52,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        
+        Button modifyRecipeTestButton = findViewById(R.id.modify_recipe_test_button);
+        modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ModifyRecipe.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }
