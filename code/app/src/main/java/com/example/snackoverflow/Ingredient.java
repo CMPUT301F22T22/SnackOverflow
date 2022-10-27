@@ -21,14 +21,6 @@ public class Ingredient implements Serializable {
         this.category = category;
     }
 
-    // For Recipe
-    public Ingredient(String description, Integer amount, Integer unit, String category) {
-        this.description = description;
-        this.amount = amount;
-        this.unit = unit;
-        this.category = category;
-    }
-
     public String getDescription() {
         return description;
     }
