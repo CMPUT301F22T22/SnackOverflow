@@ -27,6 +27,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class ModifyRecipe extends AppCompatActivity {
+    private EditText titleField;
     private EditText categoryField;
     private EditText servingsField;
     private EditText ingredientsField;
@@ -45,7 +46,7 @@ public class ModifyRecipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_recipe);
 
-        imageView = findViewById(R.id.recipe_addPhoto);
+        imageView = findViewById(R.id.edit_recipe_photo);
 
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -85,6 +86,7 @@ public class ModifyRecipe extends AppCompatActivity {
             }
         });
 
+        titleField = (EditText) findViewById(R.id.edit_recipe_title);
         categoryField = (EditText) findViewById(R.id.edit_recipe_category);
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
         ingredientsField = (EditText) findViewById(R.id.edit_recipe_ingredients);
@@ -95,30 +97,32 @@ public class ModifyRecipe extends AppCompatActivity {
         editButton = (Button) findViewById(R.id.edit_recipe_button);
         applyButton = (Button) findViewById(R.id.apply_recipe_button);
         deleteButton = (Button) findViewById(R.id.delete_recipe_button);
-
-//        categoryField.setText(recipe.getRecipeCategory());
-//        servingsField.setText(Float.toString(recipe.getServings()));
-//        commentsField.setText(recipe.getComments());
+        
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                titleField.setEnabled(true);
                 categoryField.setEnabled(true);
                 servingsField.setEnabled(true);
                 ingredientsField.setEnabled(true);
+                instructionsField.setEnabled(true);
                 commentsField.setEnabled(true);
 
                 editButton.setVisibility(View.GONE);
                 applyButton.setVisibility(View.VISIBLE);
+                viewButton.setVisibility(View.VISIBLE);
             }
         });
 
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                titleField.setEnabled(false);
                 categoryField.setEnabled(false);
                 servingsField.setEnabled(false);
                 ingredientsField.setEnabled(false);
+                instructionsField.setEnabled(false);
                 commentsField.setEnabled(false);
 
                 editButton.setVisibility(View.VISIBLE);

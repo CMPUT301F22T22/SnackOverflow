@@ -1,17 +1,7 @@
 package com.example.snackoverflow;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.View;
-import android.widget.AdapterView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,32 +19,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
 
-    private ActivityResultLauncher<Intent> getModifiedData = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent intent = result.getData();
-                        String actionType = intent.getStringExtra("ACTION_TYPE");
-                        int position = intent.getIntExtra("position", 0);
-//                        if (actionType.equals("EDIT")) {
-//
-//                            Recipe recipe = intent.getParcelableExtra("Recipe");
-//                        } else if (actionType.equals("DELETE")) {
-//                            int position = intent.getIntExtra("position", 0);
-//                            long prevCost = intent.getLongExtra("previousCost", 0);
-//                            sum = sum - prevCost;
-//                            foodArrayList.remove(position);
-//                            totalCostText.setText("Total Cost = " + String.valueOf(sum));
-//                            if (foodArrayList.size() == 0) {
-//                                findViewById(R.id.none_display_text).setVisibility(View.VISIBLE);
-//                            }
-//                            foodListAdapter.notifyDataSetChanged();
-//                        }
-                    }
-                }
-            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,15 +47,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Button modifyRecipeTestButton = findViewById(R.id.modify_recipe_test_button);
+        modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ModifyRecipe.class);
-                Recipe clickedRecipe = recipeDataList.get(position);
-                intent.putExtra("clickedRecipe", (Parcelable) clickedRecipe);
-                intent.putExtra("position", position);
-                getModifiedData.launch(intent);
+                startActivity(intent);
             }
         });
 
