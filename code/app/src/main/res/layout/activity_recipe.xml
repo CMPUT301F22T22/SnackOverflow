@@ -8,9 +8,9 @@
     tools:context=".MainActivity">
 
     <ListView
-        android:id="@+id/recipeListView"
-        android:layout_width="409dp"
-        android:layout_height="729dp" />
+        android:id="@+id/recipe_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -21,14 +21,4 @@
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
         app:menu="@menu/menu_navigation" />
-
-    <Button
-        android:id="@+id/modify_recipe_test_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="650dp"
-        android:layout_marginLeft="150dp"
-        android:text="TEST MODIFYRECIPE"/>
-
-
 </RelativeLayout>

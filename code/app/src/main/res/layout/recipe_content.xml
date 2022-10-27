@@ -23,7 +23,7 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/servingsnumTextView"
+        android:id="@+id/recipe_servings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -47,7 +47,7 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/categorynumTextView"
+        android:id="@+id/recipe_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -59,7 +59,7 @@
         android:textSize="15sp" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/photocardView"
+        android:id="@+id/recipe_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="13dp"
@@ -77,7 +77,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/recipe_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -88,7 +88,7 @@
         android:textSize="21sp" />
 
     <TextView
-        android:id="@+id/preptimeTextView"
+        android:id="@+id/recipe_preptime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
