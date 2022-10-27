@@ -1,6 +1,8 @@
 package com.example.snackoverflow;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -8,82 +10,95 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
+
 import java.text.ParseException;
 
-public class ModifyRecipe extends AppCompatActivity {
-    private Recipe recipe;
+import de.hdodenhof.circleimageview.CircleImageView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
+public class ModifyRecipe extends AppCompatActivity {
     private EditText categoryField;
     private EditText servingsField;
     private EditText ingredientsField;
+    private EditText instructionsField;
     private EditText commentsField;
 
-    private long prevCost;
+    public CircleImageView imageView;
 
     private Button editButton;
     private Button applyButton;
     private Button viewButton;
     private Button deleteButton;
 
-    // Referenced how to go back when back button is clicked
-    // From: silvan
-    // Date (last updated): Sep 12, 2020
-    // Date accessed: Sep 21, 2022
-    // License: Creative Commons License
-    // URL: https://stackoverflow.com/questions/36433299/setdisplayhomeasupenabled-not-working-in-preferenceactivity
-    @Override
-    public boolean onSupportNavigateUp() {
-        Intent modifyIntent = new Intent();
-        modifyIntent.putExtra("ACTION_TYPE", "NONE");
-        finish();
-        return true;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.modify_recipe);
+        setContentView(R.layout.activity_modify_recipe);
 
-        Intent intent = getIntent();
-        recipe = intent.getParcelableExtra("clickedRecipe");
+        imageView = findViewById(R.id.recipe_addPhoto);
 
-        categoryField = (EditText) findViewById(R.id.edit_category_text);
-        servingsField = (EditText) findViewById(R.id.edit_servings_text);
-        ingredientsField = (EditText) findViewById(R.id.edit_ingredients_text);
-        commentsField = (EditText) findViewById(R.id.edit_comments_text);
+        // Register activity result to handle the Image the user selected
+        ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        if (intent != null) {
+                            System.out.println("intent is not null");
+                            System.out.println(intent);
+                            System.out.println(intent.getData());
+                            Uri uri = intent.getData();
+                            // set the display picture to the
+                            // picture that was selected by the user
+                            imageView.setImageURI(uri);
+                            imageView.setBackgroundResource(0);
+                            imageView.setPadding(0, 0, 0, 0);
+                        }
+                    }
+                });
 
-//        countField.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                if (editable.toString().equals("0")) {
-//                    countField.setText("");
-//                }
-//            }
-//        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Allow user to select a picture from the gallery
+                // or take a picture using the camera
+                ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
+                with.crop(1f, 1f);
+                with.compress(1024) ;        //Final image size will be less than 1 MB
+                with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
+                with.createIntent(new Function1<Intent, Unit>() {
+                    @Override
+                    public Unit invoke(Intent Intent) {
+                        selectImage.launch(Intent );
+                        return null;
+                    }
+                });
+            }
+        });
 
-        editButton = (Button) findViewById(R.id.edit_button);
-        applyButton = (Button) findViewById(R.id.apply_button);
-        deleteButton = (Button) findViewById(R.id.delete_button);
+        categoryField = (EditText) findViewById(R.id.edit_recipe_category);
+        servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
+        ingredientsField = (EditText) findViewById(R.id.edit_recipe_ingredients);
+        instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
+        commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
 
-        categoryField.setText(recipe.getRecipeCategory());
-        servingsField.setText(Float.toString(recipe.getServings()));
-        commentsField.setText(recipe.getComments());
+        viewButton = (Button) findViewById(R.id.view_recipe_button);
+        editButton = (Button) findViewById(R.id.edit_recipe_button);
+        applyButton = (Button) findViewById(R.id.apply_recipe_button);
+        deleteButton = (Button) findViewById(R.id.delete_recipe_button);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+//        categoryField.setText(recipe.getRecipeCategory());
+//        servingsField.setText(Float.toString(recipe.getServings()));
+//        commentsField.setText(recipe.getComments());
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,12 +126,7 @@ public class ModifyRecipe extends AppCompatActivity {
                 applyButton.setVisibility(View.GONE);
             }
         });
-        // Referenced how to pass data through Intents
-        // From: Google-Android Studio Documentation
-        // Date (last updated): Jun 08, 2022
-        // Date accessed: Sep 21, 2022
-        // License: Apache 2.0 license
-        // URL: https://developer.android.com/reference/android/content/Intent
+
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,14 +138,6 @@ public class ModifyRecipe extends AppCompatActivity {
                         ingredients.equals("") || comments.equals("")) {
 
                 } else {
-                    recipe.setRecipeCategory(category);
-                    recipe.setServings(Float.parseFloat(servings));
-                    recipe.setComments(comments);
-                    Intent modifyIntent = new Intent();
-                    modifyIntent.putExtra("ACTION_TYPE", "EDIT");
-                    modifyIntent.putExtra("position", intent.getIntExtra("position", 0));
-                    modifyIntent.putExtra("Recipe", (Parcelable) recipe);
-                    setResult(-1, modifyIntent);
                     finish();
                 }
             }
