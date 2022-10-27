@@ -97,7 +97,7 @@ public class ModifyRecipe extends AppCompatActivity {
         editButton = (Button) findViewById(R.id.edit_recipe_button);
         applyButton = (Button) findViewById(R.id.apply_recipe_button);
         deleteButton = (Button) findViewById(R.id.delete_recipe_button);
-        
+
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
