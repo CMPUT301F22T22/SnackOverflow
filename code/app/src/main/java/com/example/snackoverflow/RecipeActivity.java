@@ -3,12 +3,15 @@ package com.example.snackoverflow;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.time.LocalTime;
@@ -60,6 +63,16 @@ public class RecipeActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        //Modify Button //TODO: Replace functionality or change when tests done
+        FloatingActionButton modifyRecipeTestButton = findViewById(R.id.add_recipe_button);
+        modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
+                startActivity(intent);
             }
         });
     }

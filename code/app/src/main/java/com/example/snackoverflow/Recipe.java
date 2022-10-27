@@ -32,7 +32,7 @@ public class Recipe implements Serializable, Parcelable {
         servings = in.readFloat();
         recipeCategory = in.readString();
         comments = in.readString();
-        ingriedients = in.createStringArrayList();
+        //ingredients = in.createStringArrayList();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -109,7 +109,6 @@ public class Recipe implements Serializable, Parcelable {
         parcel.writeFloat(servings);
         parcel.writeString(comments);
     }
-}
 
     public boolean equals(Object o) {
         if (this == o) return true;

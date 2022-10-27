@@ -22,13 +22,4 @@
         app:itemTextColor="@drawable/selector"
         app:menu="@menu/menu_navigation" />
 
-    <Button
-        android:id="@+id/modify_recipe_test_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="650dp"
-        android:layout_marginLeft="150dp"
-        android:text="TEST MODIFYRECIPE"/>
-
-
 </RelativeLayout>
