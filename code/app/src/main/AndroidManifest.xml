@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.snackoverflow">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +19,15 @@
         <activity
             android:name=".ModifyRecipe"
             android:exported="true" />
+        <activity
+            android:name=".AddRecipe"
+            android:exported="false" />
+        <activity
+            android:name=".IngredientDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IngredientStorageActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
