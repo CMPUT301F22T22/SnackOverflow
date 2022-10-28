@@ -1,15 +1,18 @@
 package com.example.snackoverflow;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -55,6 +58,30 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
             @Override
             public void onClick(View view) {
                 new AddIngredientFragment().show(getSupportFragmentManager(), "ADD_INGREDIENT");
+            }
+        });
+
+        NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
+        navigationBarView.setSelectedItemId(R.id.ingredients);
+        navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId())
+                {
+                    case R.id.ingredients:
+                    case R.id.shoppinglist:
+                        return true;
+                    case R.id.mealplanner:
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.recipes:
+                        startActivity(new Intent(getApplicationContext(),RecipeActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
             }
         });
 
