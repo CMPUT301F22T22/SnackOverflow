@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
-public class add_ingredient_fragment extends DialogFragment {
+public class RecipeAddIngredientFragment extends DialogFragment {
     // Check if we are editing data
     private boolean edit;
     // Data storage
@@ -29,10 +29,10 @@ public class add_ingredient_fragment extends DialogFragment {
     // listener for Recipe fragment
     private OnFragmentInteractionListener listener;
 
-    public add_ingredient_fragment(){
+    public RecipeAddIngredientFragment(){
         edit = false;
     }
-    public add_ingredient_fragment(Ingredient ingredient){
+    public RecipeAddIngredientFragment(Ingredient ingredient){
         this.ingredient = ingredient;
         edit = true;
     }
@@ -58,7 +58,7 @@ public class add_ingredient_fragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
         //Inflate the layout
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.reciepe_ingredients_fragment_layout, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.recipe_add_ingredients_fragment_layout, null);
         text_input_description = view.findViewById(R.id.text_input_description);
         text_input_amount = view.findViewById(R.id.text_input_amount);
         text_input_unit = view.findViewById(R.id.text_input_unit);

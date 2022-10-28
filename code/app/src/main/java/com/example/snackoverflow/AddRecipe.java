@@ -21,7 +21,7 @@ import kotlin.jvm.functions.Function1;
 
 // TODO: How to request user permission for gallery access with the new
 // Android API
-public class AddRecipe extends AppCompatActivity implements add_ingredient_fragment.OnFragmentInteractionListener{
+public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
     private TextInputLayout titletext;
@@ -84,7 +84,7 @@ public class AddRecipe extends AppCompatActivity implements add_ingredient_fragm
         ingredients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new add_ingredient_fragment().show(getSupportFragmentManager(), "Add_Ingredient");
+                new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
     }
@@ -103,7 +103,7 @@ public class AddRecipe extends AppCompatActivity implements add_ingredient_fragm
 
     @Override
     public void Add_food(Ingredient ingredient) {
-        // Test
+        // Placeholder
         ingredients.setText(ingredient.getDescription());
     }
 
