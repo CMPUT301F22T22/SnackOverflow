@@ -35,13 +35,13 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
 
-        imageView = findViewById(R.id.addPhoto);
-        ingredients = findViewById(R.id.adding);
-        titletext = findViewById(R.id.title);
-        categorytext = findViewById(R.id.recipeCategory);
-        servingtext = findViewById(R.id.servings);
-        instructionstext = findViewById(R.id.instructions);
-        commentstext = findViewById(R.id.comments);
+        imageView = findViewById(R.id.recipe_addPhoto);
+        ingredients = findViewById(R.id.recipe_addIngredients);
+        titletext = findViewById(R.id.recipe_title);
+        categorytext = findViewById(R.id.recipe_category);
+        servingtext = findViewById(R.id.recipe_servings);
+        instructionstext = findViewById(R.id.recipe_instructions);
+        commentstext = findViewById(R.id.recipe_comments);
         imageView = findViewById(R.id.recipe_addPhoto);
 
         // Register activity result to handle the Image the user selected
@@ -87,18 +87,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
                 new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("in onActivityResult");
-        if (requestCode == 20 && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            imageView.setImageURI(uri);
-            imageView.setBackgroundResource(0);
-            imageView.setPadding(0, 0, 0, 0);
-        }
     }
 
     @Override
