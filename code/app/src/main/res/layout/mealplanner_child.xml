@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+
+    <ImageView
+        android:id="@+id/meal_image"
+        android:layout_width="137dp"
+        android:layout_height="66dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_launcher_background"/>
+
+    <TextView
+        android:id="@+id/meal_title"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/meal_category_text"
+            android:layout_width="74dp"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:text="Category: "
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/meal_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/meal_title"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center" />-->
+
+
+
+
+
+
+
+</LinearLayout>

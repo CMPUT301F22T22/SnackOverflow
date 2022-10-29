@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
@@ -34,7 +33,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
         TextView ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore);
         TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
-        ingredientDescription.setText(ingredient.getDescription());
+        ingredientDescription.setText(ingredient.getTitle());
         ingredientBestBefore.setText(String.valueOf(ingredient.getBestBefore()));
         ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
         return view;
