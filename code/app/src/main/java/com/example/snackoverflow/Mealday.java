@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
+/*
+This class stores the recipes stored/planned for the day
+ */
 public class Mealday {
     private LocalDate date;
     private ArrayList<Recipe> meals;
