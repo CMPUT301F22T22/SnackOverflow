@@ -26,7 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-public class ModifyRecipe extends AppCompatActivity {
+public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredientFragment.OnFragmentInteractionListener {
     private EditText titleField;
     private EditText categoryField;
     private EditText servingsField;
@@ -159,5 +159,15 @@ public class ModifyRecipe extends AppCompatActivity {
 //                finish();
 //            }
 //        });
+    }
+
+    @Override
+    public void Add_ingredient(Ingredient ingredient) {
+
+    }
+
+    @Override
+    public void Edit_ingredient(Ingredient ingredient) {
+
     }
 }

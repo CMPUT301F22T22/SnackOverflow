@@ -38,8 +38,8 @@ public class RecipeAddIngredientFragment extends DialogFragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void Add_food(Ingredient ingredient);
-        void Edit_food(Ingredient ingredient);
+        void Add_ingredient(Ingredient ingredient);
+        void Edit_ingredient(Ingredient ingredient);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class RecipeAddIngredientFragment extends DialogFragment {
                             Integer Unit = Integer.valueOf(text_input_unit.getEditText().getText().toString());
                             String Category = text_input_category.getEditText().getText().toString();
 
-                            listener.Add_food(new Ingredient(Description, null, null,Amount, Unit, Category));
+                            listener.Add_ingredient(new Ingredient(Description, null, null,Amount, Unit, Category));
                         }
                     }).create();
         }
@@ -116,7 +116,7 @@ public class RecipeAddIngredientFragment extends DialogFragment {
                             if (!Objects.equals(Category,"")){
                                 ingredient.setCategory(Category);
                             }
-                            listener.Edit_food(ingredient);
+                            listener.Edit_ingredient(ingredient);
                         }
                     }).create();
         }
