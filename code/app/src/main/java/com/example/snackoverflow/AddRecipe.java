@@ -28,9 +28,9 @@ import kotlin.jvm.functions.Function1;
 public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
-    private TextInputLayout titletext;
-    private TextInputLayout categorytext;
-    private TextInputLayout servingtext;
+    private TextInputLayout titleText;
+    private TextInputLayout categoryText;
+    private TextInputLayout servingText;
     private TextView ingredient_1;
     private TextView ingredient_2;
     private TextView ingredient_3;
@@ -38,8 +38,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     private ArrayList<Ingredient> ingredients;
     private Button show;
     private Button add_ingredient;
-    private TextInputLayout instructionstext;
-    private TextInputLayout commentstext;
+    private TextInputLayout instructionsText;
+    private TextInputLayout commentsText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +47,11 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
 
         // Initializing variables
         imageView = findViewById(R.id.recipe_addPhoto);
-        titletext = findViewById(R.id.recipe_title);
-        categorytext = findViewById(R.id.recipe_category);
-        servingtext = findViewById(R.id.recipe_servings);
-        instructionstext = findViewById(R.id.recipe_instructions);
-        commentstext = findViewById(R.id.recipe_comments);
+        titleText = findViewById(R.id.recipe_title);
+        categoryText = findViewById(R.id.recipe_category);
+        servingText = findViewById(R.id.recipe_servings);
+        instructionsText = findViewById(R.id.recipe_instructions);
+        commentsText = findViewById(R.id.recipe_comments);
         ingredient_1 = findViewById(R.id.Ingredient_1);
         ingredient_2 = findViewById(R.id.Ingredient_2);
         ingredient_3 = findViewById(R.id.Ingredient_3);

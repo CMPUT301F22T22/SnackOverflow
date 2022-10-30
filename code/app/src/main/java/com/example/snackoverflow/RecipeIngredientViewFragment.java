@@ -36,7 +36,7 @@ public class RecipeIngredientViewFragment extends DialogFragment {
 
         ingredientStorageList = view.findViewById(R.id.list);
 
-        ingredientArrayAdapter = new IngredientAdapter(context, ingredients);
+        ingredientArrayAdapter = new IngredientAdapter(context, ingredients, "recipe");
         ingredientStorageList.setAdapter(ingredientArrayAdapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
