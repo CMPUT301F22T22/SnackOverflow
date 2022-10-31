@@ -13,11 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class RecipeIngredientViewFragment extends Fragment implements RecipeAddIngredientFragment.OnFragmentInteractionListener{
+public class RecipeIngredientViewFragment extends Fragment {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
@@ -41,14 +42,5 @@ public class RecipeIngredientViewFragment extends Fragment implements RecipeAddI
         ingredientStorageList = view.findViewById(R.id.list);
         ingredientArrayAdapter = new IngredientAdapter(getContext(), ingredients, "recipe");
         ingredientStorageList.setAdapter(ingredientArrayAdapter);
-    }
-
-    @Override
-    public void addIngredient(Ingredient ingredient) {
-
-    }
-
-    @Override
-    public void editIngredient(Ingredient ingredient) {
     }
 }

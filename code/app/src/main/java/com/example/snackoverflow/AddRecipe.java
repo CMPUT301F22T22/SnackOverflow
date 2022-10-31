@@ -3,6 +3,8 @@ package com.example.snackoverflow;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -41,7 +43,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     private Button addIngredient;
     private TextInputLayout instructionsText;
     private TextInputLayout commentsText;
-    private final static int MY_REQUEST_CODE = 1;
+    private Fragment IngredientsView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,9 +116,11 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                IngredientsView = new RecipeIngredientViewFragment(ingredients);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.constraintLayout, new RecipeIngredientViewFragment(ingredients)).commit();
+                        .replace(R.id.constraintLayout, IngredientsView)
+                        .commit();
             }
         });
     }
@@ -135,8 +140,22 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
 
     @Override
     public void editIngredient(Ingredient ingredient) {
+        IngredientsView = new RecipeIngredientViewFragment(ingredients);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.constraintLayout, new RecipeIngredientViewFragment(ingredients)).commit();
+                .replace(R.id.constraintLayout, IngredientsView).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (IngredientsView != null){
+            System.out.println("back");
+            getSupportFragmentManager().beginTransaction()
+                    .remove(IngredientsView)
+                    .commit();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 }
