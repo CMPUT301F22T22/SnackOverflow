@@ -10,28 +10,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     private ArrayList<Ingredient> ingredients;
     private Context context;
-    private boolean recipe_check;
+    private boolean recipeCheck;
 
     public IngredientAdapter(Context context, ArrayList<Ingredient> ingredients){
         super(context, 0, ingredients);
         this.ingredients = ingredients;
         this.context = context;
-        this.recipe_check = false;
+        this.recipeCheck = false;
     }
     public IngredientAdapter(Context context, ArrayList<Ingredient> ingredients, String recipe){
         super(context, 0, ingredients);
         this.ingredients = ingredients;
         this.context = context;
         if (recipe == "recipe"){
-            this.recipe_check = true;
+            this.recipeCheck = true;
         }
     }
 
@@ -46,7 +43,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
         ingredientDescription.setText(ingredient.getDescription());
 
-        if (recipe_check == false){
+        if (recipeCheck == false){
             TextView ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore);
             TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
             ingredientBestBefore.setText(String.valueOf(ingredient.getBestBefore()));

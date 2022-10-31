@@ -143,7 +143,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/recipe_instructions"
-        android:layout_width="382dp"
+        android:layout_width="match_parent"
         android:layout_height="145dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"

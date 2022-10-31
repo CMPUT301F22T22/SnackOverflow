@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,8 +35,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     private TextView ingredient_3;
     private ArrayList<TextView> ingredient_views;
     private ArrayList<Ingredient> ingredients;
-    private Button show;
-    private Button add_ingredient;
+    private Button showMore;
+    private Button addIngredient;
     private TextInputLayout instructionsText;
     private TextInputLayout commentsText;
     @Override
@@ -55,8 +54,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         ingredient_1 = findViewById(R.id.Ingredient_1);
         ingredient_2 = findViewById(R.id.Ingredient_2);
         ingredient_3 = findViewById(R.id.Ingredient_3);
-        show = findViewById(R.id.recipe_showmore);
-        add_ingredient = findViewById(R.id.recipe_add_ingredient);
+        showMore = findViewById(R.id.recipe_showmore);
+        addIngredient = findViewById(R.id.recipe_add_ingredient);
 
         ingredients = new ArrayList<Ingredient>();
         ingredient_views = new ArrayList<TextView>();
@@ -102,13 +101,13 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
                 });
             }
         });
-        add_ingredient.setOnClickListener(new View.OnClickListener() {
+        addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
-        show.setOnClickListener(new View.OnClickListener() {
+        showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new RecipeIngredientViewFragment(AddRecipe.this,ingredients).show(getSupportFragmentManager(), "Shoe_More");

@@ -4,23 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
-import java.text.ParseException;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
@@ -30,9 +25,15 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     private EditText titleField;
     private EditText categoryField;
     private EditText servingsField;
-    private EditText ingredientsField;
     private EditText instructionsField;
     private EditText commentsField;
+    private TextView ingredient_1;
+    private TextView ingredient_2;
+    private TextView ingredient_3;
+    private ArrayList<TextView> ingredient_views;
+    private ArrayList<Ingredient> ingredients;
+    private Button showMore;
+    private Button addIngredient;
 
     public CircleImageView imageView;
 
@@ -43,6 +44,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // TODO Set variables to data stored in recipe object
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_recipe);
 
@@ -89,14 +91,34 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         titleField = (EditText) findViewById(R.id.edit_recipe_title);
         categoryField = (EditText) findViewById(R.id.edit_recipe_category);
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
-        ingredientsField = (EditText) findViewById(R.id.edit_recipe_ingredients);
         instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
         commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
+        ingredient_1 = findViewById(R.id.Ingredient_1);
+        ingredient_2 = findViewById(R.id.Ingredient_2);
+        ingredient_3 = findViewById(R.id.Ingredient_3);
+        showMore = findViewById(R.id.recipe_showmore);
+        addIngredient = findViewById(R.id.recipe_add_ingredient);
 
         viewButton = (Button) findViewById(R.id.view_recipe_button);
         editButton = (Button) findViewById(R.id.edit_recipe_button);
         applyButton = (Button) findViewById(R.id.apply_recipe_button);
         deleteButton = (Button) findViewById(R.id.delete_recipe_button);
+
+        ingredients = new ArrayList<Ingredient>();
+        ingredient_views = new ArrayList<TextView>();
+
+        ingredient_views.add(ingredient_1);
+        ingredient_views.add(ingredient_2);
+        ingredient_views.add(ingredient_3);
+
+        // Set ingredients text view
+        int last_index = ingredients.size()-1;
+        for (int i = 0; i<=last_index;i++){
+            ingredient_views.get(i).setText(ingredients.get(last_index - i).getDescription());
+            if (i == 2){
+                break;
+            }
+        }
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +127,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 titleField.setEnabled(true);
                 categoryField.setEnabled(true);
                 servingsField.setEnabled(true);
-                ingredientsField.setEnabled(true);
+                showMore.setEnabled(true);
+                addIngredient.setEnabled(true);
                 instructionsField.setEnabled(true);
                 commentsField.setEnabled(true);
 
@@ -121,7 +144,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 titleField.setEnabled(false);
                 categoryField.setEnabled(false);
                 servingsField.setEnabled(false);
-                ingredientsField.setEnabled(false);
+                showMore.setEnabled(false);
+                addIngredient.setEnabled(false);
                 instructionsField.setEnabled(false);
                 commentsField.setEnabled(false);
 
@@ -136,7 +160,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             public void onClick(View view) {
                 String category = categoryField.getText().toString();
                 String servings = servingsField.getText().toString();
-                String ingredients = ingredientsField.getText().toString();
                 String comments = commentsField.getText().toString();
                 if (category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
@@ -144,6 +167,18 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 } else {
                     finish();
                 }
+            }
+        });
+        addIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
+            }
+        });
+        showMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new RecipeIngredientViewFragment(ModifyRecipe.this,ingredients).show(getSupportFragmentManager(), "Shoe_More");
             }
         });
 
@@ -163,6 +198,14 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
 
     @Override
     public void Add_ingredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
+        int last_index = ingredients.size()-1;
+        for (int i = 0; i<=last_index;i++){
+            ingredient_views.get(i).setText(ingredients.get(last_index - i).getDescription());
+            if (i == 2){
+                break;
+            }
+        }
 
     }
 
