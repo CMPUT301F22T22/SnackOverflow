@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,13 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
             TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
             ingredientAmount.setText(String.valueOf(ingredient.getAmount()));
             ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
+//            ImageButton editIngredient = view.findViewById(R.id.edit_ingredient);
+//            editIngredient.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    new RecipeAddIngredientFragment(ingredient);
+//                }
+//            });
         }
 
         return view;
