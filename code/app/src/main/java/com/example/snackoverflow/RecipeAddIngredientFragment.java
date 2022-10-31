@@ -38,8 +38,8 @@ public class RecipeAddIngredientFragment extends DialogFragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void Add_ingredient(Ingredient ingredient);
-        void Edit_ingredient(Ingredient ingredient);
+        void addIngredient(Ingredient ingredient);
+        void editIngredient(Ingredient ingredient);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class RecipeAddIngredientFragment extends DialogFragment {
             // MAKE CHANGES WHEN INGREDIENT MADE
             // Set data
             textInputDescription.getEditText().setText(ingredient.getDescription());
-            textInputLayout.getEditText().setText(ingredient.getAmount());
-            textInputUnit.getEditText().setText(ingredient.getUnit());
+            textInputLayout.getEditText().setText(String.valueOf(ingredient.getAmount()));
+            textInputUnit.getEditText().setText(String.valueOf(ingredient.getUnit()));
             textInputCategory.getEditText().setText(ingredient.getCategory());
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
         if (edit == false){
             return builder
                     .setView(view)
@@ -87,7 +87,8 @@ public class RecipeAddIngredientFragment extends DialogFragment {
                             Integer Unit = Integer.valueOf(textInputUnit.getEditText().getText().toString());
                             String Category = textInputCategory.getEditText().getText().toString();
 
-                            listener.Add_ingredient(new Ingredient(Description, null, null,Amount, Unit, Category));
+                            listener.addIngredient(new Ingredient(Description, null, null,Amount, Unit, Category));
+                            listener = null;
                         }
                     }).create();
         }
@@ -116,7 +117,7 @@ public class RecipeAddIngredientFragment extends DialogFragment {
                             if (!Objects.equals(Category,"")){
                                 ingredient.setCategory(Category);
                             }
-                            listener.Edit_ingredient(ingredient);
+                            listener.editIngredient(ingredient);
                         }
                     }).create();
         }

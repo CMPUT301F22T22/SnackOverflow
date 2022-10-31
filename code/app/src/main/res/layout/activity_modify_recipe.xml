@@ -133,6 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="false"
                 android:minHeight="40dp"
                 android:text="Show More" />
 
@@ -141,6 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="false"
                 android:minHeight="40dp"
                 android:text="Add Ingredient" />
         </LinearLayout>

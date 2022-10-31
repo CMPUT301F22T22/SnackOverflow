@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -178,7 +179,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new RecipeIngredientViewFragment(ModifyRecipe.this,ingredients).show(getSupportFragmentManager(), "Shoe_More");
             }
         });
 
@@ -197,7 +197,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     }
 
     @Override
-    public void Add_ingredient(Ingredient ingredient) {
+    public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
         int last_index = ingredients.size()-1;
         for (int i = 0; i<=last_index;i++){
@@ -210,7 +210,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     }
 
     @Override
-    public void Edit_ingredient(Ingredient ingredient) {
+    public void editIngredient(Ingredient ingredient) {
 
     }
 }

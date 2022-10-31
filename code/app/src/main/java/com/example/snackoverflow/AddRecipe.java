@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,6 +41,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     private Button addIngredient;
     private TextInputLayout instructionsText;
     private TextInputLayout commentsText;
+    private final static int MY_REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,13 +113,15 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new RecipeIngredientViewFragment(AddRecipe.this,ingredients).show(getSupportFragmentManager(), "Shoe_More");
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.constraintLayout, new RecipeIngredientViewFragment(ingredients)).commit();
             }
         });
     }
 
     @Override
-    public void Add_ingredient(Ingredient ingredient) {
+    public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
         int last_index = ingredients.size()-1;
         for (int i = 0; i<=last_index;i++){
@@ -129,7 +134,9 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     }
 
     @Override
-    public void Edit_ingredient(Ingredient ingredient) {
-
+    public void editIngredient(Ingredient ingredient) {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.constraintLayout, new RecipeIngredientViewFragment(ingredients)).commit();
     }
 }

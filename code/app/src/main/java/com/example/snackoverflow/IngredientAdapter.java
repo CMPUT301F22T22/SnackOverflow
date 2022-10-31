@@ -1,5 +1,6 @@
 package com.example.snackoverflow;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,9 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         this.context = context;
         if (recipe == "recipe"){
             this.recipeCheck = true;
+        }
+        else{
+            this.recipeCheck = false;
         }
     }
 
@@ -58,15 +63,14 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
             TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
             ingredientAmount.setText(String.valueOf(ingredient.getAmount()));
             ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
-//            ImageButton editIngredient = view.findViewById(R.id.edit_ingredient);
-//            editIngredient.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    new RecipeAddIngredientFragment(ingredient);
-//                }
-//            });
+            ImageButton editIngredient = view.findViewById(R.id.edit_ingredient);
+            editIngredient.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new RecipeAddIngredientFragment(ingredient).show(((FragmentActivity)context).getSupportFragmentManager(), "Edit_Ingredient");
+                }
+            });
         }
-
         return view;
     }
 }
