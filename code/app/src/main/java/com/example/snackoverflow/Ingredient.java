@@ -72,6 +72,6 @@ public class Ingredient implements Serializable  {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return title.equals(that.title) && bestBefore.equals(that.bestBefore);
+        return title.equals(that.title);
     }
 }

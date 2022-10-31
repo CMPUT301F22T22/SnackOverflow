@@ -90,12 +90,22 @@ public class Recipe implements Serializable, Parcelable {
         if (!ingredients.contains(ingredient)){
             ingredients.add(ingredient);
         }
+        else{
+            throw new IllegalArgumentException();
+        }
     }
 
     public void removeIngredient(Ingredient ingredient){
         if(ingredients.contains(ingredient)){
             ingredients.remove(ingredient);
         }
+        else{
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public ArrayList<Ingredient> getIngredients(){
+        return this.ingredients;
     }
 
     public int describeContents() {
