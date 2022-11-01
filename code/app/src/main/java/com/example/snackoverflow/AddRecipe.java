@@ -41,6 +41,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     private ArrayList<Ingredient> ingredients;
     private Button showMore;
     private Button addIngredient;
+    private Button addRecipe;
     private TextInputLayout instructionsText;
     private TextInputLayout commentsText;
     private Fragment IngredientsView;
@@ -62,6 +63,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         ingredient_3 = findViewById(R.id.Ingredient_3);
         showMore = findViewById(R.id.recipe_showmore);
         addIngredient = findViewById(R.id.recipe_add_ingredient);
+        addRecipe = findViewById(R.id.recipe_add_recipe);
 
         ingredients = new ArrayList<Ingredient>();
         ingredient_views = new ArrayList<TextView>();
@@ -117,6 +119,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
             @Override
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
+                addRecipe.setEnabled(false);
+                addRecipe.setVisibility(View.GONE);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.constraintLayout, IngredientsView)
@@ -128,14 +132,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
-        int last_index = ingredients.size()-1;
-        for (int i = 0; i<=last_index;i++){
-            ingredient_views.get(i).setText(ingredients.get(last_index - i).getDescription());
-            if (i == 2){
-                break;
-            }
-        }
-
+        refreshIngredientsShown();
     }
 
     @Override
@@ -153,9 +150,21 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
             getSupportFragmentManager().beginTransaction()
                     .remove(IngredientsView)
                     .commit();
+            addRecipe.setEnabled(true);
+            addRecipe.setVisibility(View.VISIBLE);
+            refreshIngredientsShown();
         }
         else {
             super.onBackPressed();
+        }
+    }
+    private void refreshIngredientsShown(){
+        int last_index = ingredients.size()-1;
+        for (int i = 0; i<=last_index;i++){
+            ingredient_views.get(i).setText(ingredients.get(last_index - i).getDescription());
+            if (i == 2){
+                break;
+            }
         }
     }
 }

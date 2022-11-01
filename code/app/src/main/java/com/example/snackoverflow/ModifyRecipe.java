@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
@@ -33,6 +34,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     private TextView ingredient_3;
     private ArrayList<TextView> ingredient_views;
     private ArrayList<Ingredient> ingredients;
+    private Fragment IngredientsView;
     private Button showMore;
     private Button addIngredient;
 
@@ -179,6 +181,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                IngredientsView = new RecipeIngredientViewFragment(ingredients);
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.constraintLayout, IngredientsView)
+                        .commit();
             }
         });
 
@@ -199,6 +206,30 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
+        refreshIngredientsShown();
+    }
+
+    @Override
+    public void editIngredient(Ingredient ingredient) {
+        IngredientsView = new RecipeIngredientViewFragment(ingredients);
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.constraintLayout, IngredientsView).commit();
+    }
+    @Override
+    public void onBackPressed() {
+        if (IngredientsView != null){
+            System.out.println("back");
+            getSupportFragmentManager().beginTransaction()
+                    .remove(IngredientsView)
+                    .commit();
+            refreshIngredientsShown();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+    private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i<=last_index;i++){
             ingredient_views.get(i).setText(ingredients.get(last_index - i).getDescription());
@@ -206,11 +237,5 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 break;
             }
         }
-
-    }
-
-    @Override
-    public void editIngredient(Ingredient ingredient) {
-
     }
 }

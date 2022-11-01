@@ -97,7 +97,7 @@
             android:id="@+id/Ingredient_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_bg"
+            android:background="#E1E3E5"
             android:text="Ingredient"
             android:textSize="20sp" />
 
@@ -105,7 +105,8 @@
             android:id="@+id/Ingredient_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_bg"
+            android:layout_marginTop="2dp"
+            android:background="#E1E3E5"
             android:text="Ingredient"
             android:textSize="20sp" />
 
@@ -113,7 +114,8 @@
             android:id="@+id/Ingredient_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_bg"
+            android:layout_marginTop="2dp"
+            android:background="#E1E3E5"
             android:text="Ingredient"
             android:textSize="20sp" />
 
@@ -181,7 +183,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/recipe_add_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

@@ -9,22 +9,20 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:boxBackgroundColor="#FFFFFF"
-        app:boxStrokeColor="#FAF8F8">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_bg"
             android:hint="Description"
-            android:textColorHint="#1B5E20"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:textColorHint="#1B5E20" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -33,17 +31,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:paddingRight="10dp"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#FAF8F8">
+            android:paddingRight="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_bg"
                 android:hint="Amount"
-                android:textColorHint="#757575"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:textColorHint="#757575" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -51,17 +46,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:paddingLeft="10dp"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#FAF8F8">
+            android:paddingLeft="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_bg"
                 android:hint="Unit"
-                android:textColorHint="#757575"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:textColorHint="#757575" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
@@ -70,16 +62,14 @@
         android:id="@+id/text_input_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxBackgroundColor="#FFFFFF"
-        app:boxStrokeColor="#FAF8F8">
+        android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_bg"
             android:hint="Category"
-            android:textColorHint="#757575"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
