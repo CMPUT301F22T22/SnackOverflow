@@ -1,8 +1,12 @@
 package com.example.snackoverflow;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public abstract class FirestoreDatabase {
 
-    FirestoreDatabase db;
+    final static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    final static CollectionReference ingredientsCollection = db.collection("ingredient");
 
     void addIngredient() {};
 
