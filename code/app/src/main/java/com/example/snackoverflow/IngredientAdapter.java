@@ -13,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import java.sql.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     private ArrayList<Ingredient> ingredients;
@@ -73,4 +77,18 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         }
         return view;
     }
+
+//    TODO: use this function to get string format
+//    /**
+//     * Build text for best before date
+//     * @param ingredient The ingredient
+//     * @return The best before date info in string format
+//     */
+//    private String getDateText(Ingredient ingredient) {
+//        Date date = ingredient.getBestBefore();
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//        return dateFormat.format(date);
+//    }
+
 }

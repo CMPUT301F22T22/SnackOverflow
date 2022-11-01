@@ -52,6 +52,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         setContentView(R.layout.activity_modify_recipe);
 
         imageView = findViewById(R.id.edit_recipe_photo);
+        String id = "1";
 
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -168,6 +169,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                         ingredients.equals("") || comments.equals("")) {
 
                 } else {
+                    FirestoreDatabase.deleteRecipe(id);
                     finish();
                 }
             }
