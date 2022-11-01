@@ -3,45 +3,51 @@ package com.example.snackoverflow;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public abstract class FirestoreDatabase {
+import java.util.Map;
+
+public class FirestoreDatabase {
 
     final static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    final static CollectionReference ingredientsCollection = db.collection("ingredient");
+    final static CollectionReference recipeCol = db.collection("recipe");
 
-    void addIngredient() {};
+    static void addIngredient() {};
 
-    void modifyIngredient() {};
+    static void modifyIngredient() {};
 
-    void deleteIngredient() {};
+    static void deleteIngredient() {};
 
-    void fetchIngredients() {};
+    static void fetchIngredients() {};
 
-    void addRecipe() {};
+    static void addRecipe() {};
 
-    void modifyRecipe() {};
+    static void modifyRecipe(String id, Map<String, Object> data) {
+        recipeCol.document(id).update(data);
+    };
 
-    void deleteRecipe() {};
+    static void deleteRecipe(String id) {
+        recipeCol.document(id).delete();
+    };
 
-    void fetchRecipes() {};
+    static void fetchRecipes() {};
 
-    void addMealPlan() {};
+    static void addMealPlan() {};
 
-    void modifyMealPlan() {};
+    static void modifyMealPlan() {};
 
-    void deleteMealPlan() {};
+    static void deleteMealPlan() {};
 
-    void fetchMealPlans() {};
+    static void fetchMealPlans() {};
 
-    void addShoppingList() {};
+    static void addShoppingList() {};
 
-    void addToShoppingList() {};
+    static void addToShoppingList() {};
 
-    void modifyShoppingList() {};
+    static void modifyShoppingList() {};
 
-    void deleteShoppingList() {};
+    static void deleteShoppingList() {};
 
-    void deleteFromShoppingList() {};
+    static void deleteFromShoppingList() {};
 
-    void fetchShoppingList() {};
+    static void fetchShoppingList() {};
 
 }
