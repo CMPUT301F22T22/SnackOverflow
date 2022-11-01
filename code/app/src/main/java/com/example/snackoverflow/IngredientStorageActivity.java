@@ -24,7 +24,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
 
-    // TODO: Maybe change category to radio buttons for user to select
+    // TODO: Maybe change location to radio buttons for user to select
     //TODO: fix best before display as it only shows null now
     @Override
     protected void onCreate(Bundle savedInstanceState) {
