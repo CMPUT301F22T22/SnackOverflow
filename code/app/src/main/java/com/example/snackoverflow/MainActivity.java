@@ -132,4 +132,9 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         recipes.add(recipe);
         meals.add(new Mealday(date, recipes));
     }
+
+    @Override
+    public void deleteMealDay(Mealday mealDay) {
+        meals.remove(mealDay);
+    }
 }

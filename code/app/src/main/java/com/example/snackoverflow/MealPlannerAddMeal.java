@@ -30,6 +30,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class MealPlannerAddMeal extends DialogFragment implements AdapterView.OnItemSelectedListener {
     // Check if we are editing data
@@ -56,6 +57,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
     public interface OnFragmentInteractionListener {
         void addMeal(Recipe recipe, LocalDate date);
+
+        void deleteMealDay(Mealday mealDay);
     }
 
     @Override
@@ -125,13 +128,17 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                     .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String date_text = TextInputDate.getEditText().getText().toString();
-                            recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
-                            try {
-                                LocalDate date = stringToDate(date_text);
-                                listener.addMeal(recipe, date);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                            if(Objects.equals(spinner.getSelectedItemPosition(), 0)){
+                            }
+                            else{
+                                String date_text = TextInputDate.getEditText().getText().toString();
+                                recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+                                try {
+                                    LocalDate date = stringToDate(date_text);
+                                    listener.addMeal(recipe, date);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }).create();
@@ -142,7 +149,16 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
             return builder
                     .setView(view)
                     .setTitle("Edit Meal")
-                    .setNegativeButton("Cancel", null)
+                    .setNeutralButton("Cancel", null)
+                    .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mealDay.getMeals().remove(recipe);
+                            if (mealDay.getMeals().size() == 0){
+                                listener.deleteMealDay(mealDay);
+                            }
+                        }
+                    })
                     .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
