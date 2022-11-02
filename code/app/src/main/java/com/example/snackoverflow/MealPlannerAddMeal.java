@@ -88,7 +88,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         recipeDataList = new ArrayList<Recipe>();
 
         for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA"));
+            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA"));
         }
         //
 
