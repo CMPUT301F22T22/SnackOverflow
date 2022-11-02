@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.TypedArrayUtils;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class MealPlannerAddMeal extends DialogFragment implements AdapterView.OnItemSelectedListener {
@@ -37,12 +39,19 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     // Data storage
     private Spinner spinner;
     private TextInputLayout TextInputDate;
+    private Mealday mealDay;
+    private Recipe recipe;
     // listener for Meal Planner
     public OnFragmentInteractionListener listener;
 
     // constructor
     public MealPlannerAddMeal() {
         edit = false;
+    }
+    public MealPlannerAddMeal(Mealday mealDay, Recipe recipe){
+        this.edit = true;
+        this.mealDay = mealDay;
+        this.recipe = recipe;
     }
 
     public interface OnFragmentInteractionListener {
@@ -108,23 +117,47 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
-                .setView(view)
-                .setTitle("Add Ingredient")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String date_text = TextInputDate.getEditText().getText().toString();
-                        Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
-                        try {
-                            LocalDate date = stringToDate(date_text);
-                            listener.addMeal(recipe, date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+        if (edit == false) {
+            return builder
+                    .setView(view)
+                    .setTitle("Add Meal")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String date_text = TextInputDate.getEditText().getText().toString();
+                            recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+                            try {
+                                LocalDate date = stringToDate(date_text);
+                                listener.addMeal(recipe, date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }).create();
+                    }).create();
+        }
+        else{
+            spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
+            TextInputDate.getEditText().setText(mealDay.getDate().toString());
+            return builder
+                    .setView(view)
+                    .setTitle("Edit Meal")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mealDay.getMeals().remove(recipe);
+                            String date_text = TextInputDate.getEditText().getText().toString();
+                            Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+                            try {
+                                LocalDate date = stringToDate(date_text);
+                                listener.addMeal(recipe, date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).create();
+        }
     }
     private void isValidDate(EditText edt) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");

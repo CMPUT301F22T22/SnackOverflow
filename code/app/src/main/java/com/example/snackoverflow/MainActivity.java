@@ -3,6 +3,7 @@ package com.example.snackoverflow;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -66,7 +67,8 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FloatingActionButton addMeal = findViewById(R.id.add_mealplan);
         data();
 
-        mealdayAdapter = new MealdayAdapter(this,meals);
+        FragmentManager fm = getSupportFragmentManager();
+        mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
 
         mealslist.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -119,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
 
     @Override
     public void addMeal(Recipe recipe, LocalDate date) {
-        System.out.println(date.toString());
         for(int i=0;i<meals.size();i++){
             if (Objects.equals(meals.get(i).getDate() ,date)){
                 System.out.println("Date is right");
