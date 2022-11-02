@@ -15,15 +15,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class IngredientStorageActivity extends AppCompatActivity implements AddIngredientFragment.OnFragmentInteractionListener {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
-    private String TAG = "IngredientStorageActivity";
 
     // TODO: Maybe change location to radio buttons for user to select
     //TODO: fix best before display as it only shows null now
@@ -31,7 +28,6 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient_storage);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         ingredientStorageList = findViewById(R.id.ingredient_storage_list);
         ingredients = new ArrayList<>();
         //ingredients.add(new Ingredient("Apple", "2022-09-08", "Pantry", 65, 7, "Fresh Produce"));
@@ -40,6 +36,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
 
         ingredientStorageList.setAdapter(ingredientArrayAdapter);
+        FirestoreDatabase.fetchIngredients(ingredientArrayAdapter);
 
         ingredientStorageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
