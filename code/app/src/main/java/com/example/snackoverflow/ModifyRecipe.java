@@ -16,6 +16,9 @@ import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -51,6 +54,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_recipe);
 
+        Intent intent = getIntent();
+        Recipe recipe = intent.getParcelableExtra("recipe");
         imageView = findViewById(R.id.edit_recipe_photo);
         String id = "1";
 
@@ -58,12 +63,12 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent intent = result.getData();
-                        if (intent != null) {
+                        Intent imageIntent = result.getData();
+                        if (imageIntent != null) {
                             System.out.println("intent is not null");
-                            System.out.println(intent);
-                            System.out.println(intent.getData());
-                            Uri uri = intent.getData();
+                            System.out.println(imageIntent);
+                            System.out.println(imageIntent.getData());
+                            Uri uri = imageIntent.getData();
                             // set the display picture to the
                             // picture that was selected by the user
                             imageView.setImageURI(uri);
@@ -164,12 +169,17 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             public void onClick(View view) {
                 String category = categoryField.getText().toString();
                 String servings = servingsField.getText().toString();
+                String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
                 if (category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
-
                 } else {
-                    FirestoreDatabase.deleteRecipe(id);
+                    Map<String, Object> data= new HashMap<String, Object>();
+                    data.put("category", category);
+                    data.put("servings", servings);
+                    data.put("instructions", instructions);
+                    data.put("comments", comments);
+//                    FirestoreDatabase.modifyRecipe(id, data);
                     finish();
                 }
             }
