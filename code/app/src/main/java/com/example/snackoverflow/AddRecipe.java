@@ -161,7 +161,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i<=last_index;i++){
-            ingredient_views.get(i).setText(ingredients.get(last_index - i).getDescription());
+            ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
             if (i == 2){
                 break;
             }

@@ -67,7 +67,7 @@ public class RecipeAddIngredientFragment extends DialogFragment {
         if (edit == true){
             // MAKE CHANGES WHEN INGREDIENT MADE
             // Set data
-            textInputDescription.getEditText().setText(ingredient.getDescription());
+            textInputDescription.getEditText().setText(ingredient.getTitle());
             textInputLayout.getEditText().setText(String.valueOf(ingredient.getAmount()));
             textInputUnit.getEditText().setText(String.valueOf(ingredient.getUnit()));
             textInputCategory.getEditText().setText(ingredient.getCategory());
@@ -106,7 +106,7 @@ public class RecipeAddIngredientFragment extends DialogFragment {
                             String Category = textInputCategory.getEditText().getText().toString();
 
                             if (!Objects.equals(Description, "")){
-                                ingredient.setDescription(Description);
+                                ingredient.setTitle(Description);
                             }
                             if (!Objects.equals(Amount, "")){
                                 ingredient.setAmount(Amount);

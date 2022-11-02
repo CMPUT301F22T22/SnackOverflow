@@ -1,13 +1,10 @@
 package com.example.snackoverflow;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
-public class Ingredient implements Serializable {
-    private String description;
+public class Ingredient implements Serializable  {
+    private String title;
     private Date bestBefore;
     private String location;
     private int amount;
@@ -15,19 +12,19 @@ public class Ingredient implements Serializable {
     private String category;
 
     public Ingredient(String description, Date dt, String location, int amount, int unit, String category) {
-        this.description = description;
+        this.title = description;
         this.location = location;
         this.amount = amount;
         this.unit = unit;
         this.category = category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTitle() {
+        return title;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Date getBestBefore() {
@@ -75,6 +72,6 @@ public class Ingredient implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return description.equals(that.description) && bestBefore.equals(that.bestBefore);
+        return title.equals(that.title);
     }
 }

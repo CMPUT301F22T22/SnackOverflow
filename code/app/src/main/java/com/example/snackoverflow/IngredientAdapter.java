@@ -51,7 +51,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         }
         Ingredient ingredient = ingredients.get(position);
         TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
-        ingredientDescription.setText(ingredient.getDescription());
+        ingredientDescription.setText(ingredient.getTitle());
 
         if (recipeCheck == false){
             TextView ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore);
