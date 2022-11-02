@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 public class IngredientDetailsActivity extends AppCompatActivity {
 
     @Override
@@ -30,7 +27,7 @@ public class IngredientDetailsActivity extends AppCompatActivity {
 
         //String bestBefore = sdf.format(selectedIngredient.getBestBefore());
 
-        ingredientDescription.setText(selectedIngredient.getDescription());
+        ingredientDescription.setText(selectedIngredient.getTitle());
         ingredientUnit.setText(String.valueOf(selectedIngredient.getUnit()));
         ingredientBestBefore.setText(String.valueOf(selectedIngredient.getBestBefore()));
         ingredientLocation.setText(selectedIngredient.getLocation());
