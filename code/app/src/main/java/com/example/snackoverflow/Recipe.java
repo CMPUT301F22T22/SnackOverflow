@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Recipe implements Serializable, Parcelable {
+    private String id;
     private String title;
-    private LocalTime preptime;
+    private int preptime;
     private float servings;
     private String recipeCategory;
     private String comments;
@@ -18,7 +19,8 @@ public class Recipe implements Serializable, Parcelable {
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, LocalTime preptime, float servings, String recipeCategory, String comments) {
+    public Recipe(String id, String title, int preptime, float servings, String recipeCategory, String comments) {
+        this.id = id;
         this.title = title;
         this.preptime = preptime;
         this.servings = servings;
@@ -28,6 +30,7 @@ public class Recipe implements Serializable, Parcelable {
     }
 
     protected Recipe(Parcel in) {
+        id = in.readString();
         title = in.readString();
         servings = in.readFloat();
         recipeCategory = in.readString();
@@ -47,6 +50,10 @@ public class Recipe implements Serializable, Parcelable {
         }
     };
 
+    public String getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -55,11 +62,11 @@ public class Recipe implements Serializable, Parcelable {
         this.title = title;
     }
 
-    public LocalTime getPreptimeTime() {
+    public int getPreptimeTime() {
         return preptime;
     }
 
-    public void setPreptimeTime(LocalTime time) {
+    public void setPreptimeTime(int time) {
         this.preptime = preptime;
     }
 
@@ -105,6 +112,7 @@ public class Recipe implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(id);
         parcel.writeString(recipeCategory);
         parcel.writeFloat(servings);
         parcel.writeString(comments);
