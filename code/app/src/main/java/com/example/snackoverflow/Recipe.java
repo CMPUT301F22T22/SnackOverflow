@@ -18,8 +18,7 @@ public class Recipe implements Serializable, Parcelable {
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String id, String title, int preptime, float servings, String recipeCategory, String comments) {
-        this.id = id;
+    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments) {
         this.title = title;
         this.preptime = preptime;
         this.servings = servings;

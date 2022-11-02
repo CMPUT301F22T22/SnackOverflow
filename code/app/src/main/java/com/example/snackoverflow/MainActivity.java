@@ -82,23 +82,23 @@ public class MainActivity extends AppCompatActivity {
      */
     private void data(){
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
         Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
-        Tuesday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Tuesday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
-        Tuesday.add(new Recipe("nidal", LocalTime.now(),2.5f,"Lunch","nice"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
         Mealday tuesday = new Mealday(LocalDate.parse("2022-10-21"),Monday);
 
         meals.add(monday);
