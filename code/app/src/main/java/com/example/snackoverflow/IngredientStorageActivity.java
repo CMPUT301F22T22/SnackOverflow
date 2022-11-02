@@ -23,6 +23,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
+    private String TAG = "IngredientStorageActivity";
 
     // TODO: Maybe change location to radio buttons for user to select
     //TODO: fix best before display as it only shows null now
@@ -94,5 +95,6 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     @Override
     public void onOkPressed(Ingredient selectedIngredient) {
         ingredientArrayAdapter.add(selectedIngredient);
+        FirestoreDatabase.addIngredient(selectedIngredient);
     }
 }

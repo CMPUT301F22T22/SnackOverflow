@@ -1,16 +1,13 @@
 package com.example.snackoverflow;
 
-import static android.content.ContentValues.TAG;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,8 +19,26 @@ public class FirestoreDatabase {
 
     final static FirebaseFirestore db = FirebaseFirestore.getInstance();
     final static CollectionReference recipeCol = db.collection("recipe");
+    final static CollectionReference ingredientsCol = db.collection("ingredient");
 
-    static void addIngredient() {};
+    private final static String IngredeintsTAG = "IngredientStorageActivity";
+
+    static void addIngredient(Ingredient newIngredient) {
+                ingredientsCol
+                .add(newIngredient)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(IngredeintsTAG, "Ingredient DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(IngredeintsTAG, "Error adding ingredient document", e);
+                    }
+                });
+    };
 
     static void modifyIngredient() {};
 
