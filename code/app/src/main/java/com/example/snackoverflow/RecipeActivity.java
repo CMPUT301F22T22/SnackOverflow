@@ -2,8 +2,10 @@ package com.example.snackoverflow;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -35,7 +37,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         //Test Data
         for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA"));
+            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA"));
         }
 
         recipeArrayAdapter = new RecipeAdapter(this, recipeDataList);
@@ -65,12 +67,21 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
+                intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
+                startActivity(intent);
+            }
+        });
+
         //Modify Button //TODO: Replace functionality or change when tests done
         FloatingActionButton modifyRecipeTestButton = findViewById(R.id.add_recipe_button);
         modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
+                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
 //                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
                 startActivity(intent);
             }
