@@ -36,7 +36,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         //Test Data
         for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], LocalTime.now(),2.0f,"Lunch","HAHA"));
+            recipeDataList.add(new Recipe("1",recipestitle[i], 120,2.0f,"Lunch","HAHA"));
         }
 
         recipeArrayAdapter = new RecipeAdapter(this, recipeDataList);

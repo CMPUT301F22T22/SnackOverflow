@@ -169,6 +169,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             public void onClick(View view) {
                 String category = categoryField.getText().toString();
                 String servings = servingsField.getText().toString();
+                String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
                 if (category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
