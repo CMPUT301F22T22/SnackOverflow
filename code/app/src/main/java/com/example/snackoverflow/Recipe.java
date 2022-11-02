@@ -28,7 +28,6 @@ public class Recipe implements Serializable, Parcelable {
     }
 
     protected Recipe(Parcel in) {
-        id = in.readString();
         title = in.readString();
         servings = in.readFloat();
         recipeCategory = in.readString();
@@ -120,9 +119,9 @@ public class Recipe implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(recipeCategory);
+        parcel.writeString(title);
         parcel.writeFloat(servings);
+        parcel.writeString(recipeCategory);
         parcel.writeString(comments);
     }
 
