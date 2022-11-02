@@ -103,6 +103,7 @@ public class AddIngredientFragment extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // TODO: make variable names more descriptive
                         String a = ingredientDesc.getText().toString();
                         Integer b = (int) Math.ceil(Double.parseDouble(ingredientAmount.getText().toString()));
                         Integer c = Integer.parseInt(ingredientUnit.getText().toString());
