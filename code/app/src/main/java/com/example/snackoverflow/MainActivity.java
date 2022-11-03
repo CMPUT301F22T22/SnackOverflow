@@ -132,10 +132,16 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         ArrayList<Recipe> recipes = new ArrayList<Recipe>();
         recipes.add(recipe);
         meals.add(new Mealday(date, recipes));
+        FragmentManager fm = getSupportFragmentManager();
+        mealdayAdapter = new MealdayAdapter(this,meals,fm);
+        mealslist.setAdapter(mealdayAdapter);
     }
 
     @Override
     public void deleteMealDay(Mealday mealDay) {
         meals.remove(mealDay);
+        FragmentManager fm = getSupportFragmentManager();
+        mealdayAdapter = new MealdayAdapter(this,meals,fm);
+        mealslist.setAdapter(mealdayAdapter);
     }
 }
