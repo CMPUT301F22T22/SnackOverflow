@@ -28,7 +28,6 @@ public class AddIngredientFragment extends DialogFragment {
     private EditText ingredientLocation;
     private EditText ingredientCategory;
     private OnFragmentInteractionListener listener;
-    private Ingredient selectedIngredient;
 
     @Override
     public void onStart() {
@@ -104,30 +103,28 @@ public class AddIngredientFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO: make variable names more descriptive
-                        String a = ingredientDesc.getText().toString();
-                        Integer b = (int) Math.ceil(Double.parseDouble(ingredientAmount.getText().toString()));
-                        Integer c = Integer.parseInt(ingredientUnit.getText().toString());
-                        Date d = null;
+                        String ingredientDescString = ingredientDesc.getText().toString();
+                        Integer ingredientAmountInt = (int) Math.ceil(Double.parseDouble(ingredientAmount.getText().toString()));
+                        Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
+                        Date ingredientBestBeforeDate = null;
                         try {
-                            d = dateFormat.parse(ingredientBestBefore.getText().toString());
+                            ingredientBestBeforeDate = dateFormat.parse(ingredientBestBefore.getText().toString());
                         }
                         catch (ParseException e) {
                             e.printStackTrace();
                         }
 
-                        String e = ingredientLocation.getText().toString();
-                        String f = ingredientCategory.getText().toString();
-                        listener.onOkPressed(new Ingredient(a, d, e, c, b, f));
+                        String ingredientLocationString = ingredientLocation.getText().toString();
+                        String ingredientCategoryString = ingredientCategory.getText().toString();
+                        listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
                     }
                 }).create();
-
-
     }
 
     private void isValidDate(EditText edt) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
-            String after = dateFormat.format(dateFormat.parse(edt.getText().toString()));
+            String formattedDate = dateFormat.format(dateFormat.parse(edt.getText().toString()));
         } catch (ParseException e) {
             edt.setError("Format: yyyy-mm-dd");
         }
@@ -136,7 +133,6 @@ public class AddIngredientFragment extends DialogFragment {
 
     private void isValidLocation(EditText edt) {
         String txt = edt.getText().toString();
-
         if (!txt.matches("Pantry|Freezer|Fridge")) {
             edt.setError("One of Pantry, Fridge, or Freezer");
         }

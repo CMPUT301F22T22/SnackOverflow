@@ -24,15 +24,13 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     private ArrayList<Ingredient> ingredients;
 
     // TODO: Maybe change location to radio buttons for user to select
-    //TODO: fix best before display as it only shows null now
+    // TODO: Error Check if the user adds an ingredient with incomplete details
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient_storage);
         ingredientStorageList = findViewById(R.id.ingredient_storage_list);
         ingredients = new ArrayList<>();
-        //ingredients.add(new Ingredient("Apple", "2022-09-08", "Pantry", 65, 7, "Fresh Produce"));
-        //ingredients.add(new Ingredient("Yogurt", "2022-09-08", "Fridge", 12, 2, "Dairy"));
 
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
 
@@ -98,7 +96,6 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
 
     @Override
     public void onOkPressed(Ingredient selectedIngredient) {
-        //ingredientArrayAdapter.add(selectedIngredient);
         FirestoreDatabase.addIngredient(selectedIngredient);
     }
 }
