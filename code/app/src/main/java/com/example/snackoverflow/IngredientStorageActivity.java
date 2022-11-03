@@ -73,6 +73,8 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
                 {
                     case R.id.ingredients:
                     case R.id.shoppinglist:
+                        startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.mealplanner:
                         startActivity(new Intent(getApplicationContext(),MainActivity.class));

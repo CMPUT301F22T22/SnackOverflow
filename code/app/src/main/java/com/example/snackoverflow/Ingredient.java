@@ -11,12 +11,22 @@ public class Ingredient implements Serializable  {
     private int unit;
     private String category;
 
+    public Ingredient(String description, int amount, int unit, String category)  {
+        this.title = description;
+        this.location = null;
+        this.amount = amount;
+        this.unit = unit;
+        this.category = category;
+        this.bestBefore = null;
+    }
+
     public Ingredient(String description, Date dt, String location, int amount, int unit, String category) {
         this.title = description;
         this.location = location;
         this.amount = amount;
         this.unit = unit;
         this.category = category;
+        this.bestBefore = dt;
     }
 
     public String getTitle() {
