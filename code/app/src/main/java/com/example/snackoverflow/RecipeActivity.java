@@ -125,7 +125,7 @@ public class RecipeActivity extends AppCompatActivity {
         modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
+                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
                 startActivity(intent);
             }
         });

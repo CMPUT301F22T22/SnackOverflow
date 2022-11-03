@@ -57,6 +57,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         else{
             if(view == null){
                 view = LayoutInflater.from(context).inflate(R.layout.recipe_ingredient_content, parent,false);
+                System.out.println("drawn");
             }
             Ingredient ingredient = ingredients.get(position);
             TextView ingredientDescription = view.findViewById(R.id.ingredient_description);

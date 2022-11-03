@@ -117,10 +117,11 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
                 addRecipe.setVisibility(View.GONE);
+                findViewById(R.id.constraintLayout).setVisibility(View.INVISIBLE);
                 changeClickState(false);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.constraintLayout, IngredientsView)
+                        .replace(R.id.Main, IngredientsView)
                         .commit();
             }
         });
@@ -150,6 +151,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             addRecipe.setVisibility(View.VISIBLE);
             refreshIngredientsShown();
             changeClickState(true);
+            findViewById(R.id.constraintLayout).setVisibility(View.VISIBLE);
         }
         else {
             super.onBackPressed();
@@ -186,6 +188,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.constraintLayout, IngredientsView).commit();
+                .replace(R.id.Main, IngredientsView)
+                .commit();
     }
 }

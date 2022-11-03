@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -221,10 +220,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             @Override
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
+                findViewById(R.id.constraintLayout).setVisibility(View.INVISIBLE);
                 changeClickState(false);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.constraintLayout, IngredientsView)
+                        .replace(R.id.Main, IngredientsView)
                         .commit();
             }
         });
@@ -254,7 +254,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.constraintLayout, IngredientsView).commit();
+                .replace(R.id.Main, IngredientsView).commit();
     }
     @Override
     public void onBackPressed() {
@@ -265,6 +265,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     .commit();
             changeClickState(true);
             refreshIngredientsShown();
+            findViewById(R.id.constraintLayout).setVisibility(View.VISIBLE);
         }
         else {
             super.onBackPressed();
@@ -296,6 +297,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         viewButton.setEnabled(state);
         editButton.setEnabled(state);
         applyButton.setEnabled(state);
+        deleteButton.setEnabled(state);
     }
 
     @Override
@@ -304,6 +306,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.constraintLayout, IngredientsView).commit();
+                .replace(R.id.Main, IngredientsView)
+                .commit();
     }
 }
