@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class RecipeActivity extends AppCompatActivity {
@@ -37,7 +36,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         //Test Data
         for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA"));
+            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil" ));
         }
 
         recipeArrayAdapter = new RecipeAdapter(this, recipeDataList);

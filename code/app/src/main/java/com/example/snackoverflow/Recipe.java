@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Recipe implements Serializable, Parcelable {
@@ -13,12 +12,13 @@ public class Recipe implements Serializable, Parcelable {
     private int preptime;
     private float servings;
     private String recipeCategory;
+    private String instructions;
     private String comments;
     private ArrayList<Ingredient> ingredients ;
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments) {
+    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions) {
         this.title = title;
         this.preptime = preptime;
         this.servings = servings;
@@ -91,6 +91,15 @@ public class Recipe implements Serializable, Parcelable {
     public void setComments(String comments) {
         this.comments = comments;
     }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
 
     public void addIngredient(Ingredient ingredient){
         if (!ingredients.contains(ingredient)){
