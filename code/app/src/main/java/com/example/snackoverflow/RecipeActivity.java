@@ -56,6 +56,9 @@ public class RecipeActivity extends AppCompatActivity {
                 switch(item.getItemId())
                 {
                     case R.id.shoppinglist:
+                        startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
                     case R.id.recipes:
                         return true;
                     case R.id.ingredients:
@@ -121,10 +124,12 @@ public class RecipeActivity extends AppCompatActivity {
         modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
-//                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
+                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
                 startActivity(intent);
             }
         });
+    }
+    public ArrayList<Recipe> getRecipes(){
+        return recipeDataList;
     }
 }
