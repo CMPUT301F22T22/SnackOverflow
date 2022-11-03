@@ -84,7 +84,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
      * @param ingredient The ingredient
      * @return The best before date info in string format
      */
-    private String getDateText(Ingredient ingredient) {
+    protected static String getDateText(Ingredient ingredient) {
         Date date = ingredient.getBestBefore();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
