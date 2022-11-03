@@ -11,10 +11,16 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -48,6 +54,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     private Button viewButton;
     private Button deleteButton;
 
+    public Uri imageUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Set variables to data stored in recipe object
@@ -74,6 +82,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                             imageView.setImageURI(uri);
                             imageView.setBackgroundResource(0);
                             imageView.setPadding(0, 0, 0, 0);
+                            imageUri = uri;
                         }
                     }
                 });
@@ -174,6 +183,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 if (category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
                 } else {
+                    if (imageUri != null) {
+                        uploadImage(imageUri, id);
+                    }
                     Map<String, Object> data= new HashMap<String, Object>();
                     data.put("category", category);
                     data.put("servings", servings);
@@ -249,5 +261,22 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 break;
             }
         }
+    }
+    public void uploadImage(Uri uri, String id) {
+        String filename = id;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference().child("images/"+filename);
+        storageReference.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        System.out.println("GREAT SUCCESS");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("USELESS");
+                    }
+                });
     }
 }
