@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 {
                     case R.id.mealplanner:
                     case R.id.shoppinglist:
+                        startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.ingredients:
                         startActivity(new Intent(getApplicationContext(),IngredientStorageActivity.class));
