@@ -36,7 +36,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
 
         ingredientStorageList.setAdapter(ingredientArrayAdapter);
-        FirestoreDatabase.fetchIngredients(ingredientArrayAdapter);
+        FirestoreDatabase.fetchIngredients(ingredientArrayAdapter, ingredients);
 
         ingredientStorageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -91,7 +91,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
 
     @Override
     public void onOkPressed(Ingredient selectedIngredient) {
-        ingredientArrayAdapter.add(selectedIngredient);
+        //ingredientArrayAdapter.add(selectedIngredient);
         FirestoreDatabase.addIngredient(selectedIngredient);
     }
 }
