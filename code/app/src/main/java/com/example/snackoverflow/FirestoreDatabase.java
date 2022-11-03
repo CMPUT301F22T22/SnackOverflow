@@ -16,10 +16,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
 import java.util.Date;
->>>>>>> eaee606 (add firestore functions to add/delete/fetch ingredients)
 import java.util.Map;
 
 public class FirestoreDatabase {
