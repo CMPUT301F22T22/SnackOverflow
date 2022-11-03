@@ -47,9 +47,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 interface FirebaseListener {
-    public void onAction(String title, int prep_time, float servings, String category, String comments,
+    void onAction(String title, int prep_time, float servings, String category, String comments,
                           String instructions,@Nullable Bitmap imgBitmap);
 }
+
 public class RecipeActivity extends AppCompatActivity implements FirebaseListener{
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
