@@ -14,12 +14,18 @@ import android.widget.ExpandableListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.time.LocalDate;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
+// Note: For now meal plan is implemented as a list of recipes as
+// none of other functionalities are implemented
 public class MainActivity extends AppCompatActivity implements MealPlannerAddMeal.OnFragmentInteractionListener{
 
+    //TODO: Follow camel case naming convention
     ExpandableListView mealslist;
     ArrayList<Mealday> meals = new ArrayList<>();
     ExpandableListAdapter mealdayAdapter;
@@ -81,10 +87,13 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         });
     }
 
+
+
     /*
     Test DATA
      */
     private void data(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
         Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
         Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
@@ -92,35 +101,48 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
         Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
         Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Mealday monday = new Mealday(LocalDate.now(),Monday);
+        //Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
         
         Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil" ));
         Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil"));
         Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice", "boil"));
-        Mealday tuesday = new Mealday(LocalDate.parse("2022-10-21"),Monday);
+        Mealday tuesday = null;
+        try {
+            tuesday = new Mealday(dateFormat.parse("2022-10-21"),Monday);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        meals.add(monday);
-        meals.add(tuesday);
+        //meals.add(monday);
+       // meals.add(tuesday);
 
     }
 
     @Override
-    public void addMeal(Recipe recipe, LocalDate date) {
-        for(int i=0;i<meals.size();i++){
+    public void addMeal(Recipe recipe, Date date) {
+        for(int i=0;i<meals.size();i++) {
             if (Objects.equals(meals.get(i).getDate() ,date)){
-                System.out.println("Date is right");
+                System.out.println("Dates are equal");
                 meals.get(i).getMeals().add(recipe);
+                for(Recipe r : meals.get(i).getMeals()) {
+                    System.out.println(r.getTitle());
+
+                }
+                // update recipes
+                //FirestoreDatabase.modifyMealPlan(i,meals);
                 return;
             }
         }
         ArrayList<Recipe> recipes = new ArrayList<Recipe>();
         recipes.add(recipe);
-        meals.add(new Mealday(date, recipes));
+        Mealday mealDay = new Mealday(date, recipes);
+        meals.add(mealDay);
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
+        //FirestoreDatabase.addMealPlan(mealDay);
     }
 
     @Override

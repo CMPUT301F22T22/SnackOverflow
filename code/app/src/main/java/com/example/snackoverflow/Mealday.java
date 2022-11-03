@@ -1,6 +1,5 @@
 package com.example.snackoverflow;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,19 +7,20 @@ import java.util.Date;
 This class stores the recipes stored/planned for the day
  */
 public class Mealday {
-    private LocalDate date;
+    private Date date;
     private ArrayList<Recipe> meals;
+    protected String id;
 
-    public Mealday(LocalDate date, ArrayList<Recipe> meals) {
+    public Mealday(Date date, ArrayList<Recipe> meals) {
         this.meals = meals;
         this.date = date;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

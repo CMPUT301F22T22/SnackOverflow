@@ -24,10 +24,10 @@ import androidx.fragment.app.DialogFragment;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class MealPlannerAddMeal extends DialogFragment implements AdapterView.OnItemSelectedListener {
@@ -56,7 +56,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     }
 
     public interface OnFragmentInteractionListener {
-        void addMeal(Recipe recipe, LocalDate date);
+        void addMeal(Recipe recipe, Date date);
 
         void deleteMealDay(Mealday mealDay);
     }
@@ -80,6 +80,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.mealplanner_add_meal_fragment, null);
         spinner = view.findViewById(R.id.spinner);
         TextViewDate = view.findViewById(R.id.text_view_date);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 
         TextViewDate.setOnClickListener(new View.OnClickListener(){
 
@@ -150,14 +151,16 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                             }
                             else{
                                 String date_text = TextViewDate.getText().toString();
+                                //TODO: is this check necessary?
                                 if(Objects.equals(date_text,"Date")){
                                     new ErrorFragment("Invalid Date Chosen").show(getParentFragmentManager(), "error");
                                 }
                                 else {
                                     recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
-                                    LocalDate date = null;
+                                    Date date = null;
                                     try {
-                                        date = stringToDate(date_text);
+//                                      date = stringToDate(date_text);
+                                        date = dateFormat.parse(date_text);
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
@@ -197,7 +200,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 String date_text = TextViewDate.getText().toString();
                                 Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
                                 try {
-                                    LocalDate date = stringToDate(date_text);
+//                                    LocalDate date = stringToDate(date_text);
+                                    Date date = dateFormat.parse(date_text);
                                     listener.addMeal(recipe, date);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -226,9 +230,9 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
     }
 
-    private LocalDate stringToDate(String adate) throws ParseException {
-        LocalDate Date = LocalDate.parse(adate);
-        return Date;
-    }
+//    private LocalDate stringToDate(String adate) throws ParseException {
+//        LocalDate Date = LocalDate.parse(adate);
+//        return Date;
+//    }
 
 }

@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MealdayAdapter implements ExpandableListAdapter {
 
@@ -96,7 +98,10 @@ public class MealdayAdapter implements ExpandableListAdapter {
         }
 
         parentHolder.mealday = (TextView) convertView.findViewById(R.id.text_meal);
-        parentHolder.mealday.setText(mealday.getDate().getDayOfWeek().toString());
+        System.out.println("meal day of week");
+        System.out.println(mealday.getDate().toString());
+        System.out.println(getDayStringOld(mealday.getDate(),new Locale("en")));
+        parentHolder.mealday.setText(getDayStringOld(mealday.getDate(),new Locale("en")));
 
         parentHolder.indicator = (ImageView) convertView.findViewById(R.id.image_indicator);
 
@@ -107,6 +112,17 @@ public class MealdayAdapter implements ExpandableListAdapter {
         }
 
         return convertView;
+    }
+
+//    public static int getDayNumberOld(Date date) {
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(date);
+//        return cal.get(Calendar.DAY_OF_WEEK);
+//    }
+
+    public static String getDayStringOld(Date date, Locale locale) {
+        DateFormat formatter = new SimpleDateFormat("EEEE", locale);
+        return formatter.format(date);
     }
 
     @Override
