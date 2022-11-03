@@ -93,7 +93,6 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     public void deleteIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
-        Log.d("DEBUG", selectedIngredient.getTitle());
         FirestoreDatabase.deleteIngredient(selectedIngredient);
     }
 
