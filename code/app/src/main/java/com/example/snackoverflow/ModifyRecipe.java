@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -48,6 +50,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     private Button viewButton;
     private Button deleteButton;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Set variables to data stored in recipe object
@@ -56,8 +60,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
 
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra("recipe");
+        String recipeId = intent.getStringExtra("recipeId");
+        ArrayList<String> ingredientIds = intent.getStringArrayListExtra("ingredientIds");
         imageView = findViewById(R.id.edit_recipe_photo);
-        String id = "1";
 
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -102,9 +107,31 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
         instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
         commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
+        titleField.setText(recipe.getTitle());
+        categoryField.setText(recipe.getRecipeCategory());
+        servingsField.setText(String.valueOf(recipe.getServings()));
         ingredient_1 = findViewById(R.id.Ingredient_1);
         ingredient_2 = findViewById(R.id.Ingredient_2);
         ingredient_3 = findViewById(R.id.Ingredient_3);
+        instructionsField.setText(recipe.getInstructions());
+        commentsField.setText(recipe.getComments());
+
+        ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
+        if (recipeIngredients != null) {
+            for (int i = 0; i < recipeIngredients.size(); i++) {
+                ingredients.add(recipeIngredients.get(i));
+            }
+            if (ingredients.size() > 0) {
+                ingredient_1.setText(ingredients.get(0).getTitle());
+                if (ingredients.size() > 1) {
+                    ingredient_1.setText(ingredients.get(1).getTitle());
+                    if (ingredients.size() > 2) {
+                        ingredient_1.setText(ingredients.get(2).getTitle());
+                    }
+                }
+            }
+        }
+
         showMore = findViewById(R.id.recipe_showmore);
         addIngredient = findViewById(R.id.recipe_add_ingredient);
 
@@ -167,19 +194,21 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String title = titleField.getText().toString();
                 String category = categoryField.getText().toString();
                 String servings = servingsField.getText().toString();
                 String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
-                if (category.equals("") || servings.equals("") ||
+                if (titleField.equals("") || category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
                 } else {
                     Map<String, Object> data= new HashMap<String, Object>();
+                    data.put("title", title);
                     data.put("category", category);
-                    data.put("servings", servings);
+                    data.put("servings", Float.valueOf(servings));
                     data.put("instructions", instructions);
                     data.put("comments", comments);
-//                    FirestoreDatabase.modifyRecipe(id, data);
+                    FirestoreDatabase.modifyRecipe(recipeId, data);
                     finish();
                 }
             }
