@@ -29,7 +29,7 @@ public class IngredientDetailsActivity extends AppCompatActivity {
 
         ingredientDescription.setText(selectedIngredient.getTitle());
         ingredientUnit.setText(String.valueOf(selectedIngredient.getUnit()));
-        ingredientBestBefore.setText(String.valueOf(selectedIngredient.getBestBefore()));
+        ingredientBestBefore.setText(IngredientAdapter.getDateText(selectedIngredient));
         ingredientLocation.setText(selectedIngredient.getLocation());
         ingredientAmount.setText(String.valueOf(selectedIngredient.getAmount()));
         ingredientCategory.setText(selectedIngredient.getCategory());
