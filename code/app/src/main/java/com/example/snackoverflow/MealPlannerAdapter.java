@@ -1,5 +1,6 @@
 package com.example.snackoverflow;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -16,11 +19,15 @@ import java.util.ArrayList;
 public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.ViewHolder> {
 
     private Context context;
+    private Mealday mealDay;
     private ArrayList<Recipe> meals;
+    private FragmentManager fm;
 
-    public MealPlannerAdapter(Context context, ArrayList<Recipe> meals) {
+    public MealPlannerAdapter(Context context, Mealday mealDay, FragmentManager fm) {
         this.context = context;
-        this.meals = meals;
+        this.mealDay = mealDay;
+        this.meals = mealDay.getMeals();
+        this.fm = fm;
     }
 
     @Override
@@ -44,6 +51,13 @@ public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.
 
         TextView titleTextView = (TextView) holder.title;
         titleTextView.setText(meals.get(position).getTitle());
+
+        mealImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MealPlannerAddMeal(mealDay, meals.get(position)).show(fm,"Edit_meal");
+            }
+        });
 
     }
 

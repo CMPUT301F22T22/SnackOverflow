@@ -1,6 +1,5 @@
 package com.example.snackoverflow;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import java.sql.Array;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     private ArrayList<Ingredient> ingredients;
@@ -46,24 +41,27 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent,false);
-        }
-        Ingredient ingredient = ingredients.get(position);
-        TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
-        ingredientDescription.setText(ingredient.getTitle());
 
         if (recipeCheck == false){
-            TextView ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore);
+            if(view == null){
+                view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent,false);
+            }
+            Ingredient ingredient = ingredients.get(position);
+            TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
+            ingredientDescription.setText(ingredient.getTitle());
+            TextView ingredientBestBefore = view.findViewById(R.id.recipe_ingredient_amount);
             TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
             ingredientBestBefore.setText(String.valueOf(ingredient.getBestBefore()));
             ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
         }
-
         else{
-            TextView TextViewAmount = view.findViewById(R.id.TextView_Bestbefore);
-            TextViewAmount.setText("Amount:");
-            TextView ingredientAmount = view.findViewById(R.id.ingredient_bestBefore);
+            if(view == null){
+                view = LayoutInflater.from(context).inflate(R.layout.recipe_ingredient_content, parent,false);
+            }
+            Ingredient ingredient = ingredients.get(position);
+            TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
+            ingredientDescription.setText(ingredient.getTitle());
+            TextView ingredientAmount = view.findViewById(R.id.recipe_ingredient_amount);
             TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
             ingredientAmount.setText(String.valueOf(ingredient.getAmount()));
             ingredientUnit.setText(String.valueOf(ingredient.getUnit()));

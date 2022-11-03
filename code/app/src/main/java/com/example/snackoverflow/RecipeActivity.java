@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -82,10 +81,12 @@ public class RecipeActivity extends AppCompatActivity {
         modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
-//                Intent intent = new Intent(RecipeActivity.this, AddRecipe.class);
+                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
                 startActivity(intent);
             }
         });
+    }
+    public ArrayList<Recipe> getRecipes(){
+        return recipeDataList;
     }
 }

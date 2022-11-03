@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,10 +23,12 @@ public class MealdayAdapter implements ExpandableListAdapter {
 
     private Context context;
     private ArrayList<Mealday> mealdays = new ArrayList<Mealday>();
+    private FragmentManager fm;
 
-    public MealdayAdapter(Context context, ArrayList<Mealday> mealdays){
+    public MealdayAdapter(Context context, ArrayList<Mealday> mealdays, FragmentManager fm){
         this.context = context;
         this.mealdays = mealdays;
+        this.fm = fm;
     }
 
     @Override
@@ -123,7 +127,7 @@ public class MealdayAdapter implements ExpandableListAdapter {
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         childHolder.horizontalListView.setLayoutManager(layoutManager);
 
-        MealPlannerAdapter horizontalListAdapter = new MealPlannerAdapter(context, mealdays.get(groupPosition).getMeals());
+        MealPlannerAdapter horizontalListAdapter = new MealPlannerAdapter(context, mealdays.get(groupPosition), fm);
         childHolder.horizontalListView.setAdapter(horizontalListAdapter);
 
         return convertView;
