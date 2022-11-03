@@ -146,41 +146,6 @@ public class FirestoreDatabase {
         recipeCol.document(id).delete();
     };
 
-    static void addMealPlan(Mealday mealDay) {
-        MealPlanCol
-        .add(mealDay)
-        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(MealsTag, "Meal day document snapshot written with ID: " + documentReference.getId());
-                mealDay.id = documentReference.getId();
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(MealsTag, "Error adding Meal day document", e);
-            }
-        });
-    };
-
-    static void modifyMealPlan(int i,ArrayList<Mealday> meals) {
-        MealPlanCol
-        .document(meals.get(i).id).update("meals", meals.get(i).getMeals())
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(MealsTag, "DocumentSnapshot successfully updated!");
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(MealsTag, "Error updating document", e);
-            }
-        });
-    };
-
     static void deleteMealPlan() {};
 
     static void fetchMealPlans() {
