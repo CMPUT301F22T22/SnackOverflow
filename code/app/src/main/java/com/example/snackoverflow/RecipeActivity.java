@@ -95,8 +95,9 @@ public class RecipeActivity extends AppCompatActivity {
                     int prep_time = ((Long) data.get("prep_time")).intValue();
                     float servings = Float.valueOf(data.get("servings").toString());
                     String category = data.get("category").toString();
+                    String instructions = data.get("instructions").toString();
                     String comments = data.get("comments").toString();
-                    recipeDataList.add(new Recipe(title, prep_time, servings, category, comments));
+                    recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions));
                     ArrayList<String> ingredientIdList = new ArrayList<String>();
                     for (Object iid: (ArrayList) data.get("ingredients")) {
                         ingredientIdList.add(iid.toString());

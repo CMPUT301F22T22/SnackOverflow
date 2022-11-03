@@ -113,6 +113,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         ingredient_1 = findViewById(R.id.Ingredient_1);
         ingredient_2 = findViewById(R.id.Ingredient_2);
         ingredient_3 = findViewById(R.id.Ingredient_3);
+        instructionsField.setText(recipe.getInstructions());
         commentsField.setText(recipe.getComments());
 
         ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
