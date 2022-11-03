@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -236,14 +237,17 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                     data.put("instructions", instructions);
                     data.put("image_tracker", imageTracker);
                     data.put("comments", comments);
-                    FirebaseFirestore.getInstance().collection("recipe").
-                            document(recipeId).update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    System.out.println("Done");
-                                    finish();
-                                }
-                            });
+                    Intent modifyIntent = new Intent();
+                    modifyIntent.putExtra("ACTION_TYPE", "EDIT");
+                    modifyIntent.putExtra("recipeId", recipeId);
+                    modifyIntent.putExtra("title", title);
+                    modifyIntent.putExtra("category", category);
+                    modifyIntent.putExtra("servings", Float.valueOf(servings));
+                    modifyIntent.putExtra("instructions", instructions);
+                    modifyIntent.putExtra("image_tracker", imageTracker);
+                    modifyIntent.putExtra("comments", comments);
+                    setResult(RESULT_OK, modifyIntent);
+                    finish();
                 }
             }
         });
@@ -264,18 +268,16 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             }
         });
 
-//        deleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent modifyIntent = new Intent();
-//                modifyIntent.putExtra("ACTION_TYPE", "DELETE");
-//                modifyIntent.putExtra("position", intent.getIntExtra("position", 0));
-//                prevCost = Utils.getFinalCost(food.getCount(), food.getCost());
-//                modifyIntent.putExtra("previousCost", prevCost);
-//                setResult(-1, modifyIntent);
-//                finish();
-//            }
-//        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent modifyIntent = new Intent();
+                modifyIntent.putExtra("ACTION_TYPE", "DELETE");
+                modifyIntent.putExtra("recipeId", recipeId);
+                setResult(RESULT_OK, modifyIntent);
+                finish();
+            }
+        });
     }
 
     @Override

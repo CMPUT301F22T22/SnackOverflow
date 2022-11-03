@@ -1,5 +1,6 @@
 package com.example.snackoverflow;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,12 +14,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
@@ -51,9 +58,41 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
     Map<String, ArrayList<String>> ingredientIds =  new HashMap();
     int imageTrackingData = 0;
 
+    public ActivityResultLauncher<Intent> getModifiedData = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        String actionType = intent.getStringExtra("ACTION_TYPE");
+                        String recipeId = intent.getStringExtra("recipeId");
+                        if (actionType.equals("EDIT")) {
+                            Map<String, Object> data= new HashMap<String, Object>();
+                            data.put("title", intent.getStringExtra("title"));
+                            data.put("category", intent.getStringExtra("category"));
+                            data.put("servings", intent.getFloatExtra("servings", 0));
+                            data.put("instructions", intent.getStringExtra("instructions"));
+                            data.put("image_tracker", intent.getIntExtra("image_tracker",0));
+                            data.put("comments", intent.getStringExtra("comments"));
+                            FirebaseFirestore.getInstance().collection("recipe").
+                                    document(recipeId).update(data);
+                        } else if (actionType.equals("DELETE")) {
+                            FirebaseFirestore.getInstance().collection("recipe").
+                                    document(recipeId).delete();
+                            int ind = recipeIdList.indexOf(recipeId);
+                            recipeDataList.remove(ind);
+                            recipeIdList.remove(ind);
+                            ingredientIds.remove(recipeId);
+                            recipeArrayAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_recipe);
 
         recipeList = findViewById(R.id.recipe_list);
@@ -89,15 +128,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                         return true;
                 }
                 return false;
-            }
-        });
-
-        recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
-                intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
-                startActivity(intent);
             }
         });
 
@@ -153,7 +183,7 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                 intent.putExtra("recipeId", recipeIdList.get(position));
                 intent.putStringArrayListExtra("ingredientIds", ingredientIds.get(recipeIdList.get(position)));
                 intent.putExtra("imageTracker", imageTrackingData);
-                startActivity(intent);
+                getModifiedData.launch(intent);
             }
         });
 
@@ -181,4 +211,10 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
         }
         recipeArrayAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    };
+
 }
