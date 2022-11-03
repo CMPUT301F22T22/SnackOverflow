@@ -194,6 +194,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             @Override
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
+                changeClickState(false);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.constraintLayout, IngredientsView)
@@ -235,6 +236,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             getSupportFragmentManager().beginTransaction()
                     .remove(IngredientsView)
                     .commit();
+            changeClickState(true);
             refreshIngredientsShown();
         }
         else {
@@ -249,5 +251,20 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 break;
             }
         }
+    }
+    private void changeClickState(boolean state){
+        imageView.setEnabled(state);
+        titleField.setEnabled(state);
+        categoryField.setEnabled(state);
+        servingsField.setEnabled(state);
+        showMore.setEnabled(state);
+        addIngredient.setEnabled(state);
+        instructionsField.setEnabled(state);
+        commentsField.setEnabled(state);
+        addIngredient.setEnabled(state);
+        showMore.setEnabled(state);
+        viewButton.setEnabled(state);
+        editButton.setEnabled(state);
+        applyButton.setEnabled(state);
     }
 }

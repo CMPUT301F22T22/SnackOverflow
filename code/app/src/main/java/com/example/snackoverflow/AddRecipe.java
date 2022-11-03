@@ -119,8 +119,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
             @Override
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
-                addRecipe.setEnabled(false);
                 addRecipe.setVisibility(View.GONE);
+                changeClickState(false);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.constraintLayout, IngredientsView)
@@ -153,6 +153,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
             addRecipe.setEnabled(true);
             addRecipe.setVisibility(View.VISIBLE);
             refreshIngredientsShown();
+            changeClickState(true);
         }
         else {
             super.onBackPressed();
@@ -166,5 +167,17 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
                 break;
             }
         }
+    }
+    private void changeClickState(boolean state){
+        imageView.setEnabled(state);
+        titleText.setEnabled(state);
+        categoryText.setEnabled(state);
+        servingText.setEnabled(state);
+        instructionsText.setEnabled(state);
+        commentsText.setEnabled(state);
+        showMore.setEnabled(state);
+        addIngredient.setEnabled(state);
+        addRecipe.setEnabled(state);
+        return;
     }
 }
