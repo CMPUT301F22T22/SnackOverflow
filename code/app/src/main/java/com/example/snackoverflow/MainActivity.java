@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
 
                 }
                 // update recipes
-                FirestoreDatabase.modifyMealPlan(i,meals);
+                //FirestoreDatabase.modifyMealPlan(i,meals);
                 return;
             }
         }
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
-        FirestoreDatabase.addMealPlan(mealDay);
+        //FirestoreDatabase.addMealPlan(mealDay);
     }
 
     @Override
