@@ -2,31 +2,20 @@ package com.example.snackoverflow;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MealPlannerAddMeal.OnFragmentInteractionListener{
@@ -97,24 +86,19 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
      */
     private void data(){
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
         Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
         
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil" ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice", "boil"));
         Mealday tuesday = new Mealday(LocalDate.parse("2022-10-21"),Monday);
 
         meals.add(monday);
