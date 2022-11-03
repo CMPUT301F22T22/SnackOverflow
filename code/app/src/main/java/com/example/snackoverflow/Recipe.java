@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Recipe implements Serializable, Parcelable {
@@ -13,25 +12,27 @@ public class Recipe implements Serializable, Parcelable {
     private int preptime;
     private float servings;
     private String recipeCategory;
+    private String instructions;
     private String comments;
     private ArrayList<Ingredient> ingredients ;
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments) {
+    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions) {
         this.title = title;
         this.preptime = preptime;
         this.servings = servings;
         this.recipeCategory = recipeCategory;
+        this.instructions = instructions;
         this.comments = comments;
         ingredients = new ArrayList<Ingredient>();
     }
 
     protected Recipe(Parcel in) {
-        id = in.readString();
         title = in.readString();
         servings = in.readFloat();
         recipeCategory = in.readString();
+        instructions = in.readString();
         comments = in.readString();
         //ingredients = in.createStringArrayList();
     }
@@ -92,6 +93,15 @@ public class Recipe implements Serializable, Parcelable {
         this.comments = comments;
     }
 
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+
     public void addIngredient(Ingredient ingredient){
         if (!ingredients.contains(ingredient)){
             ingredients.add(ingredient);
@@ -120,9 +130,10 @@ public class Recipe implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(recipeCategory);
+        parcel.writeString(title);
         parcel.writeFloat(servings);
+        parcel.writeString(recipeCategory);
+        parcel.writeString(instructions);
         parcel.writeString(comments);
     }
 
