@@ -1,8 +1,12 @@
 package com.example.snackoverflow;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,17 +27,29 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RecipeActivity extends AppCompatActivity {
+interface FirebaseListener {
+    public void onAction(String title, int prep_time, float servings, String category, String comments,
+                          String instructions,@Nullable Bitmap imgBitmap);
+}
+public class RecipeActivity extends AppCompatActivity implements FirebaseListener{
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
     ArrayList<String> recipeIdList = new ArrayList<String>();
     Map<String, ArrayList<String>> ingredientIds =  new HashMap();
+    int imageTrackingData = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +115,33 @@ public class RecipeActivity extends AppCompatActivity {
                     String category = data.get("category").toString();
                     String instructions = data.get("instructions").toString();
                     String comments = data.get("comments").toString();
-                    recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions));
                     ArrayList<String> ingredientIdList = new ArrayList<String>();
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+id+".jpg");
+                    imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                    try {
+                        File localFile = File.createTempFile("tempfile",".jpg");
+                        storageRef.getFile(localFile)
+                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                        onAction(title, prep_time,servings,category,comments,instructions,imgBitmap);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        onAction(title, prep_time,servings,category,comments,instructions, null);
+                                    }
+                                });
+                    } catch (IOException e) {
+
+                    }
                     for (Object iid: (ArrayList) data.get("ingredients")) {
                         ingredientIdList.add(iid.toString());
                     }
                     ingredientIds.put(id, ingredientIdList);
                     recipeIdList.add(id);
                 }
-                recipeArrayAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
             }
         });
 
@@ -116,6 +152,7 @@ public class RecipeActivity extends AppCompatActivity {
                 intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
                 intent.putExtra("recipeId", recipeIdList.get(position));
                 intent.putStringArrayListExtra("ingredientIds", ingredientIds.get(recipeIdList.get(position)));
+                intent.putExtra("imageTracker", imageTrackingData);
                 startActivity(intent);
             }
         });
@@ -132,5 +169,16 @@ public class RecipeActivity extends AppCompatActivity {
     }
     public ArrayList<Recipe> getRecipes(){
         return recipeDataList;
+    }
+
+    @Override
+    public void onAction(String title, int prep_time, float servings, String category, String comments,
+                          String instructions,@Nullable Bitmap imgBitmap) {
+        if (imgBitmap == null) {
+            recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions));
+        } else {
+            recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions, imgBitmap));
+        }
+        recipeArrayAdapter.notifyDataSetChanged();
     }
 }

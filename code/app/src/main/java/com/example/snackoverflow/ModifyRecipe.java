@@ -2,6 +2,8 @@ package com.example.snackoverflow;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -16,18 +18,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.ParseException;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,9 +59,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     private Button viewButton;
     private Button deleteButton;
 
-    public Uri imageUri;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    private int imageTracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Set variables to data stored in recipe object
@@ -69,6 +70,23 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         Recipe recipe = intent.getParcelableExtra("recipe");
         String recipeId = intent.getStringExtra("recipeId");
         ArrayList<String> ingredientIds = intent.getStringArrayListExtra("ingredientIds");
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
+        try {
+            File localFile = File.createTempFile("tempfile", ".jpg");
+            storageRef.getFile(localFile)
+                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                            imageView.setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+        } catch (IOException e) {}
+        imageTracker = intent.getIntExtra("imageTracker", 0);
         imageView = findViewById(R.id.edit_recipe_photo);
 
         // Register activity result to handle the Image the user selected
@@ -86,7 +104,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                             imageView.setImageURI(uri);
                             imageView.setBackgroundResource(0);
                             imageView.setPadding(0, 0, 0, 0);
-                            imageUri = uri;
+                            uploadImage(uri, recipeId);
+                            imageTracker += 1;
                         }
                     }
                 });
@@ -210,17 +229,21 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 if (titleField.equals("") || category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
                 } else {
-                    if (imageUri != null) {
-                        uploadImage(imageUri, id);
-                    }
                     Map<String, Object> data= new HashMap<String, Object>();
                     data.put("title", title);
                     data.put("category", category);
                     data.put("servings", Float.valueOf(servings));
                     data.put("instructions", instructions);
+                    data.put("image_tracker", imageTracker);
                     data.put("comments", comments);
-                    FirestoreDatabase.modifyRecipe(recipeId, data);
-                    finish();
+                    FirebaseFirestore.getInstance().collection("recipe").
+                            document(recipeId).update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    System.out.println("Done");
+                                    finish();
+                                }
+                            });
                 }
             }
         });
@@ -293,18 +316,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     public void uploadImage(Uri uri, String id) {
         String filename = id;
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference().child("images/"+filename);
-        storageReference.putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        System.out.println("GREAT SUCCESS");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        System.out.println("USELESS");
-                    }
-                });
+        StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
+        storageReference.putFile(uri);
     }
 }

@@ -39,13 +39,13 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         TextView recipePreptime = view.findViewById(R.id.recipe_preptime);
         TextView servings = view.findViewById(R.id.recipe_servings);
         TextView category = view.findViewById(R.id.recipe_category);
-        ImageView photo = view.findViewById(R.id.photoImageView);
+        ImageView photo = view.findViewById(R.id.photo_image_view);
 
         recipeTitle.setText(recipe.getTitle());
         recipePreptime.setText(Integer.toString(recipe.getPreptimeTime()));
         servings.setText(Float.toString(recipe.getServings()));
         category.setText(recipe.getRecipeCategory());
-        //photo.setImageResource(
+        photo.setImageBitmap(recipe.getImageBitmap());
         return view;
     }
 }
