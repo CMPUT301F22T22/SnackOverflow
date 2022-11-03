@@ -105,6 +105,17 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
+                intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
+                intent.putExtra("recipeId", recipeIdList.get(position));
+                intent.putStringArrayListExtra("ingredientIds", ingredientIds.get(recipeIdList.get(position)));
+                startActivity(intent);
+            }
+        });
+
         //Modify Button //TODO: Replace functionality or change when tests done
         FloatingActionButton modifyRecipeTestButton = findViewById(R.id.add_recipe_button);
         modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
