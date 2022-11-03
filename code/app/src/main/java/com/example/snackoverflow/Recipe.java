@@ -1,10 +1,7 @@
 package com.example.snackoverflow;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,8 +14,7 @@ public class Recipe implements Serializable, Parcelable {
     private String recipeCategory;
     private String instructions;
     private String comments;
-    private ArrayList<Ingredient> ingredients;
-    private Bitmap imageBitmap = null;
+    private ArrayList<Ingredient> ingredients ;
     //TODO: Add path to photograph(?)
 
 
@@ -30,17 +26,6 @@ public class Recipe implements Serializable, Parcelable {
         this.instructions = instructions;
         this.comments = comments;
         ingredients = new ArrayList<Ingredient>();
-    }
-
-    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions, Bitmap imageBitmap) {
-        this.title = title;
-        this.preptime = preptime;
-        this.servings = servings;
-        this.recipeCategory = recipeCategory;
-        this.instructions = instructions;
-        this.comments = comments;
-        ingredients = new ArrayList<Ingredient>();
-        this.imageBitmap = imageBitmap;
     }
 
     protected Recipe(Parcel in) {
@@ -137,14 +122,6 @@ public class Recipe implements Serializable, Parcelable {
 
     public ArrayList<Ingredient> getIngredients(){
         return this.ingredients;
-    }
-
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
-    }
-
-    public void setImageBitmap(Bitmap imageBitmap) {
-        this.imageBitmap = imageBitmap;
     }
 
     public int describeContents() {

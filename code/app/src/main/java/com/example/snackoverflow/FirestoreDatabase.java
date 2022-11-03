@@ -138,6 +138,10 @@ public class FirestoreDatabase {
 
     static void addRecipe() {};
 
+    static void modifyRecipe(String id, Map<String, Object> data) {
+        recipeCol.document(id).update(data);
+    };
+
     static void deleteRecipe(String id) {
         recipeCol.document(id).delete();
     };

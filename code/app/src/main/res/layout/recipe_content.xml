@@ -69,7 +69,7 @@
 
         <!-- add a Image image.png in your Drawable folder -->
         <ImageView
-            android:id="@+id/photo_image_view"
+            android:id="@+id/photoImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="Picture depicting the item"
