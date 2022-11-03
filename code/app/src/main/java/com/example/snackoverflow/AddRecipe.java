@@ -4,13 +4,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.app.Activity;
 import android.content.Intent;
 
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -28,7 +25,7 @@ import kotlin.jvm.functions.Function1;
 
 // TODO: How to request user permission for gallery access with the new
 // Android API
-public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientFragment.OnFragmentInteractionListener{
+public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
     private TextInputLayout titleText;
@@ -112,7 +109,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
+                new RecipeIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
         showMore.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +143,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     @Override
     public void onBackPressed() {
         if (IngredientsView != null){
-            System.out.println("back");
             getSupportFragmentManager().beginTransaction()
                     .remove(IngredientsView)
                     .commit();
@@ -161,6 +157,9 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
     }
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
+        for (int i = 0; i < 2; i++){
+            ingredient_views.get(i).setText("Ingredient");
+        }
         for (int i = 0; i<=last_index;i++){
             ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
             if (i == 2){
@@ -179,5 +178,14 @@ public class AddRecipe extends AppCompatActivity implements RecipeAddIngredientF
         addIngredient.setEnabled(state);
         addRecipe.setEnabled(state);
         return;
+    }
+
+    @Override
+    public void deleteObject(Object object) {
+        ingredients.remove(object);
+        IngredientsView = new RecipeIngredientViewFragment(ingredients);
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.constraintLayout, IngredientsView).commit();
     }
 }

@@ -16,17 +16,15 @@ import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredientFragment.OnFragmentInteractionListener {
+public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
     private EditText titleField;
     private EditText categoryField;
     private EditText servingsField;
@@ -187,7 +185,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
+                new RecipeIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
         showMore.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +243,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     }
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
+        for (int i = 0; i < 3; i++){
+            ingredient_views.get(i).setText("Ingredient");
+        }
         for (int i = 0; i<=last_index;i++){
             ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
             if (i == 2){
@@ -266,5 +267,14 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         viewButton.setEnabled(state);
         editButton.setEnabled(state);
         applyButton.setEnabled(state);
+    }
+
+    @Override
+    public void deleteObject(Object object) {
+        ingredients.remove(object);
+        IngredientsView = new RecipeIngredientViewFragment(ingredients);
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.constraintLayout, IngredientsView).commit();
     }
 }

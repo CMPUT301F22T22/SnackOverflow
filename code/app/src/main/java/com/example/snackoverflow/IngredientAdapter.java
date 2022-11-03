@@ -69,7 +69,14 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
             editIngredient.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new RecipeAddIngredientFragment(ingredient).show(((FragmentActivity)context).getSupportFragmentManager(), "Edit_Ingredient");
+                    new RecipeIngredientFragment(ingredient).show(((FragmentActivity)context).getSupportFragmentManager(), "Edit_Ingredient");
+                }
+            });
+            ImageButton deleteIngredient = view.findViewById(R.id.delete_ingredient);
+            deleteIngredient.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DeleteConformationFragment<Ingredient>(ingredient, ingredient.getTitle()).show(((FragmentActivity)context).getSupportFragmentManager(), "Delete_Ingredient");
                 }
             });
         }
