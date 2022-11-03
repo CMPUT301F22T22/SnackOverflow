@@ -6,14 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
-public class ShoppingListActivity extends AppCompatActivity {
+public class ShoppingListActivity extends AppCompatActivity implements ShoppingListAddItemFragment.OnFragmentInteractionListener {
     private ListView shoppingList;
     private ArrayAdapter<Ingredient> shoppingListAdapter;
     private ArrayList<Ingredient> shoppingItems;
@@ -55,7 +57,19 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         });
 
+        final FloatingActionButton addShoppingItemButton = findViewById(R.id.add_to_shopping_list_button);
+        addShoppingItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ShoppingListAddItemFragment().show(getSupportFragmentManager(), "ADD_SHOPPING_LIST_ITEM");
+            }
+        });
 
 
+    }
+
+    @Override
+    public void onOkPressed(Ingredient selectedIngredient) {
+        shoppingListAdapter.add(selectedIngredient);
     }
 }
