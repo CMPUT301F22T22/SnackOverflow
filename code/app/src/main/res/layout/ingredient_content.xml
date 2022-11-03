@@ -89,6 +89,6 @@
         android:background="@android:color/transparent"
         app:srcCompat="@android:drawable/ic_menu_delete"
         app:tint="@android:color/holo_red_dark"
-        android:onClick="deleteFoodItem"/>
+        android:onClick="deleteIngredientAtPosition"/>
 
 </LinearLayout>

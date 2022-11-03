@@ -38,7 +38,7 @@ public class FirestoreDatabase {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d(IngredientsTAG, "Ingredient document snapshot written with ID: " + documentReference.getId());
-                newIngredient.id = documentReference.getId();
+                newIngredient.setId(documentReference.getId());
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -53,7 +53,7 @@ public class FirestoreDatabase {
 
     static void deleteIngredient(Ingredient ingredient) {
         ingredientsCol
-        .document(ingredient.id)
+        .document(ingredient.getId())
         .delete()
         .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -113,6 +113,7 @@ public class FirestoreDatabase {
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     Log.d(IngredientsTAG, "Ingredients retrieved successfully");
+                    String id = doc.getId();
                     String title = (String) doc.getData().get("title");
                     String location = (String) doc.getData().get("location");
                     int amount = doc.getLong("amount").intValue();
@@ -120,6 +121,7 @@ public class FirestoreDatabase {
                     Date bestBefore = doc.getDate("bestBefore");
                     String category = (String) doc.getData().get("category");
 
+                    System.out.println(id);
                     System.out.println(title);
                     System.out.println(location);
                     System.out.println(amount);
@@ -128,6 +130,7 @@ public class FirestoreDatabase {
                     System.out.println(category);
 
                     Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
+                    ingredientItem.setId(id);
                     ingredients.add(ingredientItem); // Adding the ingredients from FireStore
                 }
                 // Notifying the adapter to render any new data fetched

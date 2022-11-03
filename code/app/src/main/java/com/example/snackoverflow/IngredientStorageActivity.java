@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -87,6 +88,12 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
             }
         });
 
+    }
+
+    public void deleteIngredientAtPosition(View v) {
+        int position = ingredientStorageList.getPositionForView((View) v.getParent());
+        Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
+        FirestoreDatabase.deleteIngredient(selectedIngredient);
     }
 
     @Override
