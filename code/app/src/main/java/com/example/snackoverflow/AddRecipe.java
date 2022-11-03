@@ -2,12 +2,14 @@ package com.example.snackoverflow;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.rpc.context.AttributeContext;
 
 import java.util.ArrayList;
 
@@ -28,9 +31,13 @@ import kotlin.jvm.functions.Function1;
 public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
+    private Drawable imageViewDrawable;
+    private Drawable imageViewBackground;
+    private int imageViewRadius;
     private TextInputLayout titleText;
     private TextInputLayout categoryText;
     private TextInputLayout servingText;
+    private TextInputLayout prepText;
     private TextView ingredient_1;
     private TextView ingredient_2;
     private TextView ingredient_3;
@@ -50,9 +57,15 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
 
         // Initializing variables
         imageView = findViewById(R.id.recipe_addPhoto);
+        // imageview default
+        imageViewDrawable = imageView.getDrawable();
+        imageViewBackground = imageView.getBackground();
+        imageViewRadius = imageView.getLayoutParams().width;
+        //
         titleText = findViewById(R.id.recipe_title);
         categoryText = findViewById(R.id.recipe_category);
         servingText = findViewById(R.id.recipe_servings);
+        prepText = findViewById(R.id.recipe_preptime);
         instructionsText = findViewById(R.id.recipe_instructions);
         commentsText = findViewById(R.id.recipe_comments);
         ingredient_1 = findViewById(R.id.Ingredient_1);
@@ -93,17 +106,22 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             public void onClick(View view) {
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
-                ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);
-                with.crop(1f, 1f);
-                with.compress(1024) ;        //Final image size will be less than 1 MB
-                with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
-                with.createIntent(new Function1<Intent, Unit>() {
-                    @Override
-                    public Unit invoke(Intent Intent) {
-                        selectImage.launch(Intent );
-                        return null;
-                    }
-                });
+                if (imageView.getDrawable() != imageViewDrawable){
+                    new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                }
+                else {
+                    ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);
+                    with.crop(1f, 1f);
+                    with.compress(1024);        //Final image size will be less than 1 MB
+                    with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
+                    with.createIntent(new Function1<Intent, Unit>() {
+                        @Override
+                        public Unit invoke(Intent Intent) {
+                            selectImage.launch(Intent);
+                            return null;
+                        }
+                    });
+                }
             }
         });
         addIngredient.setOnClickListener(new View.OnClickListener() {
@@ -184,11 +202,22 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
 
     @Override
     public void deleteObject(Object object) {
-        ingredients.remove(object);
-        IngredientsView = new RecipeIngredientViewFragment(ingredients);
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.Main, IngredientsView)
-                .commit();
+        if (object.getClass() == Ingredient.class) {
+            ingredients.remove(object);
+            IngredientsView = new RecipeIngredientViewFragment(ingredients);
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.Main, IngredientsView)
+                    .commit();
+        }
+        else{
+            if (object.getClass() == CircleImageView.class){
+                ((CircleImageView) object).getLayoutParams().width = imageViewRadius;
+                ((CircleImageView) object).getLayoutParams().height =imageViewRadius;
+                ((CircleImageView) object).setBackground(imageViewBackground);
+                ((CircleImageView) object).setImageDrawable(imageViewDrawable);
+                ((CircleImageView) object).setPadding(4,7,6,10);
+            }
+        }
     }
 }

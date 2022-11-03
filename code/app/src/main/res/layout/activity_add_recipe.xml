@@ -138,6 +138,7 @@
                         android:id="@+id/recipe_showmore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:minHeight="40dp"
                         android:text="Show More" />
@@ -146,12 +147,31 @@
                         android:id="@+id/recipe_add_ingredient"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:minHeight="40dp"
                         android:text="Add Ingredient" />
                 </LinearLayout>
 
             </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recipe_preptime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/listview">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_preptime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Prep time" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/recipe_instructions"
@@ -162,7 +182,7 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/listview">
+                app:layout_constraintTop_toBottomOf="@+id/recipe_preptime">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"

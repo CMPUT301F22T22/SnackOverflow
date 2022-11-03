@@ -2,6 +2,7 @@ package com.example.snackoverflow;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -31,6 +33,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private EditText servingsField;
     private EditText instructionsField;
     private EditText commentsField;
+    private EditText prepField;
     private TextView ingredient_1;
     private TextView ingredient_2;
     private TextView ingredient_3;
@@ -41,6 +44,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private Button addIngredient;
 
     public CircleImageView imageView;
+    private Drawable imageViewDrawable;
+    private Drawable imageViewBackground;
+    private int imageViewRadius;
 
     private Button editButton;
     private Button applyButton;
@@ -60,6 +66,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         String recipeId = intent.getStringExtra("recipeId");
         ArrayList<String> ingredientIds = intent.getStringArrayListExtra("ingredientIds");
         imageView = findViewById(R.id.edit_recipe_photo);
+        // imageview default
+        imageViewDrawable = imageView.getDrawable();
+        imageViewBackground = imageView.getBackground();
+        imageViewRadius = imageView.getLayoutParams().width;
+        //
 
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -85,23 +96,29 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             public void onClick(View view) {
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
-                ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
-                with.crop(1f, 1f);
-                with.compress(1024) ;        //Final image size will be less than 1 MB
-                with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
-                with.createIntent(new Function1<Intent, Unit>() {
-                    @Override
-                    public Unit invoke(Intent Intent) {
-                        selectImage.launch(Intent );
-                        return null;
-                    }
-                });
+                if (imageView.getDrawable() != imageViewDrawable){
+                    new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                }
+                else {
+                    ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
+                    with.crop(1f, 1f);
+                    with.compress(1024);        //Final image size will be less than 1 MB
+                    with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
+                    with.createIntent(new Function1<Intent, Unit>() {
+                        @Override
+                        public Unit invoke(Intent Intent) {
+                            selectImage.launch(Intent);
+                            return null;
+                        }
+                    });
+                }
             }
         });
 
         titleField = (EditText) findViewById(R.id.edit_recipe_title);
         categoryField = (EditText) findViewById(R.id.edit_recipe_category);
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
+        prepField = (EditText) findViewById(R.id.edit_preptime);
         instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
         commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
         titleField.setText(recipe.getTitle());
@@ -194,11 +211,13 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 String title = titleField.getText().toString();
                 String category = categoryField.getText().toString();
                 String servings = servingsField.getText().toString();
+                String prepTime = prepField.getText().toString();
                 String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
                 if (titleField.equals("") || category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
                 } else {
+                    // Todo store preptime
                     Map<String, Object> data= new HashMap<String, Object>();
                     data.put("title", title);
                     data.put("category", category);
@@ -302,11 +321,22 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
     @Override
     public void deleteObject(Object object) {
-        ingredients.remove(object);
-        IngredientsView = new RecipeIngredientViewFragment(ingredients);
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.Main, IngredientsView)
-                .commit();
+        if (object.getClass() == Ingredient.class) {
+            ingredients.remove(object);
+            IngredientsView = new RecipeIngredientViewFragment(ingredients);
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.Main, IngredientsView)
+                    .commit();
+        }
+        else{
+            if (object.getClass() == CircleImageView.class){
+                ((CircleImageView) object).getLayoutParams().width = imageViewRadius;
+                ((CircleImageView) object).getLayoutParams().height =imageViewRadius;
+                ((CircleImageView) object).setBackground(imageViewBackground);
+                ((CircleImageView) object).setImageDrawable(imageViewDrawable);
+                ((CircleImageView) object).setPadding(4,7,6,10);
+            }
+        }
     }
 }
