@@ -1,240 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/edit_recipe_photo"
-        android:layout_width="86dp"
-        android:layout_height="86dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/circle_bg"
-        android:paddingLeft="4dp"
-        android:paddingTop="7dp"
-        android:paddingRight="6dp"
-        android:paddingBottom="10dp"
-        android:src="@drawable/ic_baseline_add_a_photo_24"
-        app:layout_constraintBottom_toTopOf="@id/recipe_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recipe_title"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Title"
-        app:layout_constraintBottom_toBottomOf="@+id/recipe_category"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_recipe_photo">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_recipe_title"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/edit_recipe_photo"
+            android:layout_width="86dp"
+            android:layout_height="86dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/circle_bg"
+            android:paddingLeft="4dp"
+            android:paddingTop="7dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/ic_baseline_add_a_photo_24"
+            app:layout_constraintBottom_toTopOf="@id/recipe_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/recipe_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:inputType="text" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Title"
+            app:layout_constraintBottom_toBottomOf="@+id/recipe_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_recipe_photo">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_recipe_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="text" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recipe_category"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Recipe Category"
-        app:layout_constraintEnd_toEndOf="@id/recipe_servings"
-        app:layout_constraintEnd_toStartOf="@+id/recipe_servings"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_title">
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_recipe_category"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/recipe_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Recipe Category"
+            app:layout_constraintEnd_toEndOf="@id/recipe_servings"
+            app:layout_constraintEnd_toStartOf="@+id/recipe_servings"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_recipe_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/recipe_servings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Servings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/recipe_category"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_recipe_servings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_category">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/Ingredient_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E3E5"
+                android:text="Ingredient"
+                android:textSize="20sp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recipe_servings"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Servings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/recipe_category"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_title">
+            <TextView
+                android:id="@+id/Ingredient_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E3E5"
+                android:text="Ingredient"
+                android:textSize="20sp" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_recipe_servings"
+            <TextView
+                android:id="@+id/Ingredient_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E3E5"
+                android:text="Ingredient"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/recipe_showmore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:minHeight="40dp"
+                    android:text="Show More" />
+
+                <Button
+                    android:id="@+id/recipe_add_ingredient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:minHeight="40dp"
+                    android:text="Add Ingredient" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/recipe_instructions"
+            android:layout_width="match_parent"
+            android:layout_height="145dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Instructions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/listview">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_recipe_instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:lines="7" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/recipe_comments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:inputType="number" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Comments"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_instructions">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_recipe_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:lines="4" />
 
-    <LinearLayout
-        android:id="@+id/listview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipe_category">
-
-        <TextView
-            android:id="@+id/Ingredient_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#E1E3E5"
-            android:text="Ingredient"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/Ingredient_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#E1E3E5"
-            android:text="Ingredient"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/Ingredient_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#E1E3E5"
-            android:text="Ingredient"
-            android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_comments"
+            tools:ignore="MissingConstraints">
 
             <Button
-                android:id="@+id/recipe_showmore"
+                android:id="@+id/view_recipe_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:minHeight="40dp"
-                android:text="Show More" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="View"
+                android:visibility="gone" />
 
             <Button
-                android:id="@+id/recipe_add_ingredient"
+                android:id="@+id/edit_recipe_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:minHeight="40dp"
-                android:text="Add Ingredient" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="Edit" />
+
+            <Button
+                android:id="@+id/apply_recipe_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="Apply"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/delete_recipe_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="Delete" />
         </LinearLayout>
 
-    </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recipe_instructions"
-        android:layout_width="match_parent"
-        android:layout_height="145dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Instructions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listview">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_recipe_instructions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:lines="7" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recipe_comments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Comments"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_instructions">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_recipe_comments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:lines="4" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_comments"
-        tools:ignore="MissingConstraints">
-
-        <Button
-            android:id="@+id/view_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:text="View"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/edit_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:text="Edit" />
-
-        <Button
-            android:id="@+id/apply_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:text="Apply"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/delete_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:text="Delete" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
