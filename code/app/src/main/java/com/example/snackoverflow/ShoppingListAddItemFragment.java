@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class ShoppingListFragment extends DialogFragment {
+public class ShoppingListAddItemFragment extends DialogFragment {
     private EditText shoppingDesc;
     private EditText shoppingCategory;
     private EditText shoppingAmount;

@@ -15,7 +15,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
-public class ShoppingListActivity extends AppCompatActivity implements ShoppingListFragment.OnFragmentInteractionListener {
+public class ShoppingListActivity extends AppCompatActivity implements ShoppingListAddItemFragment.OnFragmentInteractionListener {
     private ListView shoppingList;
     private ArrayAdapter<Ingredient> shoppingListAdapter;
     private ArrayList<Ingredient> shoppingItems;
@@ -61,7 +61,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         addShoppingItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ShoppingListFragment().show(getSupportFragmentManager(), "ADD_SHOPPING_LIST_ITEM");
+                new ShoppingListAddItemFragment().show(getSupportFragmentManager(), "ADD_SHOPPING_LIST_ITEM");
             }
         });
 
