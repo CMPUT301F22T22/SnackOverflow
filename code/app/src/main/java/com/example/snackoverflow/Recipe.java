@@ -1,7 +1,10 @@
 package com.example.snackoverflow;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,14 +18,15 @@ public class Recipe implements Serializable, Parcelable {
     private String instructions;
     private String comments;
     private ArrayList<Ingredient> ingredients ;
+    private Bitmap imageBitmap;
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions) {
+    public Recipe(String title, int prepTime, float servings, String category, String comments, String instructions) {
         this.title = title;
-        this.preptime = preptime;
+        this.preptime = prepTime;
         this.servings = servings;
-        this.recipeCategory = recipeCategory;
+        this.recipeCategory = category;
         this.instructions = instructions;
         this.comments = comments;
         ingredients = new ArrayList<Ingredient>();
@@ -48,6 +52,17 @@ public class Recipe implements Serializable, Parcelable {
             return new Recipe[size];
         }
     };
+
+    public Recipe(String title, int preptime, float servings, String category, String comments, String instructions, @Nullable Bitmap imgBitmap) {
+        this.title = title;
+        this.preptime = preptime;
+        this.servings = servings;
+        this.recipeCategory = category;
+        this.instructions = instructions;
+        this.comments = comments;
+        ingredients = new ArrayList<Ingredient>();
+        this.imageBitmap = imgBitmap;
+    }
 
     public String getId() {
         return id;
@@ -122,6 +137,14 @@ public class Recipe implements Serializable, Parcelable {
 
     public ArrayList<Ingredient> getIngredients(){
         return this.ingredients;
+    }
+
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
     }
 
     public int describeContents() {
