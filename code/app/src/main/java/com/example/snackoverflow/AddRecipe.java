@@ -26,6 +26,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+
+/**
+ * Add Recipe Class for adding new Recipe to Recipes storage
+ * extends AppCompatActivity
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener
+ * implements DeleteConformationFragment.OnFragmentInteractionListener
+ * @see Recipe
+ * @see RecipeActivity
+ * */
 // TODO: How to request user permission for gallery access with the new
 // Android API
 public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{

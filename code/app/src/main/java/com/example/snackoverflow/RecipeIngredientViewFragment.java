@@ -30,6 +30,10 @@ public class RecipeIngredientViewFragment extends Fragment {
     private ArrayList<Ingredient> ingredients;
     private View view;
 
+    /**
+     * Constructor for the Ingredient View Fragment for the Recipe Object
+     * @param ingredients the list of ingredients
+     * */
     public RecipeIngredientViewFragment(ArrayList<Ingredient> ingredients){
         this.ingredients = ingredients;
     }
