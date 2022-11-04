@@ -202,23 +202,23 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         }
 
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                titleField.setEnabled(true);
-                prepField.setEnabled(true);
-                categoryField.setEnabled(true);
-                servingsField.setEnabled(true);
-                showMore.setEnabled(true);
-                addIngredient.setEnabled(true);
-                instructionsField.setEnabled(true);
-                commentsField.setEnabled(true);
-
-                editButton.setVisibility(View.GONE);
-                applyButton.setVisibility(View.VISIBLE);
-                viewButton.setVisibility(View.VISIBLE);
-            }
-        });
+//        editButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                titleField.setEnabled(true);
+//                prepField.setEnabled(true);
+//                categoryField.setEnabled(true);
+//                servingsField.setEnabled(true);
+//                showMore.setEnabled(true);
+//                addIngredient.setEnabled(true);
+//                instructionsField.setEnabled(true);
+//                commentsField.setEnabled(true);
+//
+//                editButton.setVisibility(View.GONE);
+//                applyButton.setVisibility(View.VISIBLE);
+//                viewButton.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -342,6 +342,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
         storageReference.putFile(uri);
     };
+
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleField.setEnabled(state);

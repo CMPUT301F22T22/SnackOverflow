@@ -81,6 +81,8 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                             } else if (actionType.equals("DELETE")) {
                                 FirebaseFirestore.getInstance().collection("recipe").
                                         document(recipeId).delete();
+                                FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg")
+                                        .delete();
                                 int ind = recipeIdList.indexOf(recipeId);
                                 recipeDataList.remove(ind);
                                 recipeIdList.remove(ind);
