@@ -1,4 +1,6 @@
 package com.example.snackoverflow;
+import static org.junit.Assert.assertTrue;
+
 import com.robotium.solo.Solo;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class IngredientStorageTest {
     private Solo solo;
@@ -42,6 +45,28 @@ public class IngredientStorageTest {
         solo.enterText((EditText) solo.getView(R.id.ingredient_unit_editText), "1");
         solo.enterText((EditText) solo.getView(R.id.ingredient_bestBefore_editText), "2022-09-08");
         solo.clickOnButton("OK");
+        solo.waitForText("Butter", 1, 2000);
+    }
+
+//    @Test
+//    public void checkDeleteIngredient() {
+//        checkIngredientStorage();
+//        ListView listView = (ListView)solo.getView(R.id.ingredient_storage_list);
+//        View view = listView.getChildAt(0);
+//        solo.clickOnView(view);
+//
+//
+//    }
+
+    @Test
+    public void checkViewIngredient() {
+        checkIngredientStorage();
+        ListView listView = (ListView)solo.getView(R.id.ingredient_storage_list);
+        View view = listView.getChildAt(0);
+        solo.clickOnView(view);
+        // Check if switch to new activity occurs
+        assertTrue("Failed to switch to Ingredients details",
+                solo.waitForActivity(IngredientDetailsActivity.class, 2000));
     }
 
     @After
@@ -50,3 +75,4 @@ public class IngredientStorageTest {
     }
 
 }
+
