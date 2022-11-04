@@ -99,7 +99,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.mealplanner_add_meal_fragment, null);
         spinner = view.findViewById(R.id.spinner);
         TextViewDate = view.findViewById(R.id.text_view_date);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         TextViewDate.setOnClickListener(new View.OnClickListener(){
 
@@ -236,7 +236,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
      * @param edt the edit text field to be validated
      * */
     private void isValidDate(EditText edt) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             String after = dateFormat.format(dateFormat.parse(edt.getText().toString()));
         } catch (ParseException e) {

@@ -1,5 +1,6 @@
 package com.example.snackoverflow;
 
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -16,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,10 +36,11 @@ public class FirestoreDatabase {
     final static CollectionReference ingredientsCol = db.collection("ingredient");
     final static CollectionReference MealPlanCol = db.collection("meal_plan");
 
-    private final static String IngredientsTAG = "IngredientStorageActivity";
-    private final static String MealsTag = "MealPlan";
     private final static ArrayList<Ingredient> ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> ingredient_meal_plan_list = new ArrayList<>();
+    private final static String IngredientsTAG = "Ingredient Storage Activity";
+    private final static String MealsTag = "Meal Plan";
+    private final static String RecipeTag = "Recipe";
 
     /**
      * Add an Ingredient to the Firebase Storage
@@ -94,36 +98,6 @@ public class FirestoreDatabase {
      * */
     static void fetchIngredients(ArrayAdapter<Ingredient> ingredientArrayAdapter,
                                  ArrayList<Ingredient> ingredients) {
-//        ingredientsCol
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d(IngredientsTAG, "Ingredients retrieved successfully");
-//                            ArrayList<Ingredient> allIngredients = new ArrayList<>();
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                String title = document.getString("title");
-//                                String location = document.getString("location");
-//                                int amount = document.getLong("amount").intValue();
-//                                int unit = document.getLong("unit").intValue();
-//                                Date bestBefore = document.getDate("bestBefore");
-//                                String category = document.getString("category");
-//                                System.out.println(title);
-//                                System.out.println(location);
-//                                System.out.println(amount);
-//                                System.out.println(unit);
-//                                System.out.println(bestBefore);
-//                                System.out.println(category);
-//
-//                                Ingredient ingredient = new Ingredient(title, bestBefore, location, amount, unit, category);
-//                                allIngredients.add(ingredient);
-//                            }
-//                            ingredientArrayAdapter.clear();
-//                            ingredientArrayAdapter.addAll(allIngredients);
-//                        }
-//                    }
-//                });
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
@@ -222,11 +196,24 @@ public class FirestoreDatabase {
         return ingredient_meal_plan_list;
     }
 
-    /**
-     * Adds a recipe to firebase database
-     * */
-    static void addRecipe() {};
-
+    static void addRecipe(HashMap<String, Object> data, Uri uri) {
+        recipeCol
+            .add(data)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
+                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(RecipeTag, "Error adding recipe document", e);
+                }
+            });
+    };
+    
     /**
      * deletes a recipe from the storage
      * @param id id of the recipe to be deleted
@@ -267,5 +254,14 @@ public class FirestoreDatabase {
     static void deleteFromShoppingList() {};
 
     static void fetchShoppingList() {};
+
+    static void uploadImage(Uri uri, String id) {
+        if (uri != null){
+            String filename = id;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
+            storageReference.putFile(uri);
+        }
+    };
 
 }
