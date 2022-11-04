@@ -41,9 +41,10 @@ public class RecipeTest {
         solo.enterText((EditText) solo.getView(R.id.edit_preptime), "30");
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_instructions), "Add sauce to pasta.");
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_comments), "Eat it warm.");
-        View fab2 = rule.getActivity().findViewById(R.id.recipe_add_ingredient);
+        View fab2 = rule.getActivity().findViewById(R.id.recipe_add_recipe);
         solo.clickOnView(fab2);
-        //solo.enterText((EditText) solo.getView(R.id.edit_text_input_description), "Tomato");
+        View donebtn = solo.getView(R.id.edit_text_input_description_Fragment);
+        solo.enterText((EditText) solo.waitForView(R.id.edit_text_input_description_Fragment,1,500), "Tomato");
         //solo.clickOnButton("OK");
     }
 
