@@ -75,7 +75,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra("recipe");
         String recipeId = intent.getStringExtra("recipeId");
-        ArrayList<String> ingredientIds = intent.getStringArrayListExtra("ingredientIds");
         imageView = findViewById(R.id.edit_recipe_photo);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
         try {
@@ -202,23 +201,23 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         }
 
 
-//        editButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                titleField.setEnabled(true);
-//                prepField.setEnabled(true);
-//                categoryField.setEnabled(true);
-//                servingsField.setEnabled(true);
-//                showMore.setEnabled(true);
-//                addIngredient.setEnabled(true);
-//                instructionsField.setEnabled(true);
-//                commentsField.setEnabled(true);
-//
-//                editButton.setVisibility(View.GONE);
-//                applyButton.setVisibility(View.VISIBLE);
-//                viewButton.setVisibility(View.VISIBLE);
-//            }
-//        });
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                titleField.setEnabled(true);
+                prepField.setEnabled(true);
+                categoryField.setEnabled(true);
+                servingsField.setEnabled(true);
+                showMore.setEnabled(true);
+                addIngredient.setEnabled(true);
+                instructionsField.setEnabled(true);
+                commentsField.setEnabled(true);
+
+                editButton.setVisibility(View.GONE);
+                applyButton.setVisibility(View.VISIBLE);
+                viewButton.setVisibility(View.VISIBLE);
+            }
+        });
 
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
