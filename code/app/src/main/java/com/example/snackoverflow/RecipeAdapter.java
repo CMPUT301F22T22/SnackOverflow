@@ -42,7 +42,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         ImageView photo = view.findViewById(R.id.photo_image_view);
 
         recipeTitle.setText(recipe.getTitle());
-        recipePreptime.setText(Integer.toString(recipe.getPreptimeTime()));
+        recipePreptime.setText(Integer.toString(recipe.getPreptime()));
         servings.setText(Float.toString(recipe.getServings()));
         category.setText(recipe.getRecipeCategory());
         photo.setImageBitmap(recipe.getImageBitmap());

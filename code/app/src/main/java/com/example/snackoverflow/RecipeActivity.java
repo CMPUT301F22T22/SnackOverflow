@@ -72,6 +72,7 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                                 data.put("title", intent.getStringExtra("title"));
                                 data.put("category", intent.getStringExtra("category"));
                                 data.put("servings", intent.getFloatExtra("servings", 0));
+                                data.put("prep_time", intent.getIntExtra("prep_time", 0));
                                 data.put("instructions", intent.getStringExtra("instructions"));
                                 data.put("image_tracker", intent.getIntExtra("image_tracker",0));
                                 data.put("comments", intent.getStringExtra("comments"));

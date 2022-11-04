@@ -34,6 +34,7 @@ public class Recipe implements Serializable, Parcelable {
 
     protected Recipe(Parcel in) {
         title = in.readString();
+        preptime = in.readInt();
         servings = in.readFloat();
         recipeCategory = in.readString();
         instructions = in.readString();
@@ -76,12 +77,12 @@ public class Recipe implements Serializable, Parcelable {
         this.title = title;
     }
 
-    public int getPreptimeTime() {
+    public int getPreptime() {
         return preptime;
     }
 
-    public void setPreptimeTime(int time) {
-        this.preptime = preptime;
+    public void setPreptime(int time) {
+        this.preptime = time;
     }
 
     public float getServings() {
@@ -154,6 +155,7 @@ public class Recipe implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(title);
+        parcel.writeInt(preptime);
         parcel.writeFloat(servings);
         parcel.writeString(recipeCategory);
         parcel.writeString(instructions);

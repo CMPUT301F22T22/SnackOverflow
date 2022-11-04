@@ -148,12 +148,13 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         titleField = (EditText) findViewById(R.id.edit_recipe_title);
         categoryField = (EditText) findViewById(R.id.edit_recipe_category);
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
-        prepField = (EditText) findViewById(R.id.edit_preptime);
+        prepField = (EditText) findViewById(R.id.edit_recipe_preptime);
         instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
         commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
         titleField.setText(recipe.getTitle());
         categoryField.setText(recipe.getRecipeCategory());
         servingsField.setText(String.valueOf(recipe.getServings()));
+        prepField.setText(String.valueOf(recipe.getPreptime()));
         ingredient_1 = findViewById(R.id.Ingredient_1);
         ingredient_2 = findViewById(R.id.Ingredient_2);
         ingredient_3 = findViewById(R.id.Ingredient_3);
@@ -205,6 +206,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             @Override
             public void onClick(View view) {
                 titleField.setEnabled(true);
+                prepField.setEnabled(true);
                 categoryField.setEnabled(true);
                 servingsField.setEnabled(true);
                 showMore.setEnabled(true);
@@ -222,6 +224,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             @Override
             public void onClick(View v) {
                 titleField.setEnabled(false);
+                prepField.setEnabled(false);
                 categoryField.setEnabled(false);
                 servingsField.setEnabled(false);
                 showMore.setEnabled(false);
@@ -253,6 +256,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putExtra("title", title);
                     modifyIntent.putExtra("category", category);
                     modifyIntent.putExtra("servings", Float.valueOf(servings));
+                    modifyIntent.putExtra("prep_time", Integer.valueOf(prepTime));
                     modifyIntent.putExtra("instructions", instructions);
                     modifyIntent.putExtra("image_tracker", imageTracker);
                     modifyIntent.putExtra("comments", comments);
@@ -341,6 +345,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleField.setEnabled(state);
+        prepField.setEnabled(state);
         categoryField.setEnabled(state);
         servingsField.setEnabled(state);
         showMore.setEnabled(state);
