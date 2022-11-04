@@ -19,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FirestoreDatabase {
@@ -171,7 +172,7 @@ public class FirestoreDatabase {
         return ingredient_storage_list;
     }
 
-    /*static ArrayList<String> getIngredientsMealPlanList() {
+    static ArrayList<String> getIngredientsMealPlanList() {
         MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
@@ -183,22 +184,14 @@ public class FirestoreDatabase {
                 ingredient_meal_plan_list.clear();
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
-                    String id = doc.getId();
-                    String title = (String) doc.getData().get("title");
-                    String location = (String) doc.getData().get("location");
-                    int amount = doc.getLong("amount").intValue();
-                    int unit = doc.getLong("unit").intValue();
-                    Date bestBefore = doc.getDate("bestBefore");
-                    String category = (String) doc.getData().get("category");
-
-                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-                    ingredientItem.setId(id);
-                    ingredient_meal_plan_list.add(title); // Adding the ingredients from FireStore
+                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    Log.d("testing", String.valueOf(mealsForDay.get(0)));
+                    //ingredient_meal_plan_list.add(title); // Adding the ingredients from FireStore
                 }
             }
         });
         return ingredient_meal_plan_list;
-    }*/
+    }
 
     static void addRecipe() {};
 
