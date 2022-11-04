@@ -1,5 +1,7 @@
 package com.example.snackoverflow;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,7 +23,7 @@ public class Ingredient implements Serializable  {
         this.bestBefore = null;
     }
 
-    public Ingredient(String description, Date date, String location, int amount, int unit, String category) {
+    public Ingredient(String description, Date date, String location, Integer amount, int unit, String category) {
         this.title = description;
         this.location = location;
         this.amount = amount;

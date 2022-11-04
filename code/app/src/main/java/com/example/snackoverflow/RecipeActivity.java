@@ -34,6 +34,8 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +51,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
     ArrayList<String> recipeIdList = new ArrayList<String>();
-    Map<String, ArrayList<String>> ingredientIds =  new HashMap();
     int imageTrackingData = 0;
 
     @Override
@@ -76,6 +77,16 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                                 data.put("instructions", intent.getStringExtra("instructions"));
                                 data.put("image_tracker", intent.getIntExtra("image_tracker",0));
                                 data.put("comments", intent.getStringExtra("comments"));
+                                ArrayList<String> ingredientTitles = intent.getStringArrayListExtra("ingredientTitles");
+                                ArrayList<String> ingredientUnit = intent.getStringArrayListExtra("ingredientUnit");
+                                ArrayList<Object> recipeIngredientList= new ArrayList<Object>();
+                                for (int i = 0; i < ingredientTitles.size(); i++ ) {
+                                    Map<String, Object> recipeIngredients = new HashMap();
+                                    recipeIngredients.put("title", ingredientTitles.get(i));
+                                    recipeIngredients.put("unit", ingredientUnit.get(i));
+                                    recipeIngredientList.add(recipeIngredients);
+                                }
+                                data.put("ingredients", recipeIngredientList);
                                 FirebaseFirestore.getInstance().collection("recipe").
                                         document(recipeId).update(data);
                             } else if (actionType.equals("DELETE")) {
@@ -84,7 +95,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                                 int ind = recipeIdList.indexOf(recipeId);
                                 recipeDataList.remove(ind);
                                 recipeIdList.remove(ind);
-                                ingredientIds.remove(recipeId);
                                 recipeArrayAdapter.notifyDataSetChanged();
                             }
                         }
@@ -137,12 +147,11 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                         String id = doc.getId();
                         Map<String, Object> data = doc.getData();
                         String title = data.get("title").toString();
-                        int prep_time = ((Long) data.get("prep_time")).intValue();
-                        float servings = Float.valueOf(data.get("servings").toString());
+                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                        float servings = Float.parseFloat(data.get("servings").toString());
                         String category = data.get("category").toString();
                         String instructions = data.get("instructions").toString();
                         String comments = data.get("comments").toString();
-                        ArrayList<String> ingredientIdList = new ArrayList<String>();
 
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+id+".jpg");
                         imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
@@ -162,11 +171,8 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                                         }
                                     });
                         } catch (IOException e) {
-
-                        }for (Object iid: (ArrayList) data.get("ingredients")) {
-                        ingredientIdList.add(iid.toString());
-                    }
-                        ingredientIds.put(id, ingredientIdList);
+                            System.out.println("ERROR");
+                        }
                         recipeIdList.add(id);
                 }
                 } catch (NullPointerException e) {
@@ -181,7 +187,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                 Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
                 intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
                 intent.putExtra("recipeId", recipeIdList.get(position));
-                intent.putStringArrayListExtra("ingredientIds", ingredientIds.get(recipeIdList.get(position)));
                 intent.putExtra("imageTracker", imageTrackingData);
                 getModifiedData.launch(intent);
             }
