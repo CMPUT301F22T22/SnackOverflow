@@ -2,6 +2,8 @@ package com.example.snackoverflow;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,13 +14,23 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -52,8 +64,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private Button applyButton;
     private Button viewButton;
     private Button deleteButton;
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private int imageTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +77,29 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         String recipeId = intent.getStringExtra("recipeId");
         ArrayList<String> ingredientIds = intent.getStringArrayListExtra("ingredientIds");
         imageView = findViewById(R.id.edit_recipe_photo);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
+        try {
+            File localFile = File.createTempFile("tempfile", ".jpg");
+            storageRef.getFile(localFile)
+                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                            imageView.setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+        } catch (IOException e) {}
         // imageview default
         imageViewDrawable = imageView.getDrawable();
         imageViewBackground = imageView.getBackground();
         imageViewRadius = imageView.getLayoutParams().width;
         //
 
+        imageTracker = intent.getIntExtra("imageTracker", 0);
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -87,6 +115,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                             imageView.setImageURI(uri);
                             imageView.setBackgroundResource(0);
                             imageView.setPadding(0, 0, 0, 0);
+                            uploadImage(uri, recipeId);
+                            imageTracker += 1;
                         }
                     }
                 });
@@ -118,12 +148,13 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         titleField = (EditText) findViewById(R.id.edit_recipe_title);
         categoryField = (EditText) findViewById(R.id.edit_recipe_category);
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
-        prepField = (EditText) findViewById(R.id.edit_preptime);
+        prepField = (EditText) findViewById(R.id.edit_recipe_preptime);
         instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
         commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
         titleField.setText(recipe.getTitle());
         categoryField.setText(recipe.getRecipeCategory());
         servingsField.setText(String.valueOf(recipe.getServings()));
+        prepField.setText(String.valueOf(recipe.getPreptime()));
         ingredient_1 = findViewById(R.id.Ingredient_1);
         ingredient_2 = findViewById(R.id.Ingredient_2);
         ingredient_3 = findViewById(R.id.Ingredient_3);
@@ -175,6 +206,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             @Override
             public void onClick(View view) {
                 titleField.setEnabled(true);
+                prepField.setEnabled(true);
                 categoryField.setEnabled(true);
                 servingsField.setEnabled(true);
                 showMore.setEnabled(true);
@@ -192,6 +224,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             @Override
             public void onClick(View v) {
                 titleField.setEnabled(false);
+                prepField.setEnabled(false);
                 categoryField.setEnabled(false);
                 servingsField.setEnabled(false);
                 showMore.setEnabled(false);
@@ -217,14 +250,17 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 if (titleField.equals("") || category.equals("") || servings.equals("") ||
                         ingredients.equals("") || comments.equals("")) {
                 } else {
-                    // Todo store preptime
-                    Map<String, Object> data= new HashMap<String, Object>();
-                    data.put("title", title);
-                    data.put("category", category);
-                    data.put("servings", Float.valueOf(servings));
-                    data.put("instructions", instructions);
-                    data.put("comments", comments);
-                    FirestoreDatabase.modifyRecipe(recipeId, data);
+                    Intent modifyIntent = new Intent();
+                    modifyIntent.putExtra("ACTION_TYPE", "EDIT");
+                    modifyIntent.putExtra("recipeId", recipeId);
+                    modifyIntent.putExtra("title", title);
+                    modifyIntent.putExtra("category", category);
+                    modifyIntent.putExtra("servings", Float.valueOf(servings));
+                    modifyIntent.putExtra("prep_time", Integer.valueOf(prepTime));
+                    modifyIntent.putExtra("instructions", instructions);
+                    modifyIntent.putExtra("image_tracker", imageTracker);
+                    modifyIntent.putExtra("comments", comments);
+                    setResult(RESULT_OK, modifyIntent);
                     finish();
                 }
             }
@@ -248,18 +284,16 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             }
         });
 
-//        deleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent modifyIntent = new Intent();
-//                modifyIntent.putExtra("ACTION_TYPE", "DELETE");
-//                modifyIntent.putExtra("position", intent.getIntExtra("position", 0));
-//                prevCost = Utils.getFinalCost(food.getCount(), food.getCost());
-//                modifyIntent.putExtra("previousCost", prevCost);
-//                setResult(-1, modifyIntent);
-//                finish();
-//            }
-//        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent modifyIntent = new Intent();
+                modifyIntent.putExtra("ACTION_TYPE", "DELETE");
+                modifyIntent.putExtra("recipeId", recipeId);
+                setResult(RESULT_OK, modifyIntent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -302,9 +336,16 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             }
         }
     }
+    public void uploadImage(Uri uri, String id) {
+        String filename = id;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
+        storageReference.putFile(uri);
+    };
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleField.setEnabled(state);
+        prepField.setEnabled(state);
         categoryField.setEnabled(state);
         servingsField.setEnabled(state);
         showMore.setEnabled(state);
