@@ -20,6 +20,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Add Ingredient Fragment that pops up when a user wants to add an
+ * Ingredient to the storage
+ * Extends DialogFragment
+ * @see Ingredient
+ * */
 public class AddIngredientFragment extends DialogFragment {
     private EditText ingredientDesc;
     private EditText ingredientAmount;
@@ -34,6 +40,10 @@ public class AddIngredientFragment extends DialogFragment {
         super.onStart();
     }
 
+    /**
+     * Implements the Fragment Interaction Listener and defines
+     * the onOkPressed function
+     * */
     public interface OnFragmentInteractionListener {
         void onOkPressed(Ingredient selectedIngredient);
     }
@@ -121,6 +131,10 @@ public class AddIngredientFragment extends DialogFragment {
                 }).create();
     }
 
+    /**
+     * Validates the best before date inputted
+     * @param edt text to validate
+     * */
     private void isValidDate(EditText edt) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
@@ -128,9 +142,12 @@ public class AddIngredientFragment extends DialogFragment {
         } catch (ParseException e) {
             edt.setError("Format: yyyy-mm-dd");
         }
-
     }
 
+    /**
+     * Validates the location inputted
+     * @param edt text to validate
+     * */
     private void isValidLocation(EditText edt) {
         String txt = edt.getText().toString();
         if (!txt.matches("Pantry|Freezer|Fridge")) {
