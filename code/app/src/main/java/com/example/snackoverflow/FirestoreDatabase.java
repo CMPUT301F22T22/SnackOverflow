@@ -182,7 +182,23 @@ public class FirestoreDatabase {
    });
 };
 
-    static void deleteMealPlan() {};
+
+    static void deleteMealPlan(int i, ArrayList<Mealday> meals) {
+        MealPlanCol.document(meals.get(i).id).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error updating document", e);
+                    }
+                });
+
+    };
 
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
                                ArrayList<Mealday> meals) {
@@ -197,11 +213,25 @@ public class FirestoreDatabase {
                 {
                     // Log.d(MealsTag, "Meal plan fetched successfully");
                     Date date = doc.getDate("date");
-                    System.out.println("-------Im here in mealplan-----------");
-                    System.out.println(date);
-                    System.out.println(doc.getData().get("meals"));
+                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
+                    for (Object meal:mealsForDay) {
+                        Map<String, Object> mealMap = (Map<String, Object>) meal;
+                        String title = mealMap.get("title").toString();
+                        String instructions = mealMap.get("instructions").toString();
+                        int preptime = Integer.parseInt(mealMap.get("preptimeTime").toString());
+                        float servings = Float.parseFloat(mealMap.get("servings").toString());
+                        String recipeCategory = mealMap.get("recipeCategory").toString();
+                        String comments = mealMap.get("comments").toString();
+//                        String id = mealMap.get("id").toString();
+                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+                        Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+                        mealsfortheDay.add(recipe);
+                    }
+
+//                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
                     //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
-                    //meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
+                    meals.add(new Mealday( date,  mealsfortheDay)); // Adding the meal days from FireStore
                 }
                 ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
             }

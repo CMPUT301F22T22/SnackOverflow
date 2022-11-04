@@ -28,6 +28,16 @@ public class Recipe implements Serializable, Parcelable {
         ingredients = new ArrayList<Ingredient>();
     }
 
+    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions, ArrayList<Ingredient> ingredients) {
+        this.title = title;
+        this.preptime = preptime;
+        this.servings = servings;
+        this.recipeCategory = recipeCategory;
+        this.instructions = instructions;
+        this.comments = comments;
+        this.ingredients = new ArrayList<Ingredient>();
+    }
+
     protected Recipe(Parcel in) {
         title = in.readString();
         servings = in.readFloat();
