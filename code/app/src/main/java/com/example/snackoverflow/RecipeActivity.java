@@ -40,7 +40,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Recipe Activity class used to display existing recipes created by the user along with images
+ * extends AppCompatActivity
+ * @see Recipe
+ * @see ModifyRecipe
+ * @see AddRecipe
+ * @see RecipeAdapter
+ * */
 public class RecipeActivity extends AppCompatActivity {
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
