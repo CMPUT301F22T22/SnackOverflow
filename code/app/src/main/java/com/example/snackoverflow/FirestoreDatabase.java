@@ -19,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FirestoreDatabase {
@@ -171,34 +172,31 @@ public class FirestoreDatabase {
         return ingredient_storage_list;
     }
 
-    /*static ArrayList<String> getIngredientsMealPlanList() {
+    static ArrayList<String> getIngredientsMealPlanList() {
         MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) {
                 if (error != null) {
-                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+                    Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
                     return;
                 }
                 ingredient_meal_plan_list.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    String id = doc.getId();
-                    String title = (String) doc.getData().get("title");
-                    String location = (String) doc.getData().get("location");
-                    int amount = doc.getLong("amount").intValue();
-                    int unit = doc.getLong("unit").intValue();
-                    Date bestBefore = doc.getDate("bestBefore");
-                    String category = (String) doc.getData().get("category");
-
-                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-                    ingredientItem.setId(id);
-                    ingredient_meal_plan_list.add(title); // Adding the ingredients from FireStore
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    for (Object obj : mealsForDay) {
+                        Map<String, Object> mapping = (Map<String, Object>) obj;
+                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
+                        for (String mealplaningredient : mealplaningredients) {
+                            ingredient_meal_plan_list.add(mealplaningredient);
+                        }
+                    }
                 }
             }
         });
+        //System.out.println(ingredient_meal_plan_list.size());
         return ingredient_meal_plan_list;
-    }*/
+    }
 
     static void addRecipe() {};
 

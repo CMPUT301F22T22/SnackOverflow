@@ -24,7 +24,9 @@ import com.google.firebase.firestore.EventListener;
 
 import java.lang.ref.Reference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The main activity page for shopping list. This page shows the ingredients a user needs to buy from the store.
@@ -38,6 +40,9 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private ListView shoppingList;
     private ArrayAdapter<Ingredient> shoppingListAdapter;
     private ArrayList<Ingredient> shoppingItems;
+    private final static ArrayList<String> firebase_ingredient_meal_plan_list = new ArrayList<>();
+    private final static ArrayList<String> firebase_ingredient_storage_list = new ArrayList<>();
+    private final static ArrayList<String> shoppingItemsString = new ArrayList<>();
 
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
@@ -53,12 +58,71 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         shoppingItems.add(new Ingredient("Apple", 3, 4, "Fresh"));
         shoppingItems.add(new Ingredient("Bread", 3, 1, "Bakery"));
 
-        ArrayList<Ingredient> firebaseIngredients = FirestoreDatabase.getIngredientsStorageList();
-
         // Linking the listview to an arraylist and setting adapter
         shoppingList = findViewById(R.id.shopping_list_storage_list);
         shoppingListAdapter = new ShoppingListAdapter(this, shoppingItems);
         shoppingList.setAdapter(shoppingListAdapter);
+
+        FirebaseFirestore db_instance = FirebaseFirestore.getInstance();
+        CollectionReference ingredientsCol = db_instance.collection("ingredient");
+        CollectionReference MealPlanCol = db_instance.collection("meal_plan");
+
+        ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                if (error != null) {
+                    //Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+                    return;
+                }
+                firebase_ingredient_storage_list.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                {
+                    Log.d("lol", "Ingredients retrieved successfully");
+                    String id = doc.getId();
+                    String title = (String) doc.getData().get("title");
+                    firebase_ingredient_storage_list.add(title); // Adding the ingredients from FireStore
+                }
+            }
+        });
+
+        MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                if (error != null) {
+                    //Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
+                    return;
+                }
+                firebase_ingredient_meal_plan_list.clear();
+                shoppingItemsString.clear();
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    for (Object obj : mealsForDay) {
+                        Map<String, Object> mapping = (Map<String, Object>) obj;
+                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
+                        for (String mealplaningredient : mealplaningredients) {
+                            firebase_ingredient_meal_plan_list.add(mealplaningredient);
+                        }
+                    }
+                }
+                for (Ingredient ingredientShoppingItems: shoppingItems) {
+                    shoppingItemsString.add(ingredientShoppingItems.getTitle());
+                }
+                for (String ing: firebase_ingredient_meal_plan_list) {
+                    if (!firebase_ingredient_storage_list.contains(ing)) {
+                        if (!shoppingItemsString.contains(ing)) {
+                            shoppingItems.add(new Ingredient(ing, 3, 4, "Fresh"));
+                            shoppingListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        });
+
+        //ArrayList<Ingredient> firebaseIngredients = FirestoreDatabase.getIngredientsStorageList();
+        Log.d("debugging", String.valueOf(firebase_ingredient_meal_plan_list));
+        Log.d("debugging", String.valueOf(firebase_ingredient_storage_list));
 
         // Setting up NavBar
         NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
