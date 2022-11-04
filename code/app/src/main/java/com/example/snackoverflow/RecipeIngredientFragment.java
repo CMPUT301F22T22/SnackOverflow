@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
-public class RecipeAddIngredientFragment extends DialogFragment {
+public class RecipeIngredientFragment extends DialogFragment {
     // Check if we are editing data
     private boolean edit;
     // Data storage
@@ -29,10 +29,10 @@ public class RecipeAddIngredientFragment extends DialogFragment {
     // listener for Recipe fragment
     private OnFragmentInteractionListener listener;
 
-    public RecipeAddIngredientFragment(){
+    public RecipeIngredientFragment(){
         edit = false;
     }
-    public RecipeAddIngredientFragment(Ingredient ingredient){
+    public RecipeIngredientFragment(Ingredient ingredient){
         this.ingredient = ingredient;
         edit = true;
     }
