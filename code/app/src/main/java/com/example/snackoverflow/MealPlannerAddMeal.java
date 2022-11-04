@@ -75,12 +75,13 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
     @NonNull
     @Override
+    //Todo impliment for multiple weeks
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //Inflate the layout
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.mealplanner_add_meal_fragment, null);
         spinner = view.findViewById(R.id.spinner);
         TextViewDate = view.findViewById(R.id.text_view_date);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         TextViewDate.setOnClickListener(new View.OnClickListener(){
 
@@ -172,7 +173,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         }
         else{
             spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
-            TextViewDate.setText(mealDay.getDate().toString());
+            TextViewDate.setText(dateFormat.format(mealDay.getDate()));
             return builder
                     .setView(view)
                     .setTitle("Edit Meal")
