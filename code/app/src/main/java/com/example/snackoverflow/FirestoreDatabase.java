@@ -55,7 +55,7 @@ public class FirestoreDatabase {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d(IngredientsTAG, "Ingredient document snapshot written with ID: " + documentReference.getId());
-                newIngredient.setId(documentReference.getId());
+                newIngredient.id = documentReference.getId();
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -77,7 +77,7 @@ public class FirestoreDatabase {
      * */
     static void deleteIngredient(Ingredient ingredient) {
         ingredientsCol
-        .document(ingredient.getId())
+        .document(ingredient.id)
         .delete()
         .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -129,7 +129,7 @@ public class FirestoreDatabase {
                     System.out.println(category);
 
                     Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-                    ingredientItem.setId(id);
+                    ingredientItem.id = id;
                     ingredients.add(ingredientItem); // Adding the ingredients from FireStore
                 }
                 // Notifying the adapter to render any new data fetched
@@ -164,7 +164,7 @@ public class FirestoreDatabase {
                     String category = (String) doc.getData().get("category");
 
                     Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-                    ingredientItem.setId(id);
+                    ingredientItem.id = id;
                     ingredient_storage_list.add(ingredientItem); // Adding the ingredients from FireStore
                 }
             }
