@@ -265,13 +265,19 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putExtra("image_tracker", imageTracker);
                     ArrayList<String> ingredientTitles = new ArrayList<>();
                     ArrayList<String> ingredientUnit = new ArrayList<>();
+                    ArrayList<String> ingredientAmount = new ArrayList<>();
+                    ArrayList<String> ingredientCategory = new ArrayList<>();
                     for (Ingredient ingredient: ingredients) {
                         ingredientTitles.add(ingredient.getTitle());
                         ingredientUnit.add(String.valueOf(ingredient.getUnit()));
+                        ingredientAmount.add(String.valueOf(ingredient.getAmount()));
+                        ingredientCategory.add(ingredient.getCategory());
                     }
                     modifyIntent.putExtra("comments", comments);
                     modifyIntent.putStringArrayListExtra("ingredientTitles", ingredientTitles);
                     modifyIntent.putStringArrayListExtra("ingredientUnit", ingredientUnit);
+                    modifyIntent.putStringArrayListExtra("ingredientAmount", ingredientAmount);
+                    modifyIntent.putStringArrayListExtra("ingredientCategory", ingredientCategory);
                     setResult(RESULT_OK, modifyIntent);
                     finish();
                 }
@@ -410,9 +416,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                                 Map<String, Object> ingredientMap = (Map<String, Object>) ingredient;
                                 String title = ingredientMap.get("title").toString();
                                 Integer unit = Integer.valueOf(ingredientMap.get("unit").toString());
+                                Integer amount = Integer.valueOf(ingredientMap.get("amount").toString());
+                                String category = ingredientMap.get("category").toString();
                                 ingredients.add(new Ingredient(title,
-                                        null, null, 0, unit,
-                                        null));
+                                        null, null, amount, unit,
+                                        category));
                             }
                         } catch (ConcurrentModificationException e) {
 
