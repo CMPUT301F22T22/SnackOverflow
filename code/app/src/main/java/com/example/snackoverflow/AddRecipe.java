@@ -184,40 +184,63 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 final String prepTimeItem = editPrepText.getText().toString();
                 final String instructionsItem = editInstructionsText.getText().toString();
                 final String commentsItem = editCommentsText.getText().toString();
+                boolean invalidInput = false;
 
-                HashMap<String, Object> data = new HashMap<String,Object>();
-                data.put("title",titleItem);
-                data.put("category",categoryItem);
-                data.put("servings",Integer.parseInt(servingItem));
-                data.put("prep_time",Integer.parseInt(prepTimeItem));
-                data.put("instructions",instructionsItem);
-                data.put("comments",commentsItem);
-                data.put("ingredients",ingredients);
-                data.put("image_tracker",0);
+                if (titleItem.isEmpty()){
+                    invalidInput = true;
+                    setErrorMessage(editTitleText, "Title must not be empty");
+                }
+                if (categoryItem.isEmpty() ){
+                    invalidInput = true;
+                    setErrorMessage(editCategoryText, "Category must not be empty");
+                }
+                if (servingItem.isEmpty() || Integer.parseInt(servingItem) == 0){
+                    invalidInput = true;
+                    setErrorMessage(editServingText,
+                            "Serving size must be a number greater than zero");
+                }
+                if (prepTimeItem.isEmpty() || Integer.parseInt(prepTimeItem) == 0){
+                    invalidInput = true;
+                    setErrorMessage(editPrepText,
+                            "Prep time must be a number greater than zero");
+                }
+                if (instructionsItem.isEmpty()){
+                    invalidInput = true;
+                    setErrorMessage(editInstructionsText,
+                            "Instructions must not be empty");
+                }
+                if(ingredients.isEmpty()){
+                    invalidInput = true;
+                    ingredient_1.setError("At least one ingredient is required");
+                }
 
-                FirestoreDatabase.recipeCol
-                    .add(data)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("RECIPE TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-                            FirestoreDatabase.uploadImage(uri, documentReference.getId());
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("RECIPE TAG", "Error adding document", e);
-                        }
-                    });
-                finish();
+
+                if (!invalidInput){
+                    HashMap<String, Object> data = new HashMap<String,Object>();
+                    data.put("title",titleItem);
+                    data.put("category",categoryItem);
+                    data.put("servings",Integer.parseInt(servingItem));
+                    data.put("prep_time",Integer.parseInt(prepTimeItem));
+                    data.put("instructions",instructionsItem);
+                    data.put("comments",commentsItem);
+                    data.put("ingredients",ingredients);
+                    data.put("image_tracker",0);
+
+                    FirestoreDatabase.addRecipe(data,uri);
+                    finish();
+                }
             }
         });
+    }
+
+    private void setErrorMessage(EditText edt, String errorMessage) {
+        edt.setError(errorMessage);
     }
 
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
+        ingredient_1.setError(null);
         refreshIngredientsShown();
     }
 
