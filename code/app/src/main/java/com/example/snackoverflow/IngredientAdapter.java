@@ -17,17 +17,33 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Ingredient Adapter to view the Ingredients in list view
+ * @see Ingredient
+ * */
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     private ArrayList<Ingredient> ingredients;
     private Context context;
     private boolean recipeCheck;
 
+    /**
+     * Constructor for the Ingredient Adapter
+     * @param context
+     * @param ingredients ArrayList storing ingredients
+     * */
     public IngredientAdapter(Context context, ArrayList<Ingredient> ingredients){
         super(context, 0, ingredients);
         this.ingredients = ingredients;
         this.context = context;
         this.recipeCheck = false;
     }
+
+    /**
+     * Constructor for Ingredient Adapter for Recipe
+     * @param context
+     * @param ingredients ArrayList storing ingredients
+     * @param recipe
+     * */
     public IngredientAdapter(Context context, ArrayList<Ingredient> ingredients, String recipe){
         super(context, 0, ingredients);
         this.ingredients = ingredients;
@@ -90,5 +106,4 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
 
         return dateFormat.format(date);
     }
-
 }
