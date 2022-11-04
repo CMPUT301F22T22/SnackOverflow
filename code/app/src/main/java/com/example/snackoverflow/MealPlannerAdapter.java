@@ -16,6 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for mealPlanner
+ * @see MealPlannerAddMeal
+ * @see Mealday
+ * */
 public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.ViewHolder> {
 
     private Context context;
@@ -23,6 +28,12 @@ public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.
     private ArrayList<Recipe> meals;
     private FragmentManager fm;
 
+    /**
+     * Constructor for the Meal Planner Adapter
+     * @param context
+     * @param mealDay a mealDay for the meal planner adapter
+     * @param fm fragement manager
+     * */
     public MealPlannerAdapter(Context context, Mealday mealDay, FragmentManager fm) {
         this.context = context;
         this.mealDay = mealDay;
@@ -71,6 +82,9 @@ public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    /**
+     * The view holder for all the meals including an image, title and category
+     * */
     public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView mealImage;
         TextView title;

@@ -15,10 +15,21 @@ import androidx.annotation.Nullable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * An adapter for Recipe Storage
+ * extends arrayAdapter<Recipe>
+ * @see Recipe
+ * @see RecipeActivity
+ * */
 public class RecipeAdapter extends ArrayAdapter<Recipe> {
     private ArrayList<Recipe> cookbook;
     private Context context;
 
+    /**
+     * Constructor for the Recipe Adapter
+     * @param context
+     * @param cookbook all the list of recipes
+     * */
     public RecipeAdapter(Context context, ArrayList<Recipe> cookbook){
         super(context,0,cookbook);
         this.cookbook = cookbook;

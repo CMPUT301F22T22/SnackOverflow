@@ -14,10 +14,19 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 
+/**
+ * ShoppingListAdapter returns a view to display Ingredient objects in a user friendly, concise manner.
+ * It displays the description, category, unit, and amount.
+ */
 public class ShoppingListAdapter extends ArrayAdapter<Ingredient>{
     private ArrayList<Ingredient> shoppingList;
     private Context context;
 
+    /**
+     * Constructor for the adapter
+     * @param context: Interface to global information about an application environment
+     * @param list: List of ingredients to display
+     */
     public ShoppingListAdapter(Context context, ArrayList<Ingredient> list){
         super(context, 0, list);
         this.shoppingList = list;
@@ -48,5 +57,3 @@ public class ShoppingListAdapter extends ArrayAdapter<Ingredient>{
         return view;
     }
 }
-
-

@@ -36,6 +36,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+
+/**
+ * Add Recipe Class for adding new Recipe to Recipes storage
+ * extends AppCompatActivity
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener
+ * implements DeleteConformationFragment.OnFragmentInteractionListener
+ * @see Recipe
+ * @see RecipeActivity
+ * */
 // TODO: How to request user permission for gallery access with the new
 // Android API
 public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
@@ -236,14 +245,20 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     private void setErrorMessage(EditText edt, String errorMessage) {
         edt.setError(errorMessage);
     }
-
+    /**
+     * Adds the particular ingredient when prompted by the RecipeIngredientFragment
+     * @param ingredient the ingredient user wants to add
+     * */
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
         ingredient_1.setError(null);
         refreshIngredientsShown();
     }
-
+    /**
+     * Edits the particular ingredient when prompted by the RecipeIngredientFragment
+     * @param ingredient the ingredient user wants to edit
+     * */
     @Override
     public void editIngredient(Ingredient ingredient) {
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
@@ -268,6 +283,10 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             super.onBackPressed();
         }
     }
+
+    /**
+     * refreshed the view to display the last 3 added ingredient
+     */
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i < 2; i++){
@@ -280,6 +299,11 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             }
         }
     }
+
+    /**
+     * changes the enabilty of add views
+     * @param state is the state all views enability is set too
+     */
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleText.setEnabled(state);
@@ -292,7 +316,10 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         addRecipe.setEnabled(state);
         return;
     }
-
+    /**
+     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
+     * @param object object that is to be deleted
+     * */
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {

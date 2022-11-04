@@ -25,6 +25,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class toring all the Firestore Database related functionality
+ *
+ * */
 public class FirestoreDatabase {
 
     final static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -38,6 +42,10 @@ public class FirestoreDatabase {
     private final static String MealsTag = "Meal Plan";
     private final static String RecipeTag = "Recipe";
 
+    /**
+     * Add an Ingredient to the Firebase Storage
+     * @param newIngredient the new ingredient to be added
+     * */
     static void addIngredient(Ingredient newIngredient) {
         ingredientsCol
         .add(newIngredient)
@@ -56,8 +64,15 @@ public class FirestoreDatabase {
         });
     };
 
+    /**
+     * To modify the existing ingredient
+     * */
     static void modifyIngredient() {};
 
+    /**
+     * To delete an existing ingredient from the storage
+     * @param ingredient the ingredient to be deleted
+     * */
     static void deleteIngredient(Ingredient ingredient) {
         ingredientsCol
         .document(ingredient.getId())
@@ -76,6 +91,11 @@ public class FirestoreDatabase {
         });
     };
 
+    /**
+     * Fetches the ingredients from the Firebase storage
+     * @param ingredientArrayAdapter the array adapter for Ingredient Objects
+     * @param ingredients  the array containing all the ingredients
+     * */
     static void fetchIngredients(ArrayAdapter<Ingredient> ingredientArrayAdapter,
                                  ArrayList<Ingredient> ingredients) {
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -116,6 +136,10 @@ public class FirestoreDatabase {
         });
     };
 
+    /**
+     * Gets the Ingredient Storage List form the Database
+     * @return an arraylist conatining all the ingredients from the storage
+     * */
     static ArrayList<Ingredient> getIngredientsStorageList() {
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -146,34 +170,31 @@ public class FirestoreDatabase {
         return ingredient_storage_list;
     }
 
-    /*static ArrayList<String> getIngredientsMealPlanList() {
+    static ArrayList<String> getIngredientsMealPlanList() {
         MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) {
                 if (error != null) {
-                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+                    Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
                     return;
                 }
                 ingredient_meal_plan_list.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    String id = doc.getId();
-                    String title = (String) doc.getData().get("title");
-                    String location = (String) doc.getData().get("location");
-                    int amount = doc.getLong("amount").intValue();
-                    int unit = doc.getLong("unit").intValue();
-                    Date bestBefore = doc.getDate("bestBefore");
-                    String category = (String) doc.getData().get("category");
-
-                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-                    ingredientItem.setId(id);
-                    ingredient_meal_plan_list.add(title); // Adding the ingredients from FireStore
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    for (Object obj : mealsForDay) {
+                        Map<String, Object> mapping = (Map<String, Object>) obj;
+                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
+                        for (String mealplaningredient : mealplaningredients) {
+                            ingredient_meal_plan_list.add(mealplaningredient);
+                        }
+                    }
                 }
             }
         });
+        //System.out.println(ingredient_meal_plan_list.size());
         return ingredient_meal_plan_list;
-    }*/
+    }
 
     static void addRecipe(HashMap<String, Object> data, Uri uri) {
         recipeCol
@@ -192,7 +213,11 @@ public class FirestoreDatabase {
                 }
             });
     };
-
+    
+    /**
+     * deletes a recipe from the storage
+     * @param id id of the recipe to be deleted
+     * */
     static void deleteRecipe(String id) {
         recipeCol.document(id).delete();
     };
