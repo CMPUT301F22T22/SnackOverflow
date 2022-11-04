@@ -295,13 +295,19 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             }
         });
     }
-
+    /**
+     * Adds the particular ingredient when prompted by the RecipeIngredientFragment
+     * @param ingredient the ingredient user wants to add
+     * */
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
         refreshIngredientsShown();
     }
-
+    /**
+     * Edits the particular ingredient when prompted by the RecipeIngredientFragment
+     * @param ingredient the ingredient user wants to edit
+     * */
     @Override
     public void editIngredient(Ingredient ingredient) {
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
@@ -324,6 +330,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             super.onBackPressed();
         }
     }
+    /**
+     * refreshed the view to display the last 3 added ingredient
+     */
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i < 3; i++){
@@ -342,6 +351,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
         storageReference.putFile(uri);
     };
+    /**
+     * changes the enabilty of add views
+     * @param state is the state all views enability is set too
+     */
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleField.setEnabled(state);
@@ -359,7 +372,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         applyButton.setEnabled(state);
         deleteButton.setEnabled(state);
     }
-
+    /**
+     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
+     * @param object object that is to be deleted
+     * */
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {

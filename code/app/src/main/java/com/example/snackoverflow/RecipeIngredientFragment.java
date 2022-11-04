@@ -15,6 +15,13 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
+/**
+ * Add Ingredient Fragment for recipe that pops up when a user wants to add an
+ * Ingredient to the recipe
+ * Extends DialogFragment
+ * @see Ingredient
+ * @see Recipe
+ * */
 
 public class RecipeIngredientFragment extends DialogFragment {
     // Check if we are editing data
@@ -36,7 +43,10 @@ public class RecipeIngredientFragment extends DialogFragment {
         this.ingredient = ingredient;
         edit = true;
     }
-
+    /**
+     * Implements the Fragment Interaction Listener and defines
+     * the addIngredient and editIngredient function
+     * */
     public interface OnFragmentInteractionListener {
         void addIngredient(Ingredient ingredient);
         void editIngredient(Ingredient ingredient);

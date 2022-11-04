@@ -10,7 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
+/**
+ * Add Ingredient Fragment that pops up when a user makes an error
+ * Extends DialogFragment
+ * */
 public class ErrorFragment extends DialogFragment {
     private String errorMessage;
 

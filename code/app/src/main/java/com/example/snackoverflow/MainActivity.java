@@ -119,7 +119,11 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
        // meals.add(tuesday);
 
     }
-
+    /**
+     * addes the meal when prompted by the MealPlannerAddMeal Dialog
+     * @param recipe the recipe user wants to add to meal
+     * @param date the date the user wants to add the meal plan too
+     * */
     @Override
     public void addMeal(Recipe recipe, Date date) {
         for(int i=0;i<meals.size();i++) {
@@ -144,7 +148,10 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         mealslist.setAdapter(mealdayAdapter);
         //FirestoreDatabase.addMealPlan(mealDay);
     }
-
+    /**
+     * deletes the meal when prompted by the MealPlannerAddMeal Dialog
+     * @param mealDay the day user wants to delete from the meal planner
+     * */
     @Override
     public void deleteMealDay(Mealday mealDay) {
         meals.remove(mealDay);
