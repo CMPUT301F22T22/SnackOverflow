@@ -3,6 +3,7 @@ package com.example.snackoverflow;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -12,20 +13,38 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.rpc.context.AttributeContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+
+/**
+ * Add Recipe Class for adding new Recipe to Recipes storage
+ * extends AppCompatActivity
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener
+ * implements DeleteConformationFragment.OnFragmentInteractionListener
+ * @see Recipe
+ * @see RecipeActivity
+ * */
 // TODO: How to request user permission for gallery access with the new
 // Android API
 public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
@@ -49,6 +68,15 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     private TextInputLayout instructionsText;
     private TextInputLayout commentsText;
     private Fragment IngredientsView;
+    private Uri uri;
+
+    // EditText elements
+    EditText editTitleText;
+    EditText editCategoryText;
+    EditText editServingText;
+    EditText editPrepText;
+    EditText editInstructionsText;
+    EditText editCommentsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +89,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         imageViewDrawable = imageView.getDrawable();
         imageViewBackground = imageView.getBackground();
         imageViewRadius = imageView.getLayoutParams().width;
-        //
+
+        // Get UI elements
         titleText = findViewById(R.id.recipe_title);
         categoryText = findViewById(R.id.recipe_category);
         servingText = findViewById(R.id.recipe_servings);
@@ -75,6 +104,14 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         addIngredient = findViewById(R.id.recipe_add_ingredient);
         addRecipe = findViewById(R.id.recipe_add_recipe);
 
+        // Get EditText elements
+        editTitleText = findViewById(R.id.edit_recipe_title);
+        editCategoryText = findViewById(R.id.edit_recipe_category);
+        editServingText = findViewById(R.id.edit_recipe_servings);
+        editPrepText = findViewById(R.id.edit_preptime);
+        editInstructionsText = findViewById(R.id.edit_recipe_instructions);
+        editCommentsText = findViewById(R.id.edit_recipe_comments);
+
         ingredients = new ArrayList<Ingredient>();
         ingredient_views = new ArrayList<TextView>();
 
@@ -83,7 +120,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         ingredient_views.add(ingredient_3);
 
         // Register activity result to handle the Image the user selected
-        ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+        ActivityResultLauncher selectImage =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
@@ -91,7 +129,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                             System.out.println("intent is not null");
                             System.out.println(intent);
                             System.out.println(intent.getData());
-                            Uri uri = intent.getData();
+                            uri = intent.getData();
                             // set the display picture to the
                             // picture that was selected by the user
                             imageView.setImageURI(uri);
@@ -124,12 +162,14 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 }
             }
         });
+
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new RecipeIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
+
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,14 +183,82 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                         .commit();
             }
         });
+
+        addRecipe.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String titleItem = editTitleText.getText().toString();
+                final String categoryItem = editCategoryText.getText().toString();
+                final String servingItem = editServingText.getText().toString();
+                final String prepTimeItem = editPrepText.getText().toString();
+                final String instructionsItem = editInstructionsText.getText().toString();
+                final String commentsItem = editCommentsText.getText().toString();
+                boolean invalidInput = false;
+
+                if (titleItem.isEmpty()){
+                    invalidInput = true;
+                    setErrorMessage(editTitleText, "Title must not be empty");
+                }
+                if (categoryItem.isEmpty() ){
+                    invalidInput = true;
+                    setErrorMessage(editCategoryText, "Category must not be empty");
+                }
+                if (servingItem.isEmpty() || Integer.parseInt(servingItem) == 0){
+                    invalidInput = true;
+                    setErrorMessage(editServingText,
+                            "Serving size must be a number greater than zero");
+                }
+                if (prepTimeItem.isEmpty() || Integer.parseInt(prepTimeItem) == 0){
+                    invalidInput = true;
+                    setErrorMessage(editPrepText,
+                            "Prep time must be a number greater than zero");
+                }
+                if (instructionsItem.isEmpty()){
+                    invalidInput = true;
+                    setErrorMessage(editInstructionsText,
+                            "Instructions must not be empty");
+                }
+                if(ingredients.isEmpty()){
+                    invalidInput = true;
+                    ingredient_1.setError("At least one ingredient is required");
+                }
+
+
+                if (!invalidInput){
+                    HashMap<String, Object> data = new HashMap<String,Object>();
+                    data.put("title",titleItem);
+                    data.put("category",categoryItem);
+                    data.put("servings",Integer.parseInt(servingItem));
+                    data.put("prep_time",Integer.parseInt(prepTimeItem));
+                    data.put("instructions",instructionsItem);
+                    data.put("comments",commentsItem);
+                    data.put("ingredients",ingredients);
+                    data.put("image_tracker",0);
+
+                    FirestoreDatabase.addRecipe(data,uri);
+                    finish();
+                }
+            }
+        });
     }
 
+    private void setErrorMessage(EditText edt, String errorMessage) {
+        edt.setError(errorMessage);
+    }
+    /**
+     * Adds the particular ingredient when prompted by the RecipeIngredientFragment
+     * @param ingredient the ingredient user wants to add
+     * */
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
+        ingredient_1.setError(null);
         refreshIngredientsShown();
     }
-
+    /**
+     * Edits the particular ingredient when prompted by the RecipeIngredientFragment
+     * @param ingredient the ingredient user wants to edit
+     * */
     @Override
     public void editIngredient(Ingredient ingredient) {
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
@@ -175,6 +283,10 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             super.onBackPressed();
         }
     }
+
+    /**
+     * refreshed the view to display the last 3 added ingredient
+     */
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i < 2; i++){
@@ -187,6 +299,11 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
             }
         }
     }
+
+    /**
+     * changes the enabilty of add views
+     * @param state is the state all views enability is set too
+     */
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleText.setEnabled(state);
@@ -199,7 +316,10 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         addRecipe.setEnabled(state);
         return;
     }
-
+    /**
+     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
+     * @param object object that is to be deleted
+     * */
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {

@@ -12,7 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
+/**
+ * Delete Conformation pops up when a user wants to add an
+ * delete an Object
+ * Extends DialogFragment
+ * */
 public class DeleteConformationFragment<T> extends DialogFragment {
     private T object;
     private String title;
@@ -23,6 +27,10 @@ public class DeleteConformationFragment<T> extends DialogFragment {
         this.object = object;
         this.title = title;
     }
+    /**
+     * Implements the Fragment Interaction Listener and defines
+     * the deleteObject function
+     * */
     public interface OnFragmentInteractionListener {
         void deleteObject(Object object);
     }

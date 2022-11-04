@@ -32,7 +32,7 @@ public class ShoppingListAddItemFragment extends DialogFragment {
     }
 
     /**
-     * Handles the fragment to activity communication.
+     * Handles the fragment-to-activity communication.
      */
     public interface OnFragmentInteractionListener {
         void onOkPressed(Ingredient selectedIngredient);

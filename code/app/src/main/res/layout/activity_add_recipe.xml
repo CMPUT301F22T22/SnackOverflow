@@ -45,6 +45,7 @@
                 app:layout_constraintTop_toBottomOf="@id/recipe_addPhoto">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_recipe_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
@@ -66,6 +67,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/recipe_title">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_recipe_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -84,6 +86,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/recipe_title">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_recipe_servings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
@@ -123,6 +126,8 @@
 
                 <TextView
                     android:id="@+id/Ingredient_1"
+                    style="@android:style/Widget.EditText"
+                    android:textColor="#707070"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -188,6 +193,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/listview">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_recipe_instructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -207,6 +213,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/recipe_instructions">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_recipe_comments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -224,7 +231,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:hint="Add"
-                android:textColor="@color/white"
+                android:textColorHint="#fff"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

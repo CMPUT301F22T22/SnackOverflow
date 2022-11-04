@@ -40,16 +40,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-interface FirebaseListener {
-    public void onAction(String title, int prep_time, float servings, String category, String comments,
-                         String instructions,@Nullable Bitmap imgBitmap);
-}
-public class RecipeActivity extends AppCompatActivity implements FirebaseListener {
+/**
+ * Recipe Activity class used to display existing recipes created by the user along with images
+ * extends AppCompatActivity
+ * @see Recipe
+ * @see ModifyRecipe
+ * @see AddRecipe
+ * @see RecipeAdapter
+ * */
+public class RecipeActivity extends AppCompatActivity {
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
     ArrayList<String> recipeIdList = new ArrayList<String>();
-    Map<String, ArrayList<String>> ingredientIds =  new HashMap();
     int imageTrackingData = 0;
 
     @Override
@@ -76,15 +79,26 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                                 data.put("instructions", intent.getStringExtra("instructions"));
                                 data.put("image_tracker", intent.getIntExtra("image_tracker",0));
                                 data.put("comments", intent.getStringExtra("comments"));
+                                ArrayList<String> ingredientTitles = intent.getStringArrayListExtra("ingredientTitles");
+                                ArrayList<String> ingredientUnit = intent.getStringArrayListExtra("ingredientUnit");
+                                ArrayList<Object> recipeIngredientList= new ArrayList<Object>();
+                                for (int i = 0; i < ingredientTitles.size(); i++ ) {
+                                    Map<String, Object> recipeIngredients = new HashMap();
+                                    recipeIngredients.put("title", ingredientTitles.get(i));
+                                    recipeIngredients.put("unit", ingredientUnit.get(i));
+                                    recipeIngredientList.add(recipeIngredients);
+                                }
+                                data.put("ingredients", recipeIngredientList);
                                 FirebaseFirestore.getInstance().collection("recipe").
                                         document(recipeId).update(data);
                             } else if (actionType.equals("DELETE")) {
                                 FirebaseFirestore.getInstance().collection("recipe").
                                         document(recipeId).delete();
+                                FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg")
+                                        .delete();
                                 int ind = recipeIdList.indexOf(recipeId);
                                 recipeDataList.remove(ind);
                                 recipeIdList.remove(ind);
-                                ingredientIds.remove(recipeId);
                                 recipeArrayAdapter.notifyDataSetChanged();
                             }
                         }
@@ -135,42 +149,36 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                     for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                     {
                         String id = doc.getId();
+                        System.out.println(id);
                         Map<String, Object> data = doc.getData();
                         String title = data.get("title").toString();
-                        int prep_time = ((Long) data.get("prep_time")).intValue();
-                        float servings = Float.valueOf(data.get("servings").toString());
+                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                        float servings = Float.parseFloat(data.get("servings").toString());
                         String category = data.get("category").toString();
                         String instructions = data.get("instructions").toString();
                         String comments = data.get("comments").toString();
-                        ArrayList<String> ingredientIdList = new ArrayList<String>();
 
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+id+".jpg");
                         imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                        recipeIdList.add(id);
                         try {
+                            recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions));
                             File localFile = File.createTempFile("tempfile",".jpg");
-                            storageRef.getFile(localFile)
-                                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                            onAction(title, prep_time,servings,category,comments,instructions,imgBitmap);
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            onAction(title, prep_time,servings,category,comments,instructions, null);
-                                        }
-                                    });
+                            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    int i =recipeIdList.indexOf(id);
+                                    recipeDataList.get(i).setImageBitmap(imgBitmap);
+                                    recipeArrayAdapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (IOException e) {
 
-                        }for (Object iid: (ArrayList) data.get("ingredients")) {
-                        ingredientIdList.add(iid.toString());
-                    }
-                        ingredientIds.put(id, ingredientIdList);
-                        recipeIdList.add(id);
+                        }
                 }
+                    recipeArrayAdapter.notifyDataSetChanged();
                 } catch (NullPointerException e) {
-                    System.out.println("EH");
                 }
             }
         });
@@ -181,7 +189,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                 Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
                 intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
                 intent.putExtra("recipeId", recipeIdList.get(position));
-                intent.putStringArrayListExtra("ingredientIds", ingredientIds.get(recipeIdList.get(position)));
                 intent.putExtra("imageTracker", imageTrackingData);
                 getModifiedData.launch(intent);
             }
@@ -196,20 +203,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                 startActivity(intent);
             }
         });
-    }
-    public ArrayList<Recipe> getRecipes(){
-        return recipeDataList;
-    }
-
-    @Override
-    public void onAction(String title, int prep_time, float servings, String category, String comments,
-                         String instructions,@Nullable Bitmap imgBitmap) {
-        if (imgBitmap == null) {
-            recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions));
-        } else {
-            recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions, imgBitmap));
-        }
-        recipeArrayAdapter.notifyDataSetChanged();
     }
 
     @Override

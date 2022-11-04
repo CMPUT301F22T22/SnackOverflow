@@ -22,6 +22,7 @@
 
     <ListView
         android:layout_marginTop="75dp"
+        android:layout_marginBottom="60dp"
         android:id="@+id/shopping_list_storage_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
