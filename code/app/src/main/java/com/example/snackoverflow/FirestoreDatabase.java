@@ -78,36 +78,6 @@ public class FirestoreDatabase {
 
     static void fetchIngredients(ArrayAdapter<Ingredient> ingredientArrayAdapter,
                                  ArrayList<Ingredient> ingredients) {
-//        ingredientsCol
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d(IngredientsTAG, "Ingredients retrieved successfully");
-//                            ArrayList<Ingredient> allIngredients = new ArrayList<>();
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                String title = document.getString("title");
-//                                String location = document.getString("location");
-//                                int amount = document.getLong("amount").intValue();
-//                                int unit = document.getLong("unit").intValue();
-//                                Date bestBefore = document.getDate("bestBefore");
-//                                String category = document.getString("category");
-//                                System.out.println(title);
-//                                System.out.println(location);
-//                                System.out.println(amount);
-//                                System.out.println(unit);
-//                                System.out.println(bestBefore);
-//                                System.out.println(category);
-//
-//                                Ingredient ingredient = new Ingredient(title, bestBefore, location, amount, unit, category);
-//                                allIngredients.add(ingredient);
-//                            }
-//                            ingredientArrayAdapter.clear();
-//                            ingredientArrayAdapter.addAll(allIngredients);
-//                        }
-//                    }
-//                });
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
