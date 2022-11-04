@@ -17,7 +17,13 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-
+/**
+ * View Ingredient Fragment that pops up when a user wants to view all
+ * Ingredient added to a recipe
+ * Extends DialogFragment
+ * @see Ingredient
+ * @see Recipe
+ * */
 public class RecipeIngredientViewFragment extends Fragment {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
