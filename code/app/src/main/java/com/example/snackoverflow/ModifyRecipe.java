@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,19 +33,19 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredientFragment.OnFragmentInteractionListener {
+public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
     private EditText titleField;
     private EditText categoryField;
     private EditText servingsField;
     private EditText instructionsField;
     private EditText commentsField;
+    private EditText prepField;
     private TextView ingredient_1;
     private TextView ingredient_2;
     private TextView ingredient_3;
@@ -54,6 +56,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     private Button addIngredient;
 
     public CircleImageView imageView;
+    private Drawable imageViewDrawable;
+    private Drawable imageViewBackground;
+    private int imageViewRadius;
 
     private Button editButton;
     private Button applyButton;
@@ -88,6 +93,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                         }
                     });
         } catch (IOException e) {}
+        // imageview default
+        imageViewDrawable = imageView.getDrawable();
+        imageViewBackground = imageView.getBackground();
+        imageViewRadius = imageView.getLayoutParams().width;
+        //
 
         imageTracker = intent.getIntExtra("imageTracker", 0);
         // Register activity result to handle the Image the user selected
@@ -116,23 +126,29 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             public void onClick(View view) {
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
-                ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
-                with.crop(1f, 1f);
-                with.compress(1024) ;        //Final image size will be less than 1 MB
-                with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
-                with.createIntent(new Function1<Intent, Unit>() {
-                    @Override
-                    public Unit invoke(Intent Intent) {
-                        selectImage.launch(Intent );
-                        return null;
-                    }
-                });
+                if (imageView.getDrawable() != imageViewDrawable){
+                    new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                }
+                else {
+                    ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
+                    with.crop(1f, 1f);
+                    with.compress(1024);        //Final image size will be less than 1 MB
+                    with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
+                    with.createIntent(new Function1<Intent, Unit>() {
+                        @Override
+                        public Unit invoke(Intent Intent) {
+                            selectImage.launch(Intent);
+                            return null;
+                        }
+                    });
+                }
             }
         });
 
         titleField = (EditText) findViewById(R.id.edit_recipe_title);
         categoryField = (EditText) findViewById(R.id.edit_recipe_category);
         servingsField = (EditText) findViewById(R.id.edit_recipe_servings);
+        prepField = (EditText) findViewById(R.id.edit_preptime);
         instructionsField = (EditText) findViewById(R.id.edit_recipe_instructions);
         commentsField = (EditText) findViewById(R.id.edit_recipe_comments);
         titleField.setText(recipe.getTitle());
@@ -225,6 +241,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
                 String title = titleField.getText().toString();
                 String category = categoryField.getText().toString();
                 String servings = servingsField.getText().toString();
+                String prepTime = prepField.getText().toString();
                 String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
                 if (titleField.equals("") || category.equals("") || servings.equals("") ||
@@ -247,16 +264,18 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new RecipeAddIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
+                new RecipeIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
             }
         });
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
+                findViewById(R.id.constraintLayout).setVisibility(View.INVISIBLE);
+                changeClickState(false);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.constraintLayout, IngredientsView)
+                        .replace(R.id.Main, IngredientsView)
                         .commit();
             }
         });
@@ -284,7 +303,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.constraintLayout, IngredientsView).commit();
+                .replace(R.id.Main, IngredientsView).commit();
     }
     @Override
     public void onBackPressed() {
@@ -293,7 +312,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
             getSupportFragmentManager().beginTransaction()
                     .remove(IngredientsView)
                     .commit();
+            changeClickState(true);
             refreshIngredientsShown();
+            findViewById(R.id.constraintLayout).setVisibility(View.VISIBLE);
         }
         else {
             super.onBackPressed();
@@ -301,6 +322,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
     }
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
+        for (int i = 0; i < 3; i++){
+            ingredient_views.get(i).setText("Ingredient");
+        }
         for (int i = 0; i<=last_index;i++){
             ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
             if (i == 2){
@@ -313,5 +337,42 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeAddIngredie
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
         storageReference.putFile(uri);
+    };
+    private void changeClickState(boolean state){
+        imageView.setEnabled(state);
+        titleField.setEnabled(state);
+        categoryField.setEnabled(state);
+        servingsField.setEnabled(state);
+        showMore.setEnabled(state);
+        addIngredient.setEnabled(state);
+        instructionsField.setEnabled(state);
+        commentsField.setEnabled(state);
+        addIngredient.setEnabled(state);
+        showMore.setEnabled(state);
+        viewButton.setEnabled(state);
+        editButton.setEnabled(state);
+        applyButton.setEnabled(state);
+        deleteButton.setEnabled(state);
+    }
+
+    @Override
+    public void deleteObject(Object object) {
+        if (object.getClass() == Ingredient.class) {
+            ingredients.remove(object);
+            IngredientsView = new RecipeIngredientViewFragment(ingredients);
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.Main, IngredientsView)
+                    .commit();
+        }
+        else{
+            if (object.getClass() == CircleImageView.class){
+                ((CircleImageView) object).getLayoutParams().width = imageViewRadius;
+                ((CircleImageView) object).getLayoutParams().height =imageViewRadius;
+                ((CircleImageView) object).setBackground(imageViewBackground);
+                ((CircleImageView) object).setImageDrawable(imageViewDrawable);
+                ((CircleImageView) object).setPadding(4,7,6,10);
+            }
+        }
     }
 }

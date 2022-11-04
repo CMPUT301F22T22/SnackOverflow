@@ -60,6 +60,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         else{
             if(view == null){
                 view = LayoutInflater.from(context).inflate(R.layout.recipe_ingredient_content, parent,false);
+                System.out.println("drawn");
             }
             Ingredient ingredient = ingredients.get(position);
             TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
@@ -72,7 +73,14 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
             editIngredient.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new RecipeAddIngredientFragment(ingredient).show(((FragmentActivity)context).getSupportFragmentManager(), "Edit_Ingredient");
+                    new RecipeIngredientFragment(ingredient).show(((FragmentActivity)context).getSupportFragmentManager(), "Edit_Ingredient");
+                }
+            });
+            ImageButton deleteIngredient = view.findViewById(R.id.delete_ingredient);
+            deleteIngredient.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DeleteConformationFragment<Ingredient>(ingredient, ingredient.getTitle()).show(((FragmentActivity)context).getSupportFragmentManager(), "Delete_Ingredient");
                 }
             });
         }
