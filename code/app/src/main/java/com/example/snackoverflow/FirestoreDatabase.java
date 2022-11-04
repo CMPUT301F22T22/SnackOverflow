@@ -178,18 +178,23 @@ public class FirestoreDatabase {
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) {
                 if (error != null) {
-                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+                    Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
                     return;
                 }
                 ingredient_meal_plan_list.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
-                    Log.d("testing", String.valueOf(mealsForDay.get(0)));
-                    //ingredient_meal_plan_list.add(title); // Adding the ingredients from FireStore
+                    for (Object obj : mealsForDay) {
+                        Map<String, Object> mapping = (Map<String, Object>) obj;
+                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
+                        for (String mealplaningredient : mealplaningredients) {
+                            ingredient_meal_plan_list.add(mealplaningredient);
+                        }
+                    }
                 }
             }
         });
+        //System.out.println(ingredient_meal_plan_list.size());
         return ingredient_meal_plan_list;
     }
 

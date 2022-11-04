@@ -55,7 +55,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
 
         //ArrayList<Ingredient> firebaseIngredients = FirestoreDatabase.getIngredientsStorageList();
         ArrayList<String> yo = FirestoreDatabase.getIngredientsMealPlanList();
-
+        Log.d("debugging", String.valueOf(yo));
         // Linking the listview to an arraylist and setting adapter
         shoppingList = findViewById(R.id.shopping_list_storage_list);
         shoppingListAdapter = new ShoppingListAdapter(this, shoppingItems);

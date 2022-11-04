@@ -57,5 +57,3 @@ public class ShoppingListAdapter extends ArrayAdapter<Ingredient>{
         return view;
     }
 }
-
-
