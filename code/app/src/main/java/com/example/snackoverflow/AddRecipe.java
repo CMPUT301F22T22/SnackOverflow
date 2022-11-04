@@ -162,7 +162,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.constraintLayout, IngredientsView).commit();
+                .replace(R.id.Main, IngredientsView).commit();
     }
 
     @Override
