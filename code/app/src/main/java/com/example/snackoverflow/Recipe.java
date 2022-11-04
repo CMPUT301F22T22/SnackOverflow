@@ -1,7 +1,10 @@
 package com.example.snackoverflow;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,14 +18,15 @@ public class Recipe implements Serializable, Parcelable {
     private String instructions;
     private String comments;
     private ArrayList<Ingredient> ingredients ;
+    private Bitmap imageBitmap;
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions) {
+    public Recipe(String title, int prepTime, float servings, String category, String comments, String instructions) {
         this.title = title;
-        this.preptime = preptime;
+        this.preptime = prepTime;
         this.servings = servings;
-        this.recipeCategory = recipeCategory;
+        this.recipeCategory = category;
         this.instructions = instructions;
         this.comments = comments;
         ingredients = new ArrayList<Ingredient>();
@@ -40,6 +44,7 @@ public class Recipe implements Serializable, Parcelable {
 
     protected Recipe(Parcel in) {
         title = in.readString();
+        preptime = in.readInt();
         servings = in.readFloat();
         recipeCategory = in.readString();
         instructions = in.readString();
@@ -59,6 +64,17 @@ public class Recipe implements Serializable, Parcelable {
         }
     };
 
+    public Recipe(String title, int preptime, float servings, String category, String comments, String instructions, @Nullable Bitmap imgBitmap) {
+        this.title = title;
+        this.preptime = preptime;
+        this.servings = servings;
+        this.recipeCategory = category;
+        this.instructions = instructions;
+        this.comments = comments;
+        ingredients = new ArrayList<Ingredient>();
+        this.imageBitmap = imgBitmap;
+    }
+
     public String getId() {
         return id;
     }
@@ -71,12 +87,12 @@ public class Recipe implements Serializable, Parcelable {
         this.title = title;
     }
 
-    public int getPreptimeTime() {
+    public int getPreptime() {
         return preptime;
     }
 
-    public void setPreptimeTime(int time) {
-        this.preptime = preptime;
+    public void setPreptime(int time) {
+        this.preptime = time;
     }
 
     public float getServings() {
@@ -134,6 +150,14 @@ public class Recipe implements Serializable, Parcelable {
         return this.ingredients;
     }
 
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
+    }
+
     public int describeContents() {
         return 0;
     }
@@ -141,6 +165,7 @@ public class Recipe implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(title);
+        parcel.writeInt(preptime);
         parcel.writeFloat(servings);
         parcel.writeString(recipeCategory);
         parcel.writeString(instructions);

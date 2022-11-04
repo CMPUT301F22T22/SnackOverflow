@@ -47,8 +47,6 @@ public class RecipeTest {
         recipe.addIngredient(mockIngredient());
         recipe.removeIngredient(mockIngredient());
         assertFalse(recipe.getIngredients().contains(mockIngredient()));
-
-
     }
 
 }
