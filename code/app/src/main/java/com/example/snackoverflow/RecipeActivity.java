@@ -40,17 +40,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-interface FirebaseListener {
-    public void onAction(String title, int prep_time, float servings, String category, String comments,
-                         String instructions,@Nullable Bitmap imgBitmap, int orderId);
-}
-public class RecipeActivity extends AppCompatActivity implements FirebaseListener {
+
+public class RecipeActivity extends AppCompatActivity {
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
     ArrayList<String> recipeIdList = new ArrayList<String>();
-    Map<String, Recipe> recipes =  new HashMap();
-    int orderId = 0;
     int imageTrackingData = 0;
 
     @Override
@@ -77,6 +72,16 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                                 data.put("instructions", intent.getStringExtra("instructions"));
                                 data.put("image_tracker", intent.getIntExtra("image_tracker",0));
                                 data.put("comments", intent.getStringExtra("comments"));
+                                ArrayList<String> ingredientTitles = intent.getStringArrayListExtra("ingredientTitles");
+                                ArrayList<String> ingredientUnit = intent.getStringArrayListExtra("ingredientUnit");
+                                ArrayList<Object> recipeIngredientList= new ArrayList<Object>();
+                                for (int i = 0; i < ingredientTitles.size(); i++ ) {
+                                    Map<String, Object> recipeIngredients = new HashMap();
+                                    recipeIngredients.put("title", ingredientTitles.get(i));
+                                    recipeIngredients.put("unit", ingredientUnit.get(i));
+                                    recipeIngredientList.add(recipeIngredients);
+                                }
+                                data.put("ingredients", recipeIngredientList);
                                 FirebaseFirestore.getInstance().collection("recipe").
                                         document(recipeId).update(data);
                             } else if (actionType.equals("DELETE")) {
@@ -140,8 +145,8 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                         System.out.println(id);
                         Map<String, Object> data = doc.getData();
                         String title = data.get("title").toString();
-                        int prep_time = ((Long) data.get("prep_time")).intValue();
-                        float servings = Float.valueOf(data.get("servings").toString());
+                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                        float servings = Float.parseFloat(data.get("servings").toString());
                         String category = data.get("category").toString();
                         String instructions = data.get("instructions").toString();
                         String comments = data.get("comments").toString();
@@ -167,7 +172,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                 }
                     recipeArrayAdapter.notifyDataSetChanged();
                 } catch (NullPointerException e) {
-                    System.out.println("EH");
                 }
             }
         });
@@ -192,20 +196,6 @@ public class RecipeActivity extends AppCompatActivity implements FirebaseListene
                 startActivity(intent);
             }
         });
-    }
-    public ArrayList<Recipe> getRecipes(){
-        return recipeDataList;
-    }
-
-    @Override
-    public void onAction(String title, int prep_time, float servings, String category, String comments,
-                         String instructions,@Nullable Bitmap imgBitmap, int orderId) {
-        if (imgBitmap == null) {
-            recipeDataList.set(orderId-1, new Recipe(title, prep_time, servings, category, comments, instructions));
-        } else {
-
-        }
-        recipeArrayAdapter.notifyDataSetChanged();
     }
 
     @Override

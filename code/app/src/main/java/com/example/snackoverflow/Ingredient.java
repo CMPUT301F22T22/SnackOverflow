@@ -41,7 +41,7 @@ public class Ingredient implements Serializable  {
      * @param unit an integer defining the quantity of the ingredient
      * @param category a string describing what category the ingredient is is
      * */
-    public Ingredient(String description, Date date, String location, int amount, int unit, String category) {
+    public Ingredient(String description, Date date, String location, Integer amount, int unit, String category) {
         this.title = description;
         this.location = location;
         this.amount = amount;
