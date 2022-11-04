@@ -19,10 +19,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -39,6 +43,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+/**
+ * Modify Recipe Class to modify existing recipes and the ingredients present in the recipes
+ * extends AppCompatActivity
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener
+ * @see RecipeActivity
+ * @see Recipe
+ * @see Ingredient
+ * */
 public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
     private EditText titleField;
     private EditText categoryField;
@@ -75,7 +87,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra("recipe");
         String recipeId = intent.getStringExtra("recipeId");
-        ArrayList<String> ingredientIds = intent.getStringArrayListExtra("ingredientIds");
         imageView = findViewById(R.id.edit_recipe_photo);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
         try {
@@ -192,14 +203,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         ingredient_views.add(ingredient_2);
         ingredient_views.add(ingredient_3);
 
-        // Set ingredients text view
-        int last_index = ingredients.size()-1;
-        for (int i = 0; i<=last_index;i++){
-            ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
-            if (i == 2){
-                break;
-            }
-        }
+        fetchIngredients(recipeId);
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +263,15 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putExtra("prep_time", Integer.valueOf(prepTime));
                     modifyIntent.putExtra("instructions", instructions);
                     modifyIntent.putExtra("image_tracker", imageTracker);
+                    ArrayList<String> ingredientTitles = new ArrayList<>();
+                    ArrayList<String> ingredientUnit = new ArrayList<>();
+                    for (Ingredient ingredient: ingredients) {
+                        ingredientTitles.add(ingredient.getTitle());
+                        ingredientUnit.add(String.valueOf(ingredient.getUnit()));
+                    }
                     modifyIntent.putExtra("comments", comments);
+                    modifyIntent.putStringArrayListExtra("ingredientTitles", ingredientTitles);
+                    modifyIntent.putStringArrayListExtra("ingredientUnit", ingredientUnit);
                     setResult(RESULT_OK, modifyIntent);
                     finish();
                 }
@@ -296,12 +308,20 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         });
     }
 
+    /**
+     * Add an ingredient to an existing recipe
+     * @param ingredient ingredient to add to the recipe
+     * */
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
         refreshIngredientsShown();
     }
 
+    /**
+     * Edits an existing ingredient in an existing recipe
+     * @param ingredient ingredient to edit
+     * */
     @Override
     public void editIngredient(Ingredient ingredient) {
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
@@ -309,6 +329,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 .setReorderingAllowed(true)
                 .replace(R.id.Main, IngredientsView).commit();
     }
+
     @Override
     public void onBackPressed() {
         if (IngredientsView != null){
@@ -324,6 +345,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             super.onBackPressed();
         }
     }
+
+    /**
+     * refresh the ingredients shown on the recipe
+     * */
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i < 3; i++){
@@ -336,12 +361,23 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             }
         }
     }
+
+    /**
+     * uploads an image to the recipe
+     * @param uri path to the temporary stprage of the image
+     * @param id id of the recipe
+     * */
     public void uploadImage(Uri uri, String id) {
         String filename = id;
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
         storageReference.putFile(uri);
     };
+
+    /**
+     * Enables the fields in the recipe
+     * @param state
+     * */
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleField.setEnabled(state);
@@ -358,6 +394,34 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         editButton.setEnabled(state);
         applyButton.setEnabled(state);
         deleteButton.setEnabled(state);
+    }
+
+    public void fetchIngredients(String recipeId) {
+        FirebaseFirestore.getInstance()
+                .collection("recipe")
+                .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        Map<String, Object> data = doc.getData();
+                        ArrayList<Object> ingredientArray = (ArrayList<Object>) data.get("ingredients");
+                        try {
+                            for (Object ingredient: ingredientArray) {
+                                Map<String, Object> ingredientMap = (Map<String, Object>) ingredient;
+                                String title = ingredientMap.get("title").toString();
+                                Integer unit = Integer.valueOf(ingredientMap.get("unit").toString());
+                                ingredients.add(new Ingredient(title,
+                                        null, null, 0, unit,
+                                        null));
+                            }
+                        } catch (ConcurrentModificationException e) {
+
+                        }
+                        refreshIngredientsShown();
+                    }
+                });
+
+        // Set ingredients text view
     }
 
     @Override
