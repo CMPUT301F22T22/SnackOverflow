@@ -343,6 +343,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             getSupportFragmentManager().beginTransaction()
                     .remove(IngredientsView)
                     .commit();
+            IngredientsView = null;
             changeClickState(true);
             refreshIngredientsShown();
             findViewById(R.id.constraintLayout).setVisibility(View.VISIBLE);
