@@ -120,10 +120,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
             }
         });
 
-        //ArrayList<Ingredient> firebaseIngredients = FirestoreDatabase.getIngredientsStorageList();
-        Log.d("debugging", String.valueOf(firebase_ingredient_meal_plan_list));
-        Log.d("debugging", String.valueOf(firebase_ingredient_storage_list));
-
         // Setting up NavBar
         NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.shoppinglist);
