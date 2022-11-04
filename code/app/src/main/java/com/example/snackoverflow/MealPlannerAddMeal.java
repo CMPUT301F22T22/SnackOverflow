@@ -30,6 +30,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * A class modelling adding a meal to a Meal Planner
+ * extends DialogFragment
+ * implements AdapterView.OnItemSelectedListener
+ * @see MealPlannerAdapter
+ * @see Mealday
+ * @see MealdayAdapter
+ * */
 public class MealPlannerAddMeal extends DialogFragment implements AdapterView.OnItemSelectedListener {
     // Check if we are editing data
     private boolean edit;
@@ -45,16 +53,27 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     // listener for Meal Planner
     public OnFragmentInteractionListener listener;
 
-    // constructor
+    /**
+     * Constructor for the add meal
+     * */
     public MealPlannerAddMeal() {
         edit = false;
     }
+
+    /**
+     * Constructor for add meal to meal planner
+     * @param mealDay the meal day
+     * @param recipe the recipe to be added
+     * */
     public MealPlannerAddMeal(Mealday mealDay, Recipe recipe){
         this.edit = true;
         this.mealDay = mealDay;
         this.recipe = recipe;
     }
 
+    /**
+     * interface for OnFragmentInteractionListener
+     * */
     public interface OnFragmentInteractionListener {
         void addMeal(Recipe recipe, Date date);
 
@@ -212,8 +231,13 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                     }).create();
         }
     }
+
+    /**
+     * Validates a date that is parsed in
+     * @param edt the edit text field to be validated
+     * */
     private void isValidDate(EditText edt) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             String after = dateFormat.format(dateFormat.parse(edt.getText().toString()));
         } catch (ParseException e) {
