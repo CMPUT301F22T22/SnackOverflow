@@ -6,6 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+/**
+ * IngredientDetailsActivity defines the Activity that showcases
+ * the Ingredient details when we click on it
+ * Extends AppCompactActivity
+ * @see Ingredient
+ * @see IngredientStorageActivity
+ * */
 public class IngredientDetailsActivity extends AppCompatActivity {
 
     @Override
@@ -20,12 +27,8 @@ public class IngredientDetailsActivity extends AppCompatActivity {
         TextView ingredientAmount = (TextView) findViewById(R.id.details_amount);
         TextView ingredientCategory = (TextView) findViewById(R.id.details_category);
 
-        //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
         Intent intent = getIntent();
         Ingredient selectedIngredient = (Ingredient) intent.getSerializableExtra("selectedIngredient");
-
-        //String bestBefore = sdf.format(selectedIngredient.getBestBefore());
 
         ingredientDescription.setText(selectedIngredient.getTitle());
         ingredientUnit.setText(String.valueOf(selectedIngredient.getUnit()));
