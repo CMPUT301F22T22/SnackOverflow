@@ -19,8 +19,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
+/**
+ * Class toring all the Firestore Database related functionality
+ *
+ * */
 public class FirestoreDatabase {
 
     final static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -33,6 +36,10 @@ public class FirestoreDatabase {
     private final static ArrayList<Ingredient> ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> ingredient_meal_plan_list = new ArrayList<>();
 
+    /**
+     * Add an Ingredient to the Firebase Storage
+     * @param newIngredient the new ingredient to be added
+     * */
     static void addIngredient(Ingredient newIngredient) {
         ingredientsCol
         .add(newIngredient)
@@ -51,8 +58,15 @@ public class FirestoreDatabase {
         });
     };
 
+    /**
+     * To modify the existing ingredient
+     * */
     static void modifyIngredient() {};
 
+    /**
+     * To delete an existing ingredient from the storage
+     * @param ingredient the ingredient to be deleted
+     * */
     static void deleteIngredient(Ingredient ingredient) {
         ingredientsCol
         .document(ingredient.getId())
@@ -71,6 +85,11 @@ public class FirestoreDatabase {
         });
     };
 
+    /**
+     * Fetches the ingredients from the Firebase storage
+     * @param ingredientArrayAdapter the array adapter for Ingredient Objects
+     * @param ingredients  the array containing all the ingredients
+     * */
     static void fetchIngredients(ArrayAdapter<Ingredient> ingredientArrayAdapter,
                                  ArrayList<Ingredient> ingredients) {
 //        ingredientsCol
@@ -141,6 +160,10 @@ public class FirestoreDatabase {
         });
     };
 
+    /**
+     * Gets the Ingredient Storage List form the Database
+     * @return an arraylist conatining all the ingredients from the storage
+     * */
     static ArrayList<Ingredient> getIngredientsStorageList() {
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -200,8 +223,15 @@ public class FirestoreDatabase {
         return ingredient_meal_plan_list;
     }*/
 
+    /**
+     * Adds a recipe to firebase database
+     * */
     static void addRecipe() {};
 
+    /**
+     * deletes a recipe from the storage
+     * @param id id of the recipe to be deleted
+     * */
     static void deleteRecipe(String id) {
         recipeCol.document(id).delete();
     };

@@ -21,10 +21,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-// Note: For now meal plan is implemented as a list of recipes as
-// none of other functionalities are implemented
+/**
+ * The main activity or the home page of the app
+ * extends AppCompatActivity
+ * implements MealPlannerAddMeal.OnFragmentInteractionListener
+ * @see Mealday
+ * @see MealdayAdapter
+ * @see MealPlannerAddMeal
+ * */
 public class MainActivity extends AppCompatActivity implements MealPlannerAddMeal.OnFragmentInteractionListener{
-
+    // Note: For now meal plan is implemented as a list of recipes as
+    // none of other functionalities are implemented
     //TODO: Follow camel case naming convention
     ExpandableListView mealslist;
     ArrayList<Mealday> meals = new ArrayList<>();
@@ -89,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
 
 
 
-    /*
-    Test DATA
-     */
+    /**
+     * Adds test data to the meal plan storage
+     * */
     private void data(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
 
     }
     /**
-     * addes the meal when prompted by the MealPlannerAddMeal Dialog
+     * adds the meal when prompted by the MealPlannerAddMeal Dialog
      * @param recipe the recipe user wants to add to meal
      * @param date the date the user wants to add the meal plan too
      * */
