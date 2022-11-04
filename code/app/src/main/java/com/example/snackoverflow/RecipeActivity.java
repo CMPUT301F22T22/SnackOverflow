@@ -81,11 +81,15 @@ public class RecipeActivity extends AppCompatActivity {
                                 data.put("comments", intent.getStringExtra("comments"));
                                 ArrayList<String> ingredientTitles = intent.getStringArrayListExtra("ingredientTitles");
                                 ArrayList<String> ingredientUnit = intent.getStringArrayListExtra("ingredientUnit");
+                                ArrayList<String> ingredientAmount = intent.getStringArrayListExtra("ingredientAmount");
+                                ArrayList<String> ingredientCategory = intent.getStringArrayListExtra("ingredientCategory");
                                 ArrayList<Object> recipeIngredientList= new ArrayList<Object>();
                                 for (int i = 0; i < ingredientTitles.size(); i++ ) {
                                     Map<String, Object> recipeIngredients = new HashMap();
                                     recipeIngredients.put("title", ingredientTitles.get(i));
-                                    recipeIngredients.put("unit", ingredientUnit.get(i));
+                                    recipeIngredients.put("unit", Integer.valueOf(ingredientUnit.get(i)));
+                                    recipeIngredients.put("amount", Integer.valueOf(ingredientAmount.get(i)));
+                                    recipeIngredients.put("category", ingredientCategory.get(i));
                                     recipeIngredientList.add(recipeIngredients);
                                 }
                                 data.put("ingredients", recipeIngredientList);

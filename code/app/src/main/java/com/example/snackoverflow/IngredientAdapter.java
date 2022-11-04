@@ -83,7 +83,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
             ingredientDescription.setText(ingredient.getTitle());
             TextView ingredientAmount = view.findViewById(R.id.recipe_ingredient_amount);
             TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
-            ingredientAmount.setText("");
+            ingredientAmount.setText(String.valueOf(ingredient.getAmount()));
             ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
             ImageButton editIngredient = view.findViewById(R.id.edit_ingredient);
             editIngredient.setOnClickListener(new View.OnClickListener() {
