@@ -3,6 +3,8 @@ package com.example.snackoverflow;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -222,25 +224,94 @@ public class FirestoreDatabase {
         recipeCol.document(id).delete();
     };
 
-    static void deleteMealPlan() {};
+    static void addMealPlan(Mealday mealDay) {
+        MealPlanCol
+                .add(mealDay)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(MealsTag, "Meal day document snapshot written with ID: " + documentReference.getId());
+                        mealDay.id = documentReference.getId();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error adding Meal day document", e);
+                    }});
+    };
 
-    static void fetchMealPlans() {
+//    static void modifyMealPlan(int i,ArrayList<Mealday> meals) {
 //        MealPlanCol
-//            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-//                    FirebaseFirestoreException error) {
-//                meals.clear();
-//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-//                {
-//                    // Log.d(MealsTag, "Meal plan fetched successfully");
-//                    Date date = doc.getDate("date");
-//                    ArrayList<Recipe> mealsForDay = (ArrayList<Recipe>) doc.getData().get("meals");
-//                    meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
-//                }
-//                mealdayAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
-//            }
-//        });
+//                .document(meals.get(i).id).update("meals", meals.get(i).getMeals())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(MealsTag, "Error updating document", e);
+//                    }
+//   });
+//};
+
+
+    static void deleteMealPlan(int i, ArrayList<Mealday> meals) {
+        MealPlanCol.document(meals.get(i).id).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error updating document", e);
+                    }
+                });
+
+    };
+
+    static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
+                               ArrayList<Mealday> meals) {
+        MealPlanCol
+            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                meals.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+
+                {
+                    // Log.d(MealsTag, "Meal plan fetched successfully");
+                    Date date = doc.getDate("date");
+                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
+                    for (Object meal:mealsForDay) {
+                        Map<String, Object> mealMap = (Map<String, Object>) meal;
+                        String title = mealMap.get("title").toString();
+                        String instructions = mealMap.get("instructions").toString();
+                        int preptime = Integer.parseInt(mealMap.get("preptime").toString());
+                        float servings = Float.parseFloat(mealMap.get("servings").toString());
+                        String recipeCategory = mealMap.get("recipeCategory").toString();
+                        String comments = mealMap.get("comments").toString();
+//                        String id = mealMap.get("id").toString();
+                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+                        Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+                        mealsfortheDay.add(recipe);
+                    }
+
+//                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
+                    //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
+                    meals.add(new Mealday( date,  mealsfortheDay)); // Adding the meal days from FireStore
+                }
+                ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
+            }
+        });
     };
 
     static void addShoppingList() {};

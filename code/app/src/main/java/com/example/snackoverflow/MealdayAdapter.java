@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,23 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Adapter to show all the meal days
- * implements ExpandableListAdapter
- * @see Mealday
- * */
-public class MealdayAdapter implements ExpandableListAdapter {
+public class MealdayAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<Mealday> mealdays = new ArrayList<Mealday>();
     private FragmentManager fm;
 
-    /**
-     * Constructor for creating a new MealDay Adapter
-     * @param context
-     * @param mealdays all the meal days to be showcased
-     * @param fm
-     * */
     public MealdayAdapter(Context context, ArrayList<Mealday> mealdays, FragmentManager fm){
         this.context = context;
         this.mealdays = mealdays;
@@ -131,11 +121,6 @@ public class MealdayAdapter implements ExpandableListAdapter {
 //        return cal.get(Calendar.DAY_OF_WEEK);
 //    }
 
-    /**
-     * Gets the String for a particular date
-     * @param date the date
-     * @param locale the locale
-     * */
     public static String getDayStringOld(Date date, Locale locale) {
         DateFormat formatter = new SimpleDateFormat("EEEE", locale);
         return formatter.format(date);

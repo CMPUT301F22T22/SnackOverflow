@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
                 switch(item.getItemId())
                 {
                     case R.id.mealplanner:
+                        return true;
                     case R.id.shoppinglist:
                         startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
                         overridePendingTransition(0,0);
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
+        FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
 
         mealslist.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         //Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
-        
+
         Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil" ));
         Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil"));
         Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice", "boil"));
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         }
 
         //meals.add(monday);
-       // meals.add(tuesday);
+        // meals.add(tuesday);
 
     }
     /**
@@ -136,9 +138,6 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         for(int i=0;i<meals.size();i++) {
             if (Objects.equals(meals.get(i).getDate() ,date)){
                 meals.get(i).getMeals().add(recipe);
-                for(Recipe r : meals.get(i).getMeals()) {
-                    System.out.println(r.getTitle());
-                }
                 // update recipes
                 //FirestoreDatabase.modifyMealPlan(i,meals);
                 return;
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
-        //FirestoreDatabase.addMealPlan(mealDay);
+        FirestoreDatabase.addMealPlan(mealDay);
     }
     /**
      * deletes the meal when prompted by the MealPlannerAddMeal Dialog
@@ -163,5 +162,6 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
+        //FirestoreDatabase.deleteMealPlan(mealdayAdapter,meals);
     }
 }
