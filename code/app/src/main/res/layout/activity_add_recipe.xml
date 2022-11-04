@@ -126,6 +126,8 @@
 
                 <TextView
                     android:id="@+id/Ingredient_1"
+                    style="@android:style/Widget.EditText"
+                    android:textColor="#707070"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
