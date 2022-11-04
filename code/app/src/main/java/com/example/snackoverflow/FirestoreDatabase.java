@@ -2,6 +2,8 @@ package com.example.snackoverflow;
 
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -182,23 +184,28 @@ public class FirestoreDatabase {
 
     static void deleteMealPlan() {};
 
-    static void fetchMealPlans() {
-//        MealPlanCol
-//            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-//                    FirebaseFirestoreException error) {
-//                meals.clear();
-//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-//                {
-//                    // Log.d(MealsTag, "Meal plan fetched successfully");
-//                    Date date = doc.getDate("date");
-//                    ArrayList<Recipe> mealsForDay = (ArrayList<Recipe>) doc.getData().get("meals");
-//                    meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
-//                }
-//                mealdayAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
-//            }
-//        });
+    static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
+                               ArrayList<Mealday> meals) {
+        MealPlanCol
+            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                meals.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+
+                {
+                    // Log.d(MealsTag, "Meal plan fetched successfully");
+                    Date date = doc.getDate("date");
+                    System.out.println("-------Im here in mealplan-----------");
+                    System.out.println(date);
+                    System.out.println(doc.getData().get("meals"));
+                    //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
+                    //meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
+                }
+                ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
+            }
+        });
     };
 
     static void addShoppingList() {};
