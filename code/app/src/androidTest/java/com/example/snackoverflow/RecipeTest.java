@@ -43,9 +43,9 @@ public class RecipeTest {
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_comments), "Eat it warm.");
         View fab2 = rule.getActivity().findViewById(R.id.recipe_add_recipe);
         solo.clickOnView(fab2);
-        View donebtn = solo.getView(R.id.edit_text_input_description_Fragment);
-        solo.enterText((EditText) solo.waitForView(R.id.edit_text_input_description_Fragment,1,500), "Tomato");
-        //solo.clickOnButton("OK");
+        //Fragment f = solo.getView(R.id.edit_text_input_description_Fragment);
+        //View view = solo.waitForView("Add_Ingredient",1,500));
+        //solo.enterText((EditText) solo.waitForView("Add_Ingredient",1,500), "Tomato");
     }
 
 
