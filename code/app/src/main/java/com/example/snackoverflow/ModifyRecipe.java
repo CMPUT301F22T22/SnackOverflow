@@ -21,24 +21,26 @@ import androidx.fragment.app.Fragment;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+/**
+ * Modify Recipe Class to modify existing recipes and the ingredients present in the recipes
+ * extends AppCompatActivity
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener
+ * @see RecipeActivity
+ * @see Recipe
+ * @see Ingredient
+ * */
 public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
     private EditText titleField;
     private EditText categoryField;
@@ -296,12 +298,20 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         });
     }
 
+    /**
+     * Add an ingredient to an existing recipe
+     * @param ingredient ingredient to add to the recipe
+     * */
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
         refreshIngredientsShown();
     }
 
+    /**
+     * Edits an existing ingredient in an existing recipe
+     * @param ingredient ingredient to edit
+     * */
     @Override
     public void editIngredient(Ingredient ingredient) {
         IngredientsView = new RecipeIngredientViewFragment(ingredients);
@@ -309,6 +319,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 .setReorderingAllowed(true)
                 .replace(R.id.Main, IngredientsView).commit();
     }
+
     @Override
     public void onBackPressed() {
         if (IngredientsView != null){
@@ -324,6 +335,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             super.onBackPressed();
         }
     }
+
+    /**
+     * refresh the ingredients shown on the recipe
+     * */
     private void refreshIngredientsShown(){
         int last_index = ingredients.size()-1;
         for (int i = 0; i < 3; i++){
@@ -336,12 +351,23 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             }
         }
     }
+
+    /**
+     * uploads an image to the recipe
+     * @param uri path to the temporary stprage of the image
+     * @param id id of the recipe
+     * */
     public void uploadImage(Uri uri, String id) {
         String filename = id;
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
         storageReference.putFile(uri);
     };
+
+    /**
+     * Enables the fields in the recipe
+     * @param state
+     * */
     private void changeClickState(boolean state){
         imageView.setEnabled(state);
         titleField.setEnabled(state);
