@@ -20,6 +20,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Add Ingredient Fragment that pops up when a user wants to add an
+ * Ingredient to the storage
+ * Extends DialogFragment
+ * @see Ingredient
+ * */
 public class AddIngredientFragment extends DialogFragment {
     private EditText ingredientDesc;
     private EditText ingredientAmount;
@@ -28,13 +34,16 @@ public class AddIngredientFragment extends DialogFragment {
     private EditText ingredientLocation;
     private EditText ingredientCategory;
     private OnFragmentInteractionListener listener;
-    private Ingredient selectedIngredient;
 
     @Override
     public void onStart() {
         super.onStart();
     }
 
+    /**
+     * Implements the Fragment Interaction Listener and defines
+     * the onOkPressed function
+     * */
     public interface OnFragmentInteractionListener {
         void onOkPressed(Ingredient selectedIngredient);
     }
@@ -104,39 +113,43 @@ public class AddIngredientFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO: make variable names more descriptive
-                        String a = ingredientDesc.getText().toString();
-                        Integer b = (int) Math.ceil(Double.parseDouble(ingredientAmount.getText().toString()));
-                        Integer c = Integer.parseInt(ingredientUnit.getText().toString());
-                        Date d = null;
+                        String ingredientDescString = ingredientDesc.getText().toString();
+                        Integer ingredientAmountInt = (int) Math.ceil(Double.parseDouble(ingredientAmount.getText().toString()));
+                        Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
+                        Date ingredientBestBeforeDate = null;
                         try {
-                            d = dateFormat.parse(ingredientBestBefore.getText().toString());
+                            ingredientBestBeforeDate = dateFormat.parse(ingredientBestBefore.getText().toString());
                         }
                         catch (ParseException e) {
                             e.printStackTrace();
                         }
 
-                        String e = ingredientLocation.getText().toString();
-                        String f = ingredientCategory.getText().toString();
-                        listener.onOkPressed(new Ingredient(a, d, e, c, b, f));
+                        String ingredientLocationString = ingredientLocation.getText().toString();
+                        String ingredientCategoryString = ingredientCategory.getText().toString();
+                        listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
                     }
                 }).create();
-
-
     }
 
+    /**
+     * Validates the best before date inputted
+     * @param edt text to validate
+     * */
     private void isValidDate(EditText edt) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         try {
-            String after = dateFormat.format(dateFormat.parse(edt.getText().toString()));
+            String formattedDate = dateFormat.format(dateFormat.parse(edt.getText().toString()));
         } catch (ParseException e) {
             edt.setError("Format: yyyy-mm-dd");
         }
-
     }
 
+    /**
+     * Validates the location inputted
+     * @param edt text to validate
+     * */
     private void isValidLocation(EditText edt) {
         String txt = edt.getText().toString();
-
         if (!txt.matches("Pantry|Freezer|Fridge")) {
             edt.setError("One of Pantry, Fridge, or Freezer");
         }
