@@ -159,24 +159,6 @@ public class Ingredient implements Serializable  {
     }
 
     /**
-     * Getter for the id
-     * returns the id of the ingredient
-     * @return a string id for the ingredient
-     * */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Setter for the id
-     * sets the id for the ingredient
-     * @param id a string describing the id of the ingredient
-     * */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
      * Overriding the equals function to find equality between ingredients
      * @param o Object to equate with
      * */
