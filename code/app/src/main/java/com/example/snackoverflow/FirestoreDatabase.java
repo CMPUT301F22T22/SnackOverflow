@@ -1,5 +1,6 @@
 package com.example.snackoverflow;
 
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -16,9 +17,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FirestoreDatabase {
@@ -28,10 +32,11 @@ public class FirestoreDatabase {
     final static CollectionReference ingredientsCol = db.collection("ingredient");
     final static CollectionReference MealPlanCol = db.collection("meal_plan");
 
-    private final static String IngredientsTAG = "IngredientStorageActivity";
-    private final static String MealsTag = "MealPlan";
     private final static ArrayList<Ingredient> ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> ingredient_meal_plan_list = new ArrayList<>();
+    private final static String IngredientsTAG = "Ingredient Storage Activity";
+    private final static String MealsTag = "Meal Plan";
+    private final static String RecipeTag = "Recipe";
 
     static void addIngredient(Ingredient newIngredient) {
         ingredientsCol
@@ -200,7 +205,23 @@ public class FirestoreDatabase {
         return ingredient_meal_plan_list;
     }*/
 
-    static void addRecipe() {};
+    static void addRecipe(HashMap<String, Object> data, Uri uri) {
+        recipeCol
+            .add(data)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
+                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(RecipeTag, "Error adding recipe document", e);
+                }
+            });
+    };
 
     static void deleteRecipe(String id) {
         recipeCol.document(id).delete();
@@ -238,5 +259,14 @@ public class FirestoreDatabase {
     static void deleteFromShoppingList() {};
 
     static void fetchShoppingList() {};
+
+    static void uploadImage(Uri uri, String id) {
+        if (uri != null){
+            String filename = id;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
+            storageReference.putFile(uri);
+        }
+    };
 
 }
