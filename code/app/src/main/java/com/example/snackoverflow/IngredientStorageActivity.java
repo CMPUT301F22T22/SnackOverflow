@@ -18,6 +18,15 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Ingredient Storage Activity to display the list of ingredients in the storage
+ * extends AppCompactActivity
+ * implements AddingredientFragment.OnFragementInteractionListener
+ * @see Ingredient
+ * @see AddIngredientFragment
+ * @see IngredientAdapter
+ * @see IngredientDetailsActivity
+ * */
 public class IngredientStorageActivity extends AppCompatActivity implements AddIngredientFragment.OnFragmentInteractionListener {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
@@ -88,6 +97,10 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
 
     }
 
+    /**
+     * Deletes the particular ingredient when prompted by the delete icon
+     * @param v view that the icon is present on
+     * */
     public void deleteIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
