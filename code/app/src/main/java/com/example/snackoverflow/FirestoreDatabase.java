@@ -30,6 +30,8 @@ public class FirestoreDatabase {
 
     private final static String IngredientsTAG = "IngredientStorageActivity";
     private final static String MealsTag = "MealPlan";
+    private final static ArrayList<Ingredient> ingredient_storage_list = new ArrayList<>();
+    private final static ArrayList<String> ingredient_meal_plan_list = new ArrayList<>();
 
     static void addIngredient(Ingredient newIngredient) {
         ingredientsCol
@@ -138,6 +140,65 @@ public class FirestoreDatabase {
             }
         });
     };
+
+    static ArrayList<Ingredient> getIngredientsStorageList() {
+        ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+                    return;
+                }
+                ingredient_storage_list.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                {
+                    Log.d("lol", "Ingredients retrieved successfully");
+                    String id = doc.getId();
+                    String title = (String) doc.getData().get("title");
+                    String location = (String) doc.getData().get("location");
+                    int amount = doc.getLong("amount").intValue();
+                    int unit = doc.getLong("unit").intValue();
+                    Date bestBefore = doc.getDate("bestBefore");
+                    String category = (String) doc.getData().get("category");
+
+                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
+                    ingredientItem.setId(id);
+                    ingredient_storage_list.add(ingredientItem); // Adding the ingredients from FireStore
+                }
+            }
+        });
+        return ingredient_storage_list;
+    }
+
+    /*static ArrayList<String> getIngredientsMealPlanList() {
+        MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+                    return;
+                }
+                ingredient_meal_plan_list.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                {
+                    String id = doc.getId();
+                    String title = (String) doc.getData().get("title");
+                    String location = (String) doc.getData().get("location");
+                    int amount = doc.getLong("amount").intValue();
+                    int unit = doc.getLong("unit").intValue();
+                    Date bestBefore = doc.getDate("bestBefore");
+                    String category = (String) doc.getData().get("category");
+
+                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
+                    ingredientItem.setId(id);
+                    ingredient_meal_plan_list.add(title); // Adding the ingredients from FireStore
+                }
+            }
+        });
+        return ingredient_meal_plan_list;
+    }*/
 
     static void addRecipe() {};
 

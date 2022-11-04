@@ -14,6 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * Inflates a user friendly interface to add an item to the shopping list. The interface contains
+ * fields for Description, Category, Unit, and Amount of the Ingredient. The other attributes
+ * of this Ingredient instance are initialized to null.
+ */
 public class ShoppingListAddItemFragment extends DialogFragment {
     private EditText shoppingDesc;
     private EditText shoppingCategory;
@@ -26,6 +31,9 @@ public class ShoppingListAddItemFragment extends DialogFragment {
         super.onStart();
     }
 
+    /**
+     * Handles the fragment to activity communication.
+     */
     public interface OnFragmentInteractionListener {
         void onOkPressed(Ingredient selectedIngredient);
     }
