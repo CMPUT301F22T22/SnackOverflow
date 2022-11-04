@@ -6,6 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+/**
+ * IngredientDetailsActivity defines the Activity that showcases
+ * the Ingredient details when we click on it
+ * Extends AppCompactActivity
+ * @see Ingredient
+ * @see IngredientStorageActivity
+ * */
 public class IngredientDetailsActivity extends AppCompatActivity {
 
     @Override
