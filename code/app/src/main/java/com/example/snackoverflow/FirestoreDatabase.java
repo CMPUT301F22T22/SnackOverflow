@@ -225,22 +225,22 @@ public class FirestoreDatabase {
                     }});
     };
 
-    static void modifyMealPlan(int i,ArrayList<Mealday> meals) {
-        MealPlanCol
-                .document(meals.get(i).id).update("meals", meals.get(i).getMeals())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(MealsTag, "Error updating document", e);
-                    }
-   });
-};
+//    static void modifyMealPlan(int i,ArrayList<Mealday> meals) {
+//        MealPlanCol
+//                .document(meals.get(i).id).update("meals", meals.get(i).getMeals())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(MealsTag, "Error updating document", e);
+//                    }
+//   });
+//};
 
 
     static void deleteMealPlan(int i, ArrayList<Mealday> meals) {
@@ -279,7 +279,7 @@ public class FirestoreDatabase {
                         Map<String, Object> mealMap = (Map<String, Object>) meal;
                         String title = mealMap.get("title").toString();
                         String instructions = mealMap.get("instructions").toString();
-                        int preptime = Integer.parseInt(mealMap.get("preptimeTime").toString());
+                        int preptime = Integer.parseInt(mealMap.get("preptime").toString());
                         float servings = Float.parseFloat(mealMap.get("servings").toString());
                         String recipeCategory = mealMap.get("recipeCategory").toString();
                         String comments = mealMap.get("comments").toString();

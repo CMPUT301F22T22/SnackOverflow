@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             if (Objects.equals(meals.get(i).getDate() ,date)){
                 meals.get(i).getMeals().add(recipe);
                 // update recipes
-                FirestoreDatabase.modifyMealPlan(i,meals);
+                //FirestoreDatabase.modifyMealPlan(i,meals);
                 return;
             }
         }

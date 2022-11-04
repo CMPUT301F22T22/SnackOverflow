@@ -212,7 +212,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         }
     }
     private void isValidDate(EditText edt) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             String after = dateFormat.format(dateFormat.parse(edt.getText().toString()));
         } catch (ParseException e) {
