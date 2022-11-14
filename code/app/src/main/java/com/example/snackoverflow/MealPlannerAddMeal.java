@@ -192,7 +192,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         }
         else{
             spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
-            TextViewDate.setText(dateFormat.format(mealDay.getDate()));
+            TextViewDate.setText(dateFormat.format(mealDay.getDate()).substring(0,10));
             return builder
                     .setView(view)
                     .setTitle("Edit Meal")
@@ -206,29 +206,30 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                             }
                         }
                     })
-                    .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(Objects.equals(spinner.getSelectedItemPosition(), 0)){
-                                new ErrorFragment("Invalid Recipe Chosen").show(getParentFragmentManager(), "error");
-                            }
-                            else {
-                                mealDay.getMeals().remove(recipe);
-                                if (mealDay.getMeals().size() == 0) {
-                                    listener.deleteMealDay(mealDay);
-                                }
-                                String date_text = TextViewDate.getText().toString();
-                                Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
-                                try {
-//                                    LocalDate date = stringToDate(date_text);
-                                    Date date = dateFormat.parse(date_text);
-                                    listener.addMeal(recipe, date);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }).create();
+//                    .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            if(Objects.equals(spinner.getSelectedItemPosition(), 0)){
+//                                new ErrorFragment("Invalid Recipe Chosen").show(getParentFragmentManager(), "error");
+//                            }
+//                            else {
+//                                mealDay.getMeals().remove(recipe);
+//                                if (mealDay.getMeals().size() == 0) {
+//                                    listener.deleteMealDay(mealDay);
+//                                }
+//                                String date_text = TextViewDate.getText().toString();
+//                                Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+//                                try {
+////                                    LocalDate date = stringToDate(date_text);
+//                                    Date date = dateFormat.parse(date_text);
+//                                    listener.addMeal(recipe, date);
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }
+//                    })
+                    .create();
         }
     }
 
