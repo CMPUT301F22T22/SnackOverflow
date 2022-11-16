@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +54,9 @@ public class RecipeActivity extends AppCompatActivity {
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
-    ArrayList<String> recipeIdList = new ArrayList<String>();
     int imageTrackingData = 0;
+    String currSortOrder = "inc";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +103,7 @@ public class RecipeActivity extends AppCompatActivity {
                                         document(recipeId).delete();
                                 FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg")
                                         .delete();
-                                int ind = recipeIdList.indexOf(recipeId);
-                                recipeDataList.remove(ind);
-                                recipeIdList.remove(ind);
-                                recipeArrayAdapter.notifyDataSetChanged();
+                                // TODO: Delete from list
                             }
                         }
                     }
@@ -145,6 +145,44 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        String[] sortBySpinnerList = new String[] {"Title", "Prep Time", "Servings", "Category"};
+        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
+        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
+        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortOrderSpinner.setAdapter(sortOrderAdapter);
+
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortBy(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortOrder(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -164,17 +202,26 @@ public class RecipeActivity extends AppCompatActivity {
 
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+id+".jpg");
                         imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
-                        recipeIdList.add(id);
                         try {
-                            recipeDataList.add(new Recipe(title, prep_time, servings, category, comments, instructions));
                             File localFile = File.createTempFile("tempfile",".jpg");
                             storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                     Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    int i =recipeIdList.indexOf(id);
-                                    recipeDataList.get(i).setImageBitmap(imgBitmap);
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions, imgBitmap);
+                                    recipeDataList.add(recipe);
                                     recipeArrayAdapter.notifyDataSetChanged();
+                                    handleSortBy(0);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions, null);
+                                    recipeDataList.add(recipe);
+                                    recipeArrayAdapter.notifyDataSetChanged();
+                                    handleSortBy(0);
                                 }
                             });
                         } catch (IOException e) {
@@ -192,7 +239,6 @@ public class RecipeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
                 intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
-                intent.putExtra("recipeId", recipeIdList.get(position));
                 intent.putExtra("imageTracker", imageTrackingData);
                 getModifiedData.launch(intent);
             }
@@ -214,4 +260,48 @@ public class RecipeActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     };
 
+    public void handleSortBy(int position) {
+        switch (position) {
+            case 0:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(recipeDataList, new SortComparator.TitleComparator().reversed());
+                } else {
+                    Collections.sort(recipeDataList, new SortComparator.TitleComparator());
+                }
+                break;
+            case 1:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(recipeDataList, new SortComparator.PrepTimeComparator().reversed());
+                } else {
+                    Collections.sort(recipeDataList, new SortComparator.PrepTimeComparator());
+                }
+                break;
+            case 2:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(recipeDataList, new SortComparator.ServingsComparator().reversed());
+                } else {
+                    Collections.sort(recipeDataList, new SortComparator.ServingsComparator());
+                }
+                break;
+            case 3:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(recipeDataList, new SortComparator.CategoryComparator().reversed());
+                } else {
+                    Collections.sort(recipeDataList, new SortComparator.CategoryComparator());
+                }
+                break;
+        }
+        recipeArrayAdapter.notifyDataSetChanged();
+    }
+
+    public void handleSortOrder(int position) {
+        if (position == 1 && currSortOrder.equals("inc")) {
+            Collections.reverse(recipeDataList);
+            currSortOrder = "dec";
+        } else if (position == 0 && currSortOrder.equals("dec")) {
+            Collections.reverse(recipeDataList);
+            currSortOrder = "inc";
+        }
+        recipeArrayAdapter.notifyDataSetChanged();
+    }
 }
