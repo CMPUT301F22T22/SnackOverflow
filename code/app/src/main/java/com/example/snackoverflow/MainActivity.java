@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             public void onClick(View view) {
                 // TODO add recipe data
                 new MealPlannerAddMeal().show(getSupportFragmentManager(),"Add_meal");
+
             }
         });
     }
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             if (Objects.equals(meals.get(i).getDate() ,date)){
                 meals.get(i).getMeals().add(recipe);
                 // update recipes
-                //FirestoreDatabase.modifyMealPlan(i,meals);
+                FirestoreDatabase.modifyMealPlan(meals.get(i));
                 return;
             }
         }
@@ -151,17 +153,34 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
         FirestoreDatabase.addMealPlan(mealDay);
+        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
     }
+
+//    @Override
+//    public void deleteMeal(Recipe recipe, Date date) {
+//        for(int i=0;i<meals.size();i++) {
+//            if (Objects.equals(meals.get(i).getDate() ,date)){
+//                meals.get(i).getMeals().remove(recipe);
+//                // update recipes
+//                FirestoreDatabase.modifyMealPlan(meals.get(i));
+//                return;
+//            }
+//    }
+
     /**
      * deletes the meal when prompted by the MealPlannerAddMeal Dialog
      * @param mealDay the day user wants to delete from the meal planner
      * */
+
+
     @Override
-    public void deleteMealDay(Mealday mealDay) {
+    public void deleteMeal(Mealday mealDay) {
+        //checking the existence of this meal
         meals.remove(mealDay);
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
-        //FirestoreDatabase.deleteMealPlan(mealdayAdapter,meals);
+        FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
+        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
     }
 }

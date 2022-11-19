@@ -77,7 +77,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     public interface OnFragmentInteractionListener {
         void addMeal(Recipe recipe, Date date);
 
-        void deleteMealDay(Mealday mealDay);
+        void deleteMeal(Mealday mealday);
     }
 
     @Override
@@ -199,9 +199,19 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            System.out.println(mealDay.getDate());
                             mealDay.getMeals().remove(recipe);
+                            FirestoreDatabase.modifyMealPlan(mealDay);
                             if (mealDay.getMeals().size() == 0){
-                                listener.deleteMealDay(mealDay);
+                                String date_text = TextViewDate.getText().toString();
+                                Date date = null;
+                                try {
+                                    date = dateFormat.parse(date_text);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                listener.deleteMeal(mealDay);
+                                FirestoreDatabase.deleteMealPlan(mealDay);
                             }
                         }
                     })
@@ -212,9 +222,11 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 new ErrorFragment("Invalid Recipe Chosen").show(getParentFragmentManager(), "error");
                             }
                             else {
+                                System.out.println(mealDay.getDate());
                                 mealDay.getMeals().remove(recipe);
+                                FirestoreDatabase.modifyMealPlan(mealDay);
                                 if (mealDay.getMeals().size() == 0) {
-                                    listener.deleteMealDay(mealDay);
+                                    listener.deleteMeal(mealDay);
                                 }
                                 String date_text = TextViewDate.getText().toString();
                                 Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);

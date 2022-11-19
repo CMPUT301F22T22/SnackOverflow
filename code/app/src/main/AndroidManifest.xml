@@ -22,7 +22,7 @@
             android:exported="false" />
         <activity
             android:name=".ModifyRecipe"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".AddRecipe"
             android:exported="false" />

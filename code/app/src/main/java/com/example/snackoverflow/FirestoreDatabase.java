@@ -226,12 +226,11 @@ public class FirestoreDatabase {
 
     static void addMealPlan(Mealday mealDay) {
         MealPlanCol
-                .add(mealDay)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(mealDay.getDate().toString()).set(mealDay)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(MealsTag, "Meal day document snapshot written with ID: " + documentReference.getId());
-                        mealDay.id = documentReference.getId();
+                    public void onSuccess(Void aVoid) {
+                        Log.d(MealsTag, "Meal day document snapshot written");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -241,26 +240,10 @@ public class FirestoreDatabase {
                     }});
     };
 
-//    static void modifyMealPlan(int i,ArrayList<Mealday> meals) {
-//        MealPlanCol
-//                .document(meals.get(i).id).update("meals", meals.get(i).getMeals())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(MealsTag, "Error updating document", e);
-//                    }
-//   });
-//};
 
 
-    static void deleteMealPlan(int i, ArrayList<Mealday> meals) {
-        MealPlanCol.document(meals.get(i).id).delete()
+    static void deleteMealPlan(Mealday mealDay) {
+        MealPlanCol.document(mealDay.getDate().toString()).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -275,6 +258,28 @@ public class FirestoreDatabase {
                 });
 
     };
+
+        static void modifyMealPlan(Mealday mealday) {
+//            System.out.println("Im here ar modify");
+//            Map<String,Object> city = new HashMap<>();
+//            city.put("name","LA");
+//
+//            MealPlanCol.document("Modi").set(city));
+        MealPlanCol
+                .document(mealday.getDate().toString()).update("meals", mealday.getMeals())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error updating document", e);
+                    }
+   });
+};
 
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
                                ArrayList<Mealday> meals) {
@@ -334,5 +339,6 @@ public class FirestoreDatabase {
             storageReference.putFile(uri);
         }
     };
+
 
 }
