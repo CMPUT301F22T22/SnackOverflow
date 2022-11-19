@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             public void onClick(View view) {
                 // TODO add recipe data
                 new MealPlannerAddMeal().show(getSupportFragmentManager(),"Add_meal");
+                mealslist.setAdapter(mealdayAdapter);
+                FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
 
             }
         });
@@ -182,5 +184,17 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         mealslist.setAdapter(mealdayAdapter);
         FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
         ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void deleteMealPlan(Mealday mealday, Recipe recipe) {
+        mealday.getMeals().remove(recipe);
+        FirestoreDatabase.modifyMealPlan(mealday);
+        mealslist.setAdapter(mealdayAdapter);
+        FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
+        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
+
+
     }
 }
