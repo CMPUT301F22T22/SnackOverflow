@@ -19,6 +19,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
 
@@ -151,10 +153,17 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         recipes.add(recipe);
         Mealday mealDay = new Mealday(date, recipes);
         meals.add(mealDay);
+        Collections.sort(meals, new Comparator<Mealday>() {
+            @Override
+            public int compare(Mealday mealday, Mealday t1) {
+                return mealday.getDate().compareTo(t1.getDate());
+            }
+        });
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
         FirestoreDatabase.addMealPlan(mealDay);
+        //FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
         ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
     }
 

@@ -23,6 +23,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -292,7 +294,7 @@ public class FirestoreDatabase {
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
 
                 {
-                    // Log.d(MealsTag, "Meal plan fetched successfully");
+                    Log.d(MealsTag, "Meal plan fetched successfully");
                     Date date = doc.getDate("date");
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
                     ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
@@ -312,7 +314,13 @@ public class FirestoreDatabase {
 
 //                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
                     //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
-                    meals.add(new Mealday( date,  mealsfortheDay)); // Adding the meal days from FireStore
+                    meals.add(new Mealday( date,  mealsfortheDay));
+                    Collections.sort(meals, new Comparator<Mealday>() {
+                        @Override
+                        public int compare(Mealday mealday, Mealday t1) {
+                            return mealday.getDate().compareTo(t1.getDate());
+                        }
+                    });// Adding the meal days from FireStore
                 }
                 ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
             }
