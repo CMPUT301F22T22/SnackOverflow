@@ -21,10 +21,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-// Note: For now meal plan is implemented as a list of recipes as
-// none of other functionalities are implemented
+/**
+ * The main activity or the home page of the app
+ * extends AppCompatActivity
+ * implements MealPlannerAddMeal.OnFragmentInteractionListener
+ * @see Mealday
+ * @see MealdayAdapter
+ * @see MealPlannerAddMeal
+ * */
 public class MainActivity extends AppCompatActivity implements MealPlannerAddMeal.OnFragmentInteractionListener{
-
+    // Note: For now meal plan is implemented as a list of recipes as
+    // none of other functionalities are implemented
     //TODO: Follow camel case naming convention
     ExpandableListView mealslist;
     ArrayList<Mealday> meals = new ArrayList<>();
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
                 switch(item.getItemId())
                 {
                     case R.id.mealplanner:
+                        return true;
                     case R.id.shoppinglist:
                         startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
                         overridePendingTransition(0,0);
@@ -67,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
+        FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
 
         mealslist.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
@@ -89,25 +98,25 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
 
 
 
-    /*
-    Test DATA
-     */
+    /**
+     * Adds test data to the meal plan storage
+     * */
     private void data(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
         //Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
-        
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil" ));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil"));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice", "boil"));
+
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
         Mealday tuesday = null;
         try {
             tuesday = new Mealday(dateFormat.parse("2022-10-21"),Monday);
@@ -116,11 +125,11 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         }
 
         //meals.add(monday);
-       // meals.add(tuesday);
+        // meals.add(tuesday);
 
     }
     /**
-     * addes the meal when prompted by the MealPlannerAddMeal Dialog
+     * adds the meal when prompted by the MealPlannerAddMeal Dialog
      * @param recipe the recipe user wants to add to meal
      * @param date the date the user wants to add the meal plan too
      * */
@@ -128,12 +137,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     public void addMeal(Recipe recipe, Date date) {
         for(int i=0;i<meals.size();i++) {
             if (Objects.equals(meals.get(i).getDate() ,date)){
-                System.out.println("Dates are equal");
                 meals.get(i).getMeals().add(recipe);
-                for(Recipe r : meals.get(i).getMeals()) {
-                    System.out.println(r.getTitle());
-
-                }
                 // update recipes
                 //FirestoreDatabase.modifyMealPlan(i,meals);
                 return;
@@ -146,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
-        //FirestoreDatabase.addMealPlan(mealDay);
+        FirestoreDatabase.addMealPlan(mealDay);
     }
     /**
      * deletes the meal when prompted by the MealPlannerAddMeal Dialog
@@ -158,5 +162,6 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
+        //FirestoreDatabase.deleteMealPlan(mealdayAdapter,meals);
     }
 }

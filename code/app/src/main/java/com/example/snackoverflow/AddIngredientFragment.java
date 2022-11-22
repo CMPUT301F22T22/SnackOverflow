@@ -61,7 +61,7 @@ public class AddIngredientFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_ingredient_fragment_layout, null);
         ingredientDesc = view.findViewById(R.id.ingredient_description_editText);
         ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore_editText);
@@ -136,7 +136,7 @@ public class AddIngredientFragment extends DialogFragment {
      * @param edt text to validate
      * */
     private void isValidDate(EditText edt) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             String formattedDate = dateFormat.format(dateFormat.parse(edt.getText().toString()));
         } catch (ParseException e) {

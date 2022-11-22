@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MealdayAdapter implements ExpandableListAdapter {
+public class MealdayAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<Mealday> mealdays = new ArrayList<Mealday>();
