@@ -110,19 +110,19 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     private void data(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
         //Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
 
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil" ));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil"));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice", "boil"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
         Mealday tuesday = null;
         try {
             tuesday = new Mealday(dateFormat.parse("2022-10-21"),Monday);

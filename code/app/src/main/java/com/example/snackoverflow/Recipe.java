@@ -22,7 +22,18 @@ public class Recipe implements Serializable, Parcelable {
     //TODO: Add path to photograph(?)
 
 
-    public Recipe(String title, int prepTime, float servings, String category, String comments, String instructions) {
+    public Recipe(String title, int prepTime, float servings, String category, String comments, String instructions, ArrayList<Ingredient> ingredients) {
+        this.title = title;
+        this.preptime = prepTime;
+        this.servings = servings;
+        this.recipeCategory = category;
+        this.instructions = instructions;
+        this.comments = comments;
+        this.ingredients = ingredients != null ? ingredients : new ArrayList<Ingredient>();
+    }
+
+    public Recipe(String id, String title, int prepTime, float servings, String category, String comments, String instructions, @Nullable Bitmap imgBitmap) {
+        this.id = id;
         this.title = title;
         this.preptime = prepTime;
         this.servings = servings;
@@ -30,19 +41,11 @@ public class Recipe implements Serializable, Parcelable {
         this.instructions = instructions;
         this.comments = comments;
         ingredients = new ArrayList<Ingredient>();
-    }
-
-    public Recipe(String title, int preptime, float servings, String recipeCategory, String comments, String instructions, ArrayList<Ingredient> ingredients) {
-        this.title = title;
-        this.preptime = preptime;
-        this.servings = servings;
-        this.recipeCategory = recipeCategory;
-        this.instructions = instructions;
-        this.comments = comments;
-        this.ingredients = new ArrayList<Ingredient>();
+        this.imageBitmap = imgBitmap;
     }
 
     protected Recipe(Parcel in) {
+        id = in.readString();
         title = in.readString();
         preptime = in.readInt();
         servings = in.readFloat();
@@ -63,17 +66,6 @@ public class Recipe implements Serializable, Parcelable {
             return new Recipe[size];
         }
     };
-
-    public Recipe(String title, int preptime, float servings, String category, String comments, String instructions, @Nullable Bitmap imgBitmap) {
-        this.title = title;
-        this.preptime = preptime;
-        this.servings = servings;
-        this.recipeCategory = category;
-        this.instructions = instructions;
-        this.comments = comments;
-        ingredients = new ArrayList<Ingredient>();
-        this.imageBitmap = imgBitmap;
-    }
 
     public String getId() {
         return id;
@@ -164,6 +156,7 @@ public class Recipe implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeInt(preptime);
         parcel.writeFloat(servings);
@@ -176,6 +169,9 @@ public class Recipe implements Serializable, Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return title.equals(recipe.title);
+        if (this.id != null) {
+            return id.equals(recipe.getId());
+        }
+        return title.equals(recipe.getTitle());
     }
 }
