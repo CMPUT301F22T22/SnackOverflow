@@ -112,72 +112,47 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:id="@+id/listview"
+            <ListView
+                android:id="@+id/ingredient_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recipe_preptime">
+                app:layout_constraintTop_toBottomOf="@+id/recipe_preptime" />
 
-                <TextView
-                    android:id="@+id/Ingredient_1"
-                    style="@android:style/Widget.EditText"
-                    android:textColor="#707070"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/buttons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ingredient_preview">
+
+                <Button
+                    android:id="@+id/recipe_showmore"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:background="#E1E3E5"
-                    android:text="Ingredient"
-                    android:textSize="20sp" />
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:minHeight="40dp"
+                    android:text="Show More" />
 
-                <TextView
-                    android:id="@+id/Ingredient_2"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/recipe_add_ingredient"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#E1E3E5"
-                    android:text="Ingredient"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/Ingredient_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#E1E3E5"
-                    android:text="Ingredient"
-                    android:textSize="20sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/recipe_showmore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:minHeight="40dp"
-                        android:text="Show More" />
-
-                    <Button
-                        android:id="@+id/recipe_add_ingredient"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:minHeight="40dp"
-                        android:text="Add Ingredient" />
-                </LinearLayout>
-
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:minHeight="40dp"
+                    android:text="Add Ingredient" />
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -190,7 +165,7 @@
                 android:hint="Instructions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/listview">
+                app:layout_constraintTop_toBottomOf="@id/buttons">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_recipe_instructions"
