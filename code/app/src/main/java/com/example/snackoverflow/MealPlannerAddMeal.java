@@ -24,6 +24,7 @@ import androidx.fragment.app.DialogFragment;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -117,6 +118,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                         onDateSetListener,
                         year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 604800000L);
+                dialog.getDatePicker().setMinDate(cal.getTimeInMillis());
                 dialog.show();
             }
         });
