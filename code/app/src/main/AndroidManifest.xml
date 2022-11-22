@@ -19,25 +19,32 @@
         tools:targetApi="31">
         <activity
             android:name=".ShoppingListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Shopping List" />
         <activity
             android:name=".ModifyRecipe"
-            android:exported="true" />
+            android:exported="true"
+            android:label="Modify Recipe"/>
         <activity
             android:name=".AddRecipe"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Add Recipe"/>
         <activity
             android:name=".IngredientDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Ingredient"/>
         <activity
             android:name=".IngredientStorageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Ingredients"/>
         <activity
             android:name=".RecipeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Recipes"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="Meal Planner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

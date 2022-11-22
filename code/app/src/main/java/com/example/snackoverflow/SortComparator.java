@@ -1,60 +1,76 @@
 package com.example.snackoverflow;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class SortComparator {
-    public static class TitleComparator implements Comparator<Recipe> {
-
-
+    public static class TitleComparator implements Comparator<Object> {
         @Override
-        public int compare(Recipe r1, Recipe r2) {
-            return r1.getTitle().compareTo(r2.getTitle());
+        public int compare(Object o1, Object o2) {
+            String objectType = o1.getClass().toString();
+            if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Recipe")) {
+                return ((Recipe) o1).getTitle().compareTo(((Recipe)o2).getTitle());
+            }
+            return -1;
         }
 
         @Override
-        public Comparator<Recipe> reversed() {
+        public Comparator<Object> reversed() {
             return Comparator.super.reversed();
         }
     }
 
-    public static class CategoryComparator implements Comparator<Recipe> {
+    public static class CategoryComparator implements Comparator<Object> {
 
 
         @Override
-        public int compare(Recipe r1, Recipe r2) {
-            return r1.getRecipeCategory().compareTo(r2.getRecipeCategory());
+        public int compare(Object o1, Object o2) {
+            String objectType = o1.getClass().toString();
+            if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Recipe")) {
+                return ((Recipe) o1).getRecipeCategory().compareTo(((Recipe)o2).getRecipeCategory());
+            }
+            return -1;
         }
 
         @Override
-        public Comparator<Recipe> reversed() {
+        public Comparator<Object> reversed() {
             return Comparator.super.reversed();
         }
     }
 
-    public static class PrepTimeComparator implements Comparator<Recipe> {
+    public static class PrepTimeComparator implements Comparator<Object> {
 
 
         @Override
-        public int compare(Recipe r1, Recipe r2) {
-            return Integer.compare(r1.getPreptime(), r2.getPreptime());
+        public int compare(Object o1, Object o2) {
+            String objectType = o1.getClass().toString();
+            if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Recipe")) {
+                return Integer.compare(((Recipe) o1).getPreptime(), ((Recipe) o2).getPreptime());
+            }
+            return -1;
         }
 
         @Override
-        public Comparator<Recipe> reversed() {
+        public Comparator<Object> reversed() {
             return Comparator.super.reversed();
         }
     }
 
-    public static class ServingsComparator implements Comparator<Recipe> {
+    public static class ServingsComparator implements Comparator<Object> {
 
 
         @Override
-        public int compare(Recipe r1, Recipe r2) {
-            return Float.compare(r1.getServings(), r2.getServings());
+        public int compare(Object o1, Object o2) {
+            String objectType = o1.getClass().toString();
+            if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Recipe")) {
+                return Float.compare(((Recipe) o1).getServings(), ((Recipe) o2).getServings());
+            }
+            return -1;
         }
 
         @Override
-        public Comparator<Recipe> reversed() {
+        public Comparator<Object> reversed() {
             return Comparator.super.reversed();
         }
     }
