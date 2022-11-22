@@ -53,7 +53,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
-        shoppingItems = new ArrayList<>()
+        shoppingItems = new ArrayList<>();
         // Adding two demo ingredients to demonstrate functionality
         shoppingItems.add(new Ingredient("Apple", 3, 4, "Fresh"));
         shoppingItems.add(new Ingredient("Bread", 3, 1, "Bakery"));
