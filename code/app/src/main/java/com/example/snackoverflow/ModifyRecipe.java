@@ -86,7 +86,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra("recipe");
-        String recipeId = intent.getStringExtra("recipeId");
+        String recipeId = recipe.getId();
         imageView = findViewById(R.id.edit_recipe_photo);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
         try {
