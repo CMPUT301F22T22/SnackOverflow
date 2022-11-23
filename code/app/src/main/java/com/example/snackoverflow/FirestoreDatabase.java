@@ -307,7 +307,13 @@ public class FirestoreDatabase {
                         String recipeCategory = mealMap.get("recipeCategory").toString();
                         String comments = mealMap.get("comments").toString();
 //                        String id = mealMap.get("id").toString();
-                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+                        ArrayList<Object> ingredientArray = (ArrayList<Object>) mealMap.get("ingredients");
+                        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+                        for (int i = 0; i < ingredientArray.size(); i++) {
+                            Map<String, Object> ingredientMap = (Map<String, Object>) ingredientArray.get(i);
+                            ingredients.add(new Ingredient(null, Integer.valueOf(ingredientMap.get("amount").toString()),
+                                    Integer.valueOf(ingredientMap.get("unit").toString()), ingredientMap.get("category").toString()));
+                        }
                         Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
                         mealsfortheDay.add(recipe);
                     }
