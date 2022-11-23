@@ -77,7 +77,9 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     public interface OnFragmentInteractionListener {
         void addMeal(Recipe recipe, Date date);
 
-        void deleteMealDay(Mealday mealDay);
+        void deleteMeal(Mealday mealday);
+
+        void deleteMealPlan(Mealday mealday, Recipe recipe);
     }
 
     @Override
@@ -199,35 +201,48 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            mealDay.getMeals().remove(recipe);
+//                            mealDay.getMeals().remove(recipe);
+//                            FirestoreDatabase.modifyMealPlan(mealDay);
+                            listener.deleteMealPlan(mealDay,recipe);
                             if (mealDay.getMeals().size() == 0){
-                                listener.deleteMealDay(mealDay);
-                            }
-                        }
-                    })
-                    .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(Objects.equals(spinner.getSelectedItemPosition(), 0)){
-                                new ErrorFragment("Invalid Recipe Chosen").show(getParentFragmentManager(), "error");
-                            }
-                            else {
-                                mealDay.getMeals().remove(recipe);
-                                if (mealDay.getMeals().size() == 0) {
-                                    listener.deleteMealDay(mealDay);
-                                }
                                 String date_text = TextViewDate.getText().toString();
-                                Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+                                Date date = null;
                                 try {
-//                                    LocalDate date = stringToDate(date_text);
-                                    Date date = dateFormat.parse(date_text);
-                                    listener.addMeal(recipe, date);
+                                    date = dateFormat.parse(date_text);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
+                                listener.deleteMeal(mealDay);
+                                FirestoreDatabase.deleteMealPlan(mealDay);
                             }
                         }
-                    }).create();
+                    })
+                    //TODO: Change title and date (if needed)
+//                    .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            if(Objects.equals(spinner.getSelectedItemPosition(), 0)){
+//                                new ErrorFragment("Invalid Recipe Chosen").show(getParentFragmentManager(), "error");
+//                            }
+//                            else {
+//                                mealDay.getMeals().remove(recipe);
+//                                FirestoreDatabase.modifyMealPlan(mealDay);
+//                                if (mealDay.getMeals().size() == 0) {
+//                                    listener.deleteMeal(mealDay);
+//                                }
+//                                String date_text = TextViewDate.getText().toString();
+//                                Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+//                                try {
+////                                    LocalDate date = stringToDate(date_text);
+//                                    Date date = dateFormat.parse(date_text);
+//                                    listener.addMeal(recipe, date);
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }
+//                    })
+                    .create();
         }
     }
 
