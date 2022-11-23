@@ -131,6 +131,10 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         ingredientDataList = new ArrayList<Ingredient>();
         addedIngredients = new ArrayList<Ingredient>();
 
+        if (edit == true){
+            addedIngredients = recipe.getIngredients();
+        }
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         TextViewDate.setOnClickListener(new View.OnClickListener(){
@@ -177,7 +181,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
             recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", null));
         }
 
-        String[]ingredirenttitle = {"apple", "banana", "mango"};
+        String[]ingredirenttitle = {"apple", "banana", "mango", "fish"};
 
         for (int i =0;i<ingredirenttitle.length;i++){
             ingredientDataList.add(new Ingredient(ingredirenttitle[i], 1, 2, "fruit"));
@@ -303,9 +307,6 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 button.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
                 ingredientsView.setVisibility(View.VISIBLE);
-                addedIngredients = recipe.getIngredients();
-                ingredientArrayAdapter = new IngredientAdapter(this.getContext(), addedIngredients, "recipe_ingredient_preview");
-                ingredientsView.setAdapter(ingredientArrayAdapter);
             }
             return builder
                     .setView(view)
