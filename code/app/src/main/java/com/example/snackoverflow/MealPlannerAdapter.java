@@ -46,8 +46,6 @@ import java.util.ArrayList;
     public void onBindViewHolder(@NonNull MealPlannerAdapter.ViewHolder holder, int position) {
         ImageView mealImageView = (ImageView) holder.mealImage;
 //        mealImageView.setImageResource(meals.get(position).imageResource);
-        System.out.println("At recyclerView");
-        System.out.println(meals.get(position).getClass());
         TextView categoryTextView = (TextView) holder.category;
         categoryTextView.setText(meals.get(position).getRecipeCategory());
 
