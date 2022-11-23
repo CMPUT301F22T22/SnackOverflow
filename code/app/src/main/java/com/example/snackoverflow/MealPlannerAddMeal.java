@@ -118,7 +118,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                         onDateSetListener,
                         year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 604800000L);
+                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 518400000L);
                 dialog.getDatePicker().setMinDate(cal.getTimeInMillis());
                 dialog.show();
             }
