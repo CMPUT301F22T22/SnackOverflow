@@ -1,5 +1,7 @@
 package com.example.snackoverflow;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -19,9 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -139,6 +144,89 @@ public class FirestoreDatabase {
             }
         });
     };
+
+
+
+    static void fetchRecipesForMealPlan(ArrayList<Recipe> recipes) {
+        ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                recipes.clear();
+                try {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String id = doc.getId();
+                        System.out.println(id);
+                        Map<String, Object> data = doc.getData();
+                        String title = data.get("title").toString();
+                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                        float servings = Float.parseFloat(data.get("servings").toString());
+                        String category = data.get("category").toString();
+                        String instructions = data.get("instructions").toString();
+                        String comments = data.get("comments").toString();
+
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
+                        int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                        try {
+                            File localFile = File.createTempFile("tempfile", ".jpg");
+                            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions, imgBitmap);
+                                    recipes.add(recipe);
+//                                    recipeArrayAdapter.notifyDataSetChanged();
+//                                handleSortBy(0);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions, null);
+                                    recipes.add(recipe);
+//                                    recipeArrayAdapter.notifyDataSetChanged();
+//                                handleSortBy(0);
+                                }
+                            });
+                        } catch (IOException e) {
+
+                        }
+                    }
+//                    recipeArrayAdapter.notifyDataSetChanged();
+                } catch (NullPointerException e) {
+                }
+            }
+
+//        recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+//                    FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
+//                    return;
+//                }
+//                recipes.clear();
+//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+//                {
+//                    Log.d(IngredientsTAG, "Ingredients retrieved successfully");
+//                    String id = doc.getId();
+//                    String title = (String) doc.getData().get("title");
+//                    String location = (String) doc.getData().get("location");
+//                    int amount = doc.getLong("amount").intValue();
+//                    int unit = doc.getLong("unit").intValue();
+//                    Date bestBefore = doc.getDate("bestBefore");
+//                    String category = (String) doc.getData().get("category");
+//                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
+//                    ingredientItem.id = id;
+//                    recipes.add(ingredientItem); // Adding the ingredients from FireStore
+//                }
+//                // Notifying the adapter to render any new data fetched
+//                recipeArrayAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
+//            }
+//        });
+
+        });
+    }
 
     /**
      * Gets the Ingredient Storage List form the Database

@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +23,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApiNotAvailableException;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -41,6 +60,8 @@ import java.util.Objects;
 public class MealPlannerAddMeal extends DialogFragment implements AdapterView.OnItemSelectedListener {
     // Check if we are editing data
     private boolean edit;
+    final static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    final static CollectionReference recipeCol = db.collection("recipe");
     // Data from other activities
     ArrayList<Recipe> recipeDataList;
     // Data storage
@@ -140,11 +161,73 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         String []recipestitle = {"Curry","NOODLES","nidal"};
         int [] servings = {1,2};
         String []categories = {"Lunch","Dinner","nice"};
-        recipeDataList = new ArrayList<Recipe>();
 
-        for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", null));
-        }
+        recipeDataList = new ArrayList<Recipe>();
+        recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                          @Override
+                                          public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                                              recipeDataList.clear();
+                                              try {
+                                                  for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                                      String id = doc.getId();
+                                                      System.out.println(id);
+                                                      Map<String, Object> data = doc.getData();
+                                                      String title = data.get("title").toString();
+                                                      int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                                                      float servings = Float.parseFloat(data.get("servings").toString());
+                                                      String category = data.get("category").toString();
+                                                      String instructions = data.get("instructions").toString();
+                                                      String comments = data.get("comments").toString();
+
+                                                      StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
+                                                      int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                                                      try {
+                                                          File localFile = File.createTempFile("tempfile", ".jpg");
+                                                          storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                              @Override
+                                                              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                                  Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                                                  Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                                                          category, comments, instructions, imgBitmap);
+                                                                  recipeDataList.add(recipe);
+                                                                  String[] recipeNames = new String[recipeDataList.size()+1];
+                                                                  recipeNames[0] = "Recipe";
+                                                                  for (int i =1;i<=recipeDataList.size();i++){
+                                                                      recipeNames[i] = recipeDataList.get(i-1).getTitle();
+                                                                  }
+//                                    recipeArrayAdapter.notifyDataSetChanged();
+//                                handleSortBy(0);
+                                                              }
+                                                          }).addOnFailureListener(new OnFailureListener() {
+                                                              @Override
+                                                              public void onFailure(@NonNull Exception e) {
+                                                                  Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                                                          category, comments, instructions, null);
+                                                                  recipeDataList.add(recipe);
+                                                                  String[] recipeNames = new String[recipeDataList.size()+1];
+                                                                  recipeNames[0] = "Recipe";
+                                                                  for (int i =1;i<=recipeDataList.size();i++){
+                                                                      recipeNames[i] = recipeDataList.get(i-1).getTitle();
+                                                                  }
+//                                    recipeArrayAdapter.notifyDataSetChanged();
+//                                handleSortBy(0);
+                                                              }
+                                                          });
+                                                      } catch (IOException e) {
+
+                                                      }
+                                                  }
+//                    recipeArrayAdapter.notifyDataSetChanged();
+                                              } catch (NullPointerException e) {
+                                              }
+                                          }
+
+                                      });
+//        FirestoreDatabase.fetchRecipesForMealPlan(recipeDataList);
+
+//        for (int i =0;i<recipestitle.length;i++){
+//            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", null));
+//        }
         //
 
         String[] recipeNames = new String[recipeDataList.size()+1];
