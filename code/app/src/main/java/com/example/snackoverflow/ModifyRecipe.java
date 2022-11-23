@@ -77,6 +77,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private Button viewButton;
     private Button deleteButton;
     private int imageTracker;
+    private String recipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra("recipe");
-        String recipeId = recipe.getId();
+        recipeId = recipe.getId();
         imageView = findViewById(R.id.edit_recipe_photo);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
         try {
@@ -139,19 +140,22 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
                     new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                    imageTracker = 0;
                 }
                 else {
-                    ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
-                    with.crop(1f, 1f);
-                    with.compress(1024);        //Final image size will be less than 1 MB
-                    with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
-                    with.createIntent(new Function1<Intent, Unit>() {
-                        @Override
-                        public Unit invoke(Intent Intent) {
-                            selectImage.launch(Intent);
-                            return null;
-                        }
-                    });
+                    if (applyButton.getVisibility() == View.VISIBLE) {
+                        ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
+                        with.crop(1f, 1f);
+                        with.compress(1024);        //Final image size will be less than 1 MB
+                        with.maxResultSize(1080, 1080);  //Final image resolution will be less than 1080 x 1080
+                        with.createIntent(new Function1<Intent, Unit>() {
+                            @Override
+                            public Unit invoke(Intent Intent) {
+                                selectImage.launch(Intent);
+                                return null;
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -450,6 +454,18 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 ((CircleImageView) object).setBackground(imageViewBackground);
                 ((CircleImageView) object).setImageDrawable(imageViewDrawable);
                 ((CircleImageView) object).setPadding(4,7,6,10);
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
+                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        System.out.println("File Deleted Successfully");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println(e);
+                    }
+                });
             }
         }
     }
