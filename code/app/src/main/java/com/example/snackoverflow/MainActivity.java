@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
@@ -18,6 +19,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
 
@@ -92,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             public void onClick(View view) {
                 // TODO add recipe data
                 new MealPlannerAddMeal().show(getSupportFragmentManager(),"Add_meal");
+                mealslist.setAdapter(mealdayAdapter);
+                FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
+
             }
         });
     }
@@ -104,19 +110,19 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     private void data(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Recipe> Monday = new ArrayList<Recipe>();
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
+        Monday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", null ));
         //Mealday monday = new Mealday(LocalDate.now(),Monday);
 
         ArrayList<Recipe> Tuesday = new ArrayList<Recipe>();
 
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil" ));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil"));
-        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice", "boil"));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
+        Tuesday.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","boil", null ));
         Mealday tuesday = null;
         try {
             tuesday = new Mealday(dateFormat.parse("2022-10-21"),Monday);
@@ -139,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             if (Objects.equals(meals.get(i).getDate() ,date)){
                 meals.get(i).getMeals().add(recipe);
                 // update recipes
-                //FirestoreDatabase.modifyMealPlan(i,meals);
+                FirestoreDatabase.modifyMealPlan(meals.get(i));
                 return;
             }
         }
@@ -147,21 +153,57 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         recipes.add(recipe);
         Mealday mealDay = new Mealday(date, recipes);
         meals.add(mealDay);
+        Collections.sort(meals, new Comparator<Mealday>() {
+            @Override
+            public int compare(Mealday mealday, Mealday t1) {
+                return mealday.getDate().compareTo(t1.getDate());
+            }
+        });
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
         FirestoreDatabase.addMealPlan(mealDay);
+        //FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
+        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
     }
+
+//    @Override
+//    public void deleteMeal(Recipe recipe, Date date) {
+//        for(int i=0;i<meals.size();i++) {
+//            if (Objects.equals(meals.get(i).getDate() ,date)){
+//                meals.get(i).getMeals().remove(recipe);
+//                // update recipes
+//                FirestoreDatabase.modifyMealPlan(meals.get(i));
+//                return;
+//            }
+//    }
+
     /**
      * deletes the meal when prompted by the MealPlannerAddMeal Dialog
      * @param mealDay the day user wants to delete from the meal planner
      * */
+
+
     @Override
-    public void deleteMealDay(Mealday mealDay) {
+    public void deleteMeal(Mealday mealDay) {
+        //checking the existence of this meal
         meals.remove(mealDay);
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
         mealslist.setAdapter(mealdayAdapter);
-        //FirestoreDatabase.deleteMealPlan(mealdayAdapter,meals);
+        FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
+        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void deleteMealPlan(Mealday mealday, Recipe recipe) {
+        mealday.getMeals().remove(recipe);
+        FirestoreDatabase.modifyMealPlan(mealday);
+        mealslist.setAdapter(mealdayAdapter);
+        FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
+        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
+
+
     }
 }

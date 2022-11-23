@@ -23,6 +23,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -226,12 +228,11 @@ public class FirestoreDatabase {
 
     static void addMealPlan(Mealday mealDay) {
         MealPlanCol
-                .add(mealDay)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(mealDay.getDate().toString()).set(mealDay)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(MealsTag, "Meal day document snapshot written with ID: " + documentReference.getId());
-                        mealDay.id = documentReference.getId();
+                    public void onSuccess(Void aVoid) {
+                        Log.d(MealsTag, "Meal day document snapshot written");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -241,26 +242,10 @@ public class FirestoreDatabase {
                     }});
     };
 
-//    static void modifyMealPlan(int i,ArrayList<Mealday> meals) {
-//        MealPlanCol
-//                .document(meals.get(i).id).update("meals", meals.get(i).getMeals())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(MealsTag, "Error updating document", e);
-//                    }
-//   });
-//};
 
 
-    static void deleteMealPlan(int i, ArrayList<Mealday> meals) {
-        MealPlanCol.document(meals.get(i).id).delete()
+    static void deleteMealPlan(Mealday mealDay) {
+        MealPlanCol.document(mealDay.getDate().toString()).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -276,6 +261,28 @@ public class FirestoreDatabase {
 
     };
 
+        static void modifyMealPlan(Mealday mealday) {
+//            System.out.println("Im here ar modify");
+//            Map<String,Object> city = new HashMap<>();
+//            city.put("name","LA");
+//
+//            MealPlanCol.document("Modi").set(city));
+        MealPlanCol
+                .document(mealday.getDate().toString()).update("meals", mealday.getMeals())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error updating document", e);
+                    }
+   });
+};
+
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
                                ArrayList<Mealday> meals) {
         MealPlanCol
@@ -287,7 +294,7 @@ public class FirestoreDatabase {
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
 
                 {
-                    // Log.d(MealsTag, "Meal plan fetched successfully");
+                    Log.d(MealsTag, "Meal plan fetched successfully");
                     Date date = doc.getDate("date");
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
                     ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
@@ -307,7 +314,13 @@ public class FirestoreDatabase {
 
 //                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
                     //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
-                    meals.add(new Mealday( date,  mealsfortheDay)); // Adding the meal days from FireStore
+                    meals.add(new Mealday( date,  mealsfortheDay));
+                    Collections.sort(meals, new Comparator<Mealday>() {
+                        @Override
+                        public int compare(Mealday mealday, Mealday t1) {
+                            return mealday.getDate().compareTo(t1.getDate());
+                        }
+                    });// Adding the meal days from FireStore
                 }
                 ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
             }
@@ -334,5 +347,6 @@ public class FirestoreDatabase {
             storageReference.putFile(uri);
         }
     };
+
 
 }

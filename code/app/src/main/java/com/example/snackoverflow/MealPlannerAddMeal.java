@@ -78,7 +78,9 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     public interface OnFragmentInteractionListener {
         void addMeal(Recipe recipe, Date date);
 
-        void deleteMealDay(Mealday mealDay);
+        void deleteMeal(Mealday mealday);
+
+        void deleteMealPlan(Mealday mealday, Recipe recipe);
     }
 
     @Override
@@ -145,7 +147,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         recipeDataList = new ArrayList<Recipe>();
 
         for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil" ));
+            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", null));
         }
         //
 
@@ -203,12 +205,23 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            mealDay.getMeals().remove(recipe);
+//                            mealDay.getMeals().remove(recipe);
+//                            FirestoreDatabase.modifyMealPlan(mealDay);
+                            listener.deleteMealPlan(mealDay,recipe);
                             if (mealDay.getMeals().size() == 0){
-                                listener.deleteMealDay(mealDay);
+                                String date_text = TextViewDate.getText().toString();
+                                Date date = null;
+                                try {
+                                    date = dateFormat.parse(date_text);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                listener.deleteMeal(mealDay);
+                                FirestoreDatabase.deleteMealPlan(mealDay);
                             }
                         }
                     })
+                    //TODO: Change title and date (if needed)
 //                    .setPositiveButton("Change", new DialogInterface.OnClickListener() {
 //                        @Override
 //                        public void onClick(DialogInterface dialogInterface, int i) {
@@ -217,8 +230,9 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //                            }
 //                            else {
 //                                mealDay.getMeals().remove(recipe);
+//                                FirestoreDatabase.modifyMealPlan(mealDay);
 //                                if (mealDay.getMeals().size() == 0) {
-//                                    listener.deleteMealDay(mealDay);
+//                                    listener.deleteMeal(mealDay);
 //                                }
 //                                String date_text = TextViewDate.getText().toString();
 //                                Recipe recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
