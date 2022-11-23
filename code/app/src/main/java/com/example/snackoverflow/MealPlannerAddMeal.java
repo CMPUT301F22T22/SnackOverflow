@@ -63,7 +63,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     final static FirebaseFirestore db = FirebaseFirestore.getInstance();
     final static CollectionReference recipeCol = db.collection("recipe");
     // Data from other activities
-    ArrayList<Recipe> recipeDataList;
+    ArrayList<Recipe> recipeDataList = new ArrayList<Recipe>();
     // Data storage
     private Spinner spinner;
     private TextView TextViewDate;
@@ -158,9 +158,22 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         };
 
         // DUMMY DATA
-        String []recipestitle = {"Curry","NOODLES","nidal"};
+        String [] recipestitle = {"Curry","NOODLES","nidal"};
         int [] servings = {1,2};
         String []categories = {"Lunch","Dinner","nice"};
+//        String[] recipeNames = new String[recipeDataList.size()+1];
+        ArrayList<CharSequence> recipeNames = new ArrayList<CharSequence>();
+        recipeNames.add("Recipe");
+//        for (int i =1;i<=recipeDataList.size();i++){
+//            recipeNames[i] = recipeDataList.get(i-1).getTitle();
+//        }
+        ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(),
+                android.R.layout.simple_spinner_item,
+                recipeNames);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(0);
 
         recipeDataList = new ArrayList<Recipe>();
         recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -190,11 +203,10 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                                                   Recipe recipe = new Recipe(id, title, prep_time, servings,
                                                                           category, comments, instructions, imgBitmap);
                                                                   recipeDataList.add(recipe);
-                                                                  String[] recipeNames = new String[recipeDataList.size()+1];
-                                                                  recipeNames[0] = "Recipe";
                                                                   for (int i =1;i<=recipeDataList.size();i++){
-                                                                      recipeNames[i] = recipeDataList.get(i-1).getTitle();
+                                                                      recipeNames.add(recipeDataList.get(i-1).getTitle());
                                                                   }
+                                                                  spinnerAdapter.notifyDataSetChanged();
 //                                    recipeArrayAdapter.notifyDataSetChanged();
 //                                handleSortBy(0);
                                                               }
@@ -213,6 +225,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //                                handleSortBy(0);
                                                               }
                                                           });
+
                                                       } catch (IOException e) {
 
                                                       }
@@ -229,17 +242,6 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", null));
 //        }
         //
-
-        String[] recipeNames = new String[recipeDataList.size()+1];
-        recipeNames[0] = "Recipe";
-        for (int i =1;i<=recipeDataList.size();i++){
-            recipeNames[i] = recipeDataList.get(i-1).getTitle();
-        }
-        ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, recipeNames);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(0);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         if (edit == false) {
