@@ -267,6 +267,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients, "recipe_ingredient_preview");
         ingredientsView.setAdapter(ingredientArrayAdapter);
+        setListViewHeightBasedOnChildren(ingredientsView);
 
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override

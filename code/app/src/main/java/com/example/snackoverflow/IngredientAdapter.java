@@ -114,7 +114,11 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
                         view = LayoutInflater.from(context).inflate(R.layout.textview, parent, false);
                         System.out.println("drawn");
                     }
-                    Ingredient ingredient = ingredients.get(ingredients.size() - position - 1);
+                    System.out.println("START TEST");
+                    for (int i = 0; i < ingredients.size(); i++){
+                        System.out.println(ingredients.get(i).getTitle());
+                    }
+                    Ingredient ingredient = ingredients.get(position);
                     TextView title = view.findViewById(R.id.title_text);
                     title.setText(ingredient.getTitle());
                 }
