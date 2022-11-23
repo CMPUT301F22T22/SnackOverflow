@@ -23,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.EventListener;
 
 import java.lang.ref.Reference;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -102,13 +103,17 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     for (Object meal : mealsForDay) {
                         Map<String, Object> mealMap = (Map<String, Object>) meal;
 //                        String id = mealMap.get("id").toString();
-                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
-                        for (Ingredient ingredient: ingredients) {
-                            firebase_ingredient_meal_plan_list.add(ingredient.getTitle());
+                        ArrayList<Object> ingredients = (ArrayList<Object>) mealMap.get("ingredients");
+                        //ArrayList<Ingredient> ingredients2 = new ArrayList<>();
+                        for (Object ing: ingredients) {
+                            Map<String, Object> ingredMap = (Map<String, Object>) ing;
+                            String title = ingredMap.get("title").toString();
+                            firebase_ingredient_meal_plan_list.add(title);
                         }
                     }
 
                 }
+                System.out.println(firebase_ingredient_meal_plan_list);
                 for (Ingredient ingredientShoppingItems: shoppingItems) {
                     shoppingItemsString.add(ingredientShoppingItems.getTitle());
                 }
