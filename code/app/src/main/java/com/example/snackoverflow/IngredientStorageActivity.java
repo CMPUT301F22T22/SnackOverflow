@@ -108,6 +108,12 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
         FirestoreDatabase.deleteIngredient(selectedIngredient);
     }
 
+    public void editIngredientAtPosition(View v) {
+        int position = ingredientStorageList.getPositionForView((View) v.getParent());
+        Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
+        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
+    }
+
     @Override
     public void onOkPressed(Ingredient selectedIngredient) {
         FirestoreDatabase.addIngredient(selectedIngredient);
