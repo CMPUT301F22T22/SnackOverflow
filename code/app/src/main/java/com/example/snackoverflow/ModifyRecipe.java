@@ -7,9 +7,14 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -58,11 +63,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private EditText instructionsField;
     private EditText commentsField;
     private EditText prepField;
-    private TextView ingredient_1;
-    private TextView ingredient_2;
-    private TextView ingredient_3;
-    private ArrayList<TextView> ingredient_views;
+    private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
+    private ListView ingredientsView;
     private Fragment IngredientsView;
     private Button showMore;
     private Button addIngredient;
@@ -166,28 +169,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         categoryField.setText(recipe.getRecipeCategory());
         servingsField.setText(String.valueOf(recipe.getServings()));
         prepField.setText(String.valueOf(recipe.getPreptime()));
-        ingredient_1 = findViewById(R.id.Ingredient_1);
-        ingredient_2 = findViewById(R.id.Ingredient_2);
-        ingredient_3 = findViewById(R.id.Ingredient_3);
         instructionsField.setText(recipe.getInstructions());
         commentsField.setText(recipe.getComments());
 
-        ArrayList<Ingredient> recipeIngredients = recipe.getIngredients();
-        if (recipeIngredients != null) {
-            for (int i = 0; i < recipeIngredients.size(); i++) {
-                ingredients.add(recipeIngredients.get(i));
-            }
-            if (ingredients.size() > 0) {
-                ingredient_1.setText(ingredients.get(0).getTitle());
-                if (ingredients.size() > 1) {
-                    ingredient_1.setText(ingredients.get(1).getTitle());
-                    if (ingredients.size() > 2) {
-                        ingredient_1.setText(ingredients.get(2).getTitle());
-                    }
-                }
-            }
-        }
 
+        ingredientsView = findViewById(R.id.ingredient_preview);
         showMore = findViewById(R.id.recipe_showmore);
         addIngredient = findViewById(R.id.recipe_add_ingredient);
 
@@ -197,11 +183,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         deleteButton = (Button) findViewById(R.id.delete_recipe_button);
 
         ingredients = new ArrayList<Ingredient>();
-        ingredient_views = new ArrayList<TextView>();
-
-        ingredient_views.add(ingredient_1);
-        ingredient_views.add(ingredient_2);
-        ingredient_views.add(ingredient_3);
 
         fetchIngredients(recipeId);
 
@@ -283,6 +264,17 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 }
             }
         });
+
+        ingredientArrayAdapter = new IngredientAdapter(this, ingredients, "recipe_ingredient_preview");
+        ingredientsView.setAdapter(ingredientArrayAdapter);
+
+        addIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new RecipeIngredientFragment().show(getSupportFragmentManager(), "Add_Ingredient");
+            }
+        });
+
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -357,15 +349,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
      * refresh the ingredients shown on the recipe
      * */
     private void refreshIngredientsShown(){
-        int last_index = ingredients.size()-1;
-        for (int i = 0; i < 3; i++){
-            ingredient_views.get(i).setText("Ingredient");
-        }
-        for (int i = 0; i<=last_index;i++){
-            ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
-            if (i == 2){
-                break;
-            }
+        ingredientArrayAdapter.notifyDataSetChanged();
+        if (ingredients.size() <= 3) {
+            setListViewHeightBasedOnChildren(ingredientsView);
         }
     }
 
@@ -452,5 +438,30 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 ((CircleImageView) object).setPadding(4,7,6,10);
             }
         }
+    }
+
+    // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        Log.e("Listview Size ", "" + listView.getCount());
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+
     }
 }

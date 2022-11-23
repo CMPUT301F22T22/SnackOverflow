@@ -2,8 +2,6 @@ package com.example.snackoverflow;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -15,19 +13,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.rpc.context.AttributeContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,11 +51,9 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     private TextInputLayout categoryText;
     private TextInputLayout servingText;
     private TextInputLayout prepText;
-    private TextView ingredient_1;
-    private TextView ingredient_2;
-    private TextView ingredient_3;
-    private ArrayList<TextView> ingredient_views;
+    private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
+    private ListView ingredientsView;
     private Button showMore;
     private Button addIngredient;
     private Button addRecipe;
@@ -97,9 +89,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         prepText = findViewById(R.id.recipe_preptime);
         instructionsText = findViewById(R.id.recipe_instructions);
         commentsText = findViewById(R.id.recipe_comments);
-        ingredient_1 = findViewById(R.id.Ingredient_1);
-        ingredient_2 = findViewById(R.id.Ingredient_2);
-        ingredient_3 = findViewById(R.id.Ingredient_3);
+        ingredientsView = findViewById(R.id.ingredient_preview);
         showMore = findViewById(R.id.recipe_showmore);
         addIngredient = findViewById(R.id.recipe_add_ingredient);
         addRecipe = findViewById(R.id.recipe_add_recipe);
@@ -113,11 +103,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         editCommentsText = findViewById(R.id.edit_recipe_comments);
 
         ingredients = new ArrayList<Ingredient>();
-        ingredient_views = new ArrayList<TextView>();
-
-        ingredient_views.add(ingredient_1);
-        ingredient_views.add(ingredient_2);
-        ingredient_views.add(ingredient_3);
 
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage =
@@ -162,6 +147,9 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 }
             }
         });
+
+        ingredientArrayAdapter = new IngredientAdapter(this, ingredients, "recipe_ingredient_preview");
+        ingredientsView.setAdapter(ingredientArrayAdapter);
 
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,7 +208,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 }
                 if(ingredients.isEmpty()){
                     invalidInput = true;
-                    ingredient_1.setError("At least one ingredient is required");
+                    addIngredient.setError("At least one ingredient is required");
                 }
 
 
@@ -252,7 +240,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     @Override
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
-        ingredient_1.setError(null);
+        addIngredient.setError(null);
         refreshIngredientsShown();
     }
     /**
@@ -265,7 +253,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.Main, IngredientsView).commit();
-
     }
 
     @Override
@@ -289,15 +276,9 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
      * refreshed the view to display the last 3 added ingredient
      */
     private void refreshIngredientsShown(){
-        int last_index = ingredients.size()-1;
-        for (int i = 0; i < 2; i++){
-            ingredient_views.get(i).setText("Ingredient");
-        }
-        for (int i = 0; i<=last_index;i++){
-            ingredient_views.get(i).setText(ingredients.get(last_index - i).getTitle());
-            if (i == 2){
-                break;
-            }
+        ingredientArrayAdapter.notifyDataSetChanged();
+        if (ingredients.size() <= 3) {
+            setListViewHeightBasedOnChildren(ingredientsView);
         }
     }
 
@@ -340,5 +321,30 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 ((CircleImageView) object).setPadding(4,7,6,10);
             }
         }
+    }
+
+    // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        Log.e("Listview Size ", "" + listView.getCount());
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+
     }
 }

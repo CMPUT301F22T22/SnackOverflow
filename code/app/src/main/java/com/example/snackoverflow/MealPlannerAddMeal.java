@@ -24,6 +24,7 @@ import androidx.fragment.app.DialogFragment;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -96,6 +97,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
     @NonNull
     @Override
+    //Todo impliment for multiple weeks
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //Inflate the layout
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.mealplanner_add_meal_fragment, null);
@@ -118,6 +120,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                         onDateSetListener,
                         year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 518400000L);
+                dialog.getDatePicker().setMinDate(cal.getTimeInMillis());
                 dialog.show();
             }
         });
@@ -193,10 +197,10 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         }
         else{
             spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
-            TextViewDate.setText(mealDay.getDate().toString());
+            TextViewDate.setText(dateFormat.format(mealDay.getDate()).substring(0,10));
             return builder
                     .setView(view)
-                    .setTitle("Edit Meal")
+                    .setTitle("View Meal")
                     .setNeutralButton("Cancel", null)
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
