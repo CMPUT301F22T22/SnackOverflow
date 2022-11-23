@@ -200,7 +200,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
             TextViewDate.setText(dateFormat.format(mealDay.getDate()).substring(0,10));
             return builder
                     .setView(view)
-                    .setTitle("Edit Meal")
+                    .setTitle("View Meal")
                     .setNeutralButton("Cancel", null)
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
