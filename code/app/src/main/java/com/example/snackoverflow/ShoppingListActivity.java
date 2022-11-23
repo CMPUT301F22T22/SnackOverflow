@@ -98,13 +98,16 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                 shoppingItemsString.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
-                    for (Object obj : mealsForDay) {
-                        Map<String, Object> mapping = (Map<String, Object>) obj;
-                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
-                        for (String mealplaningredient : mealplaningredients) {
-                            firebase_ingredient_meal_plan_list.add(mealplaningredient);
+                    ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
+                    for (Object meal : mealsForDay) {
+                        Map<String, Object> mealMap = (Map<String, Object>) meal;
+//                        String id = mealMap.get("id").toString();
+                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+                        for (Ingredient ingredient: ingredients) {
+                            firebase_ingredient_meal_plan_list.add(ingredient.getTitle());
                         }
                     }
+
                 }
                 for (Ingredient ingredientShoppingItems: shoppingItems) {
                     shoppingItemsString.add(ingredientShoppingItems.getTitle());

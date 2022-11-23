@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 /**
  * Inflates a user friendly interface to add an item to the shopping list. The interface contains
  * fields for Description, Category, Unit, and Amount of the Ingredient. The other attributes
@@ -25,6 +28,7 @@ public class ShoppingListAddItemFragment extends DialogFragment {
     private EditText shoppingAmount;
     private EditText shoppingUnit;
     private OnFragmentInteractionListener listener;
+    private boolean isNull = false;
 
     @Override
     public void onStart() {
@@ -48,6 +52,10 @@ public class ShoppingListAddItemFragment extends DialogFragment {
         }
     }
 
+    private void setErrorMessage(EditText edt, String errorMessage) {
+        edt.setError(errorMessage);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -56,7 +64,6 @@ public class ShoppingListAddItemFragment extends DialogFragment {
         shoppingAmount = view.findViewById(R.id.shopping_item_amount_editText);
         shoppingCategory = view.findViewById(R.id.shopping_item_category_editText);
         shoppingUnit = view.findViewById(R.id.shopping_item_unit_editText);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         return builder
@@ -66,11 +73,42 @@ public class ShoppingListAddItemFragment extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isNull = false;
                         String shoppingDescEntry = shoppingDesc.getText().toString();
                         String shoppingCategoryEntry = shoppingCategory.getText().toString();
-                        Integer shoppingAmountEntry = Integer.parseInt(shoppingAmount.getText().toString());
-                        Integer shoppingUnitEntry = Integer.parseInt(shoppingUnit.getText().toString());
-                        listener.onOkPressed(new Ingredient(shoppingDescEntry, shoppingAmountEntry, shoppingUnitEntry, shoppingCategoryEntry));
+                        String tempShoppingAmount = shoppingAmount.getText().toString();
+                        String tempShoppingUnit = shoppingUnit.getText().toString();
+                        Integer shoppingAmountEntry = 0;
+                        Integer shoppingUnitEntry = 0;
+                        if (shoppingDescEntry.length() == 0) {
+                            isNull = true;
+                            setErrorMessage(shoppingDesc, "Required");
+                        }
+                        if (shoppingCategoryEntry.length() == 0) {
+                            isNull = true;
+                            shoppingCategory.setError("Required");
+                        }
+                        if (tempShoppingAmount.length() == 0) {
+                            isNull = true;
+                            shoppingAmount.setError("Required");
+                        }
+                        else {
+                            shoppingAmountEntry = Integer.parseInt(shoppingAmount.getText().toString());
+                        }
+                        if (tempShoppingUnit.length() == 0) {
+                            isNull = true;
+                            shoppingUnit.setError("Required");
+                        }
+                        else {
+                            shoppingUnitEntry = Integer.parseInt(shoppingUnit.getText().toString());
+                        }
+                        if (shoppingDescEntry.length() == 0) {
+                            isNull = true;
+                            shoppingDesc.setError("Required");
+                        }
+                        if (!isNull) {
+                            listener.onOkPressed(new Ingredient(shoppingDescEntry, shoppingAmountEntry, shoppingUnitEntry, shoppingCategoryEntry));
+                        }
                     }
                 }).create();
     }
