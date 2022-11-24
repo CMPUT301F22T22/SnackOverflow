@@ -211,8 +211,6 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                                                       recipeNames.add(recipeDataList.get(i-1).getTitle());
                                                                   }
                                                                   spinnerAdapter.notifyDataSetChanged();
-//                                    recipeArrayAdapter.notifyDataSetChanged();
-//                                handleSortBy(0);
                                                               }
                                                           }).addOnFailureListener(new OnFailureListener() {
                                                               @Override
@@ -220,13 +218,10 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                                                   Recipe recipe = new Recipe(id, title, prep_time, servings,
                                                                           category, comments, instructions, null);
                                                                   recipeDataList.add(recipe);
-                                                                  String[] recipeNames = new String[recipeDataList.size()+1];
-                                                                  recipeNames[0] = "Recipe";
                                                                   for (int i =1;i<=recipeDataList.size();i++){
-                                                                      recipeNames[i] = recipeDataList.get(i-1).getTitle();
+                                                                      recipeNames.add(recipeDataList.get(i-1).getTitle());
                                                                   }
-//                                    recipeArrayAdapter.notifyDataSetChanged();
-//                                handleSortBy(0);
+                                                                  spinnerAdapter.notifyDataSetChanged();
                                                               }
                                                           });
 
@@ -267,6 +262,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 }
                                 else {
                                     recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+
                                     Date date = null;
                                     try {
 //                                      date = stringToDate(date_text);
