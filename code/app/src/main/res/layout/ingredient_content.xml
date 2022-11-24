@@ -77,7 +77,8 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         app:srcCompat="@android:drawable/ic_menu_edit"
-        app:tint="@android:color/darker_gray"/>
+        app:tint="@android:color/darker_gray"
+        android:onClick="editIngredientAtPosition"/>
 
     <ImageButton
         android:id="@+id/delete_ingredient"
