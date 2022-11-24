@@ -28,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -249,7 +250,7 @@ public class FirestoreDatabase {
 
     static void addMealPlan(Mealday mealDay) {
         MealPlanCol
-                .document(mealDay.getDate().toString()).set(mealDay)
+                .document(mealDay.getDate().toString()).set(Arrays.asList(mealDay))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -289,7 +290,7 @@ public class FirestoreDatabase {
 //
 //            MealPlanCol.document("Modi").set(city));
         MealPlanCol
-                .document(mealday.getDate().toString()).update("meals", mealday.getMeals())
+                .document(mealday.getDate().toString()).update("meals", Collections.singletonList(mealday.getMeals()))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
