@@ -1,5 +1,6 @@
 package com.example.snackoverflow;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
@@ -48,7 +49,31 @@ public class RecipeTest {
     }
 
     @Test
-    public void step2_checkAddRecipe() {
+    public void step2_checkShowIngredients() {
+        step1_checkRecipe();
+        View addIngredient = solo.getView("recipe_add_ingredient");
+        solo.clickOnView(addIngredient);
+
+        solo.waitForFragmentByTag("Add_Ingredient",2000);
+
+        // Fill in ingredient fragment
+        solo.typeText((EditText)solo.getView("edit_ingredient_description"),"Tomato");
+        solo.typeText((EditText)solo.getView("edit_ingredient_amount"),"11");
+        solo.typeText((EditText)solo.getView("edit_ingredient_unit"),"13");
+        solo.typeText((EditText)solo.getView("edit_ingredient_category"),"vegetable");
+
+        // Add ingredient
+        solo.clickOnButton("Ok");
+
+        View showMore = solo.getView("recipe_showmore");
+        solo.clickOnView(showMore);
+
+        assertTrue(solo.waitForText("Tomato", 1, 6000));
+
+    }
+
+    @Test
+    public void step3_checkAddRecipe() {
         step1_checkRecipe();
         View addIngredient = solo.getView("recipe_add_ingredient");
         View addRecipe = solo.getView("recipe_add_recipe");
@@ -61,7 +86,6 @@ public class RecipeTest {
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_instructions), "Add sauce to pasta.");
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_comments), "Eat it warm.");
 
-        solo.clickOnView(solo.getView(R.id.recipe_add_ingredient));
         solo.clickOnView(addIngredient);
         solo.waitForFragmentByTag("Add_Ingredient",2000);
 
@@ -81,7 +105,7 @@ public class RecipeTest {
     }
 
     @Test
-    public void step3_checkModifyRecipe() {
+    public void step4_checkModifyRecipe() {
         ListView listView = (ListView)solo.getView(R.id.recipe_list);
         View view = listView.getChildAt(0);
         solo.clickOnView(view);
@@ -95,23 +119,27 @@ public class RecipeTest {
         solo.clearEditText((EditText) solo.getView(R.id.edit_recipe_title));
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Soup");
 
-        View applyRecipeChanges = solo.getView("edit_recipe_button");
+        View applyRecipeChanges = solo.getView("apply_recipe_button");
         solo.clickOnView(applyRecipeChanges);
 
-
-
-
-
+        // Confirm that the Recipe is edited
+        assertTrue(solo.waitForText("Soup", 1, 6000));
     }
 
+    @Test
+    public void step5_checkDeleteRecipe() {
+        ListView listView = (ListView)solo.getView(R.id.recipe_list);
+        View view = listView.getChildAt(0);
+        solo.clickOnView(view);
 
-    // check show more ingredients
+        View deleteRecipe = solo.getView("delete_recipe_button");
+        solo.clickOnView(deleteRecipe);
 
-
+        assertFalse(solo.waitForText("Soup", 1, 5000));
+    }
 
     @After
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }
-
 }
