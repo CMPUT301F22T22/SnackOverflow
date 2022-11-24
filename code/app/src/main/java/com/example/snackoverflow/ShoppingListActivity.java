@@ -77,8 +77,10 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     return;
                 }
                 firebase_ingredient_storage_list.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
+                for(Ingredient ing: shoppingItems) {
+                    firebase_ingredient_storage_list.add(ing);
+                }
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     Log.d("lol", "Ingredients retrieved successfully");
                     String id = doc.getId();
                     String title = (String) doc.getData().get("title");
@@ -121,6 +123,14 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     if (!firebase_ingredient_storage_list.contains(ing)) {
                         shoppingItems.add(ing);
                         shoppingListAdapter.notifyDataSetChanged();
+                    }
+                    else if (firebase_ingredient_storage_list.contains(ing)) {
+                        int ind = firebase_ingredient_storage_list.indexOf(ing);
+                        Ingredient ingredientInStorage = firebase_ingredient_storage_list.get(ind);
+                        if (ing.getUnit()>ingredientInStorage.getUnit()) {
+                            shoppingItems.add(new Ingredient(ing.getTitle(), ingredientInStorage.getAmount(), ing.getUnit() - ingredientInStorage.getUnit(), ing.getCategory()));
+                            shoppingListAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }

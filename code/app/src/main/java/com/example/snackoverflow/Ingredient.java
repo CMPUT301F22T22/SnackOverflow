@@ -171,7 +171,7 @@ public class Ingredient implements Serializable  {
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
         try {
-            bb = bestBefore.compareTo(that.getBestBefore());
+            bb = bestBefore.compareTo(new Date());
         } catch (NullPointerException nlptr) {
             return false;
         }try {
