@@ -216,36 +216,17 @@ public class RecipeActivity extends AppCompatActivity {
                         String category = data.get("category").toString();
                         String instructions = data.get("instructions").toString();
                         String comments = data.get("comments").toString();
-
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+id+".jpg");
+                        Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                category, comments, instructions, null);
                         imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
-                        try {
-                            File localFile = File.createTempFile("tempfile",".jpg");
-                            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                            category, comments, instructions, imgBitmap);
-                                    recipeDataList.add(recipe);
-                                    recipeArrayAdapter.notifyDataSetChanged();
-                                    handleSortBy(0);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                            category, comments, instructions, null);
-                                    recipeDataList.add(recipe);
-                                    recipeArrayAdapter.notifyDataSetChanged();
-                                    handleSortBy(0);
-                                }
-                            });
-                        } catch (IOException e) {
-
+                        if (imageTrackingData > 0) {
+                            loadImage(recipe);
+                        } else {
+                            recipeDataList.add(recipe);
                         }
-                }
+                        }
                     recipeArrayAdapter.notifyDataSetChanged();
+                    handleSortBy(0);
                 } catch (NullPointerException e) {
                 }
             }
@@ -320,5 +301,29 @@ public class RecipeActivity extends AppCompatActivity {
             currSortOrder = "inc";
         }
         recipeArrayAdapter.notifyDataSetChanged();
+    }
+
+    public void loadImage(Recipe recipe) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipe.getId()+".jpg");
+        try {
+            File localFile = File.createTempFile("tempfile",".jpg");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    recipe.setImageBitmap(imgBitmap);
+                    recipeDataList.add(recipe);
+                    recipeArrayAdapter.notifyDataSetChanged();
+                    handleSortBy(0);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    loadImage(recipe);
+                }
+            });
+        } catch (IOException e) {
+
+        }
     }
 }
