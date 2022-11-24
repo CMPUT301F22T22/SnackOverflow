@@ -41,8 +41,8 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private ListView shoppingList;
     private ArrayAdapter<Ingredient> shoppingListAdapter;
     private ArrayList<Ingredient> shoppingItems;
-    private final static ArrayList<String> firebase_ingredient_meal_plan_list = new ArrayList<>();
-    private final static ArrayList<String> firebase_ingredient_storage_list = new ArrayList<>();
+    private final static ArrayList<Ingredient> firebase_ingredient_meal_plan_list = new ArrayList<>();
+    private final static ArrayList<Ingredient> firebase_ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> shoppingItemsString = new ArrayList<>();
 
     /**
@@ -82,7 +82,10 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     Log.d("lol", "Ingredients retrieved successfully");
                     String id = doc.getId();
                     String title = (String) doc.getData().get("title");
-                    firebase_ingredient_storage_list.add(title); // Adding the ingredients from FireStore
+                    String category = doc.get("category").toString();
+                    Integer unit = Integer.parseInt(doc.get("unit").toString());
+                    Integer amount = Integer.parseInt(doc.get("amount").toString());
+                    firebase_ingredient_storage_list.add(new Ingredient(title, amount, unit, category)); // Adding the ingredients from FireStore
                 }
             }
         });
@@ -99,7 +102,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                 shoppingItemsString.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
-                    ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
                     for (Object meal : mealsForDay) {
                         Map<String, Object> mealMap = (Map<String, Object>) meal;
 //                        String id = mealMap.get("id").toString();
@@ -108,21 +110,17 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                         for (Object ing: ingredients) {
                             Map<String, Object> ingredMap = (Map<String, Object>) ing;
                             String title = ingredMap.get("title").toString();
-                            firebase_ingredient_meal_plan_list.add(title);
+                            String category = ingredMap.get("category").toString();
+                            Integer unit = Integer.parseInt(ingredMap.get("unit").toString());
+                            Integer amount = Integer.parseInt(ingredMap.get("amount").toString());
+                            firebase_ingredient_meal_plan_list.add(new Ingredient(title, amount, unit, category));
                         }
                     }
-
                 }
-                System.out.println(firebase_ingredient_meal_plan_list);
-                for (Ingredient ingredientShoppingItems: shoppingItems) {
-                    shoppingItemsString.add(ingredientShoppingItems.getTitle());
-                }
-                for (String ing: firebase_ingredient_meal_plan_list) {
+                for (Ingredient ing: firebase_ingredient_meal_plan_list) {
                     if (!firebase_ingredient_storage_list.contains(ing)) {
-                        if (!shoppingItemsString.contains(ing)) {
-                            shoppingItems.add(new Ingredient(ing, 3, 4, "Fresh"));
-                            shoppingListAdapter.notifyDataSetChanged();
-                        }
+                        shoppingItems.add(ing);
+                        shoppingListAdapter.notifyDataSetChanged();
                     }
                 }
             }
