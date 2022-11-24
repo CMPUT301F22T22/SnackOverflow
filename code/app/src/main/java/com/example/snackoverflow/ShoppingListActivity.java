@@ -26,6 +26,7 @@ import java.lang.ref.Reference;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private final static ArrayList<Ingredient> firebase_ingredient_meal_plan_list = new ArrayList<>();
     private final static ArrayList<Ingredient> firebase_ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> shoppingItemsString = new ArrayList<>();
-
+    private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -55,9 +56,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
         shoppingItems = new ArrayList<>();
-        // Adding two demo ingredients to demonstrate functionality
-        shoppingItems.add(new Ingredient("Apple", 3, 4, "Fresh"));
-        shoppingItems.add(new Ingredient("Bread", 3, 1, "Bakery"));
 
         // Linking the listview to an arraylist and setting adapter
         shoppingList = findViewById(R.id.shopping_list_storage_list);
@@ -77,9 +75,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     return;
                 }
                 firebase_ingredient_storage_list.clear();
-                for(Ingredient ing: shoppingItems) {
-                    firebase_ingredient_storage_list.add(ing);
-                }
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     Log.d("lol", "Ingredients retrieved successfully");
                     String id = doc.getId();
@@ -89,7 +84,9 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     Integer amount = Integer.parseInt(doc.get("amount").toString());
                     firebase_ingredient_storage_list.add(new Ingredient(title, amount, unit, category)); // Adding the ingredients from FireStore
                 }
+
             }
+
         });
 
         MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -107,32 +104,45 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     for (Object meal : mealsForDay) {
                         Map<String, Object> mealMap = (Map<String, Object>) meal;
 //                        String id = mealMap.get("id").toString();
+                        Object servings = (Object) mealMap.get("servings");
+                        Double servingInDouble = Double.parseDouble(servings.toString());
+                        Integer servingInInt = servingInDouble.intValue();
+                        Log.d("brother", servings.toString());
+                        //Integer servingsInt = servings.intValue();
                         ArrayList<Object> ingredients = (ArrayList<Object>) mealMap.get("ingredients");
                         //ArrayList<Ingredient> ingredients2 = new ArrayList<>();
                         for (Object ing: ingredients) {
                             Map<String, Object> ingredMap = (Map<String, Object>) ing;
                             String title = ingredMap.get("title").toString();
                             String category = ingredMap.get("category").toString();
-                            Integer unit = Integer.parseInt(ingredMap.get("unit").toString());
+                            Integer unit = Integer.parseInt(ingredMap.get("unit").toString())*servingInInt;
                             Integer amount = Integer.parseInt(ingredMap.get("amount").toString());
                             firebase_ingredient_meal_plan_list.add(new Ingredient(title, amount, unit, category));
                         }
                     }
                 }
+                Log.d("arrlist", firebase_ingredient_meal_plan_list.toString());
+                firebase_ingredient_meal_plan_hashmap.clear();
                 for (Ingredient ing: firebase_ingredient_meal_plan_list) {
-                    if (!firebase_ingredient_storage_list.contains(ing)) {
-                        shoppingItems.add(ing);
-                        shoppingListAdapter.notifyDataSetChanged();
-                    }
-                    else if (firebase_ingredient_storage_list.contains(ing)) {
-                        int ind = firebase_ingredient_storage_list.indexOf(ing);
-                        Ingredient ingredientInStorage = firebase_ingredient_storage_list.get(ind);
-                        if (ing.getUnit()>ingredientInStorage.getUnit()) {
-                            shoppingItems.add(new Ingredient(ing.getTitle(), ingredientInStorage.getAmount(), ing.getUnit() - ingredientInStorage.getUnit(), ing.getCategory()));
-                            shoppingListAdapter.notifyDataSetChanged();
+                    int count = firebase_ingredient_meal_plan_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_meal_plan_hashmap.get(ing.getTitle()) : 0;
+                    firebase_ingredient_meal_plan_hashmap.put(ing.getTitle(), count + ing.getUnit());
+                }
+                
+                for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
+                    for (Ingredient elem: firebase_ingredient_storage_list) {
+                        Log.d("inhere", elem.getTitle());
+                        if (ing.equals(elem.getTitle())) {
+                            Log.d("herenow", firebase_ingredient_meal_plan_hashmap.get(ing).toString());
+                            Log.d("herenow2", String.valueOf(elem.getUnit()));
+                            if (firebase_ingredient_meal_plan_hashmap.get(ing) > elem.getUnit()) {
+                                shoppingItems.add(new Ingredient(ing, elem.getAmount(), firebase_ingredient_meal_plan_hashmap.get(ing) - elem.getUnit(), elem.getCategory()));
+                                Log.d("deeb", shoppingItems.toString());
+                                shoppingListAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }
+
             }
         });
 

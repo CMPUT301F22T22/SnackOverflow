@@ -164,31 +164,14 @@ public class Ingredient implements Serializable  {
      * */
     @Override
     public boolean equals(Object o) {
-        boolean isEqual = false;
-        int bb = 0;
-        int un = 0;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        try {
-            bb = bestBefore.compareTo(new Date());
-        } catch (NullPointerException nlptr) {
-            return false;
-        }try {
-            un = unit - that.getUnit();
-        } catch (NullPointerException nlptr) {
-            return false;
-        }
-        isEqual = title.equals(that.getTitle());
-        if (!isEqual) {
-            return false;
-        }
-        if (bb <= 0) {
-            isEqual = false;
-        }
-        if (un < 0) {
-            isEqual = false;
-        }
-        return isEqual;
+
+        return this.getTitle() == that.getTitle();
+    }
+
+    public boolean equalsTitle(String o) {
+        return this.getTitle().equals(o);
     }
 }

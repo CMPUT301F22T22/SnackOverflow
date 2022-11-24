@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="150dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="7dp"
             >
 
@@ -92,6 +92,16 @@
 
             </LinearLayout>
         </LinearLayout>
+        <ImageButton
+            android:id="@+id/add_shopping_list_item"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            app:srcCompat="@android:drawable/ic_input_add"
+            app:tint="@android:color/darker_gray"/>
     </LinearLayout>
 
 </LinearLayout>
