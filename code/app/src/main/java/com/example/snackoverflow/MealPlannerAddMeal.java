@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -118,7 +117,6 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
     @NonNull
     @Override
-    //Todo impliment for multiple weeks
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //Inflate the layout
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.mealplanner_add_meal_fragment, null);
@@ -141,8 +139,6 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                         onDateSetListener,
                         year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 518400000L);
-                dialog.getDatePicker().setMinDate(cal.getTimeInMillis());
                 dialog.show();
             }
         });
@@ -181,60 +177,65 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
         recipeDataList = new ArrayList<Recipe>();
         recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                          @Override
-                                          public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                                              recipeDataList.clear();
-                                              try {
-                                                  for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                                      String id = doc.getId();
-                                                      System.out.println(id);
-                                                      Map<String, Object> data = doc.getData();
-                                                      String title = data.get("title").toString();
-                                                      int prep_time = Integer.valueOf(data.get("prep_time").toString());
-                                                      float servings = Float.parseFloat(data.get("servings").toString());
-                                                      String category = data.get("category").toString();
-                                                      String instructions = data.get("instructions").toString();
-                                                      String comments = data.get("comments").toString();
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                recipeDataList.clear();
+                try {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String id = doc.getId();
+                        System.out.println(id);
+                        Map<String, Object> data = doc.getData();
+                        String title = data.get("title").toString();
+                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                        float servings = Float.parseFloat(data.get("servings").toString());
+                        String category = data.get("category").toString();
+                        String instructions = data.get("instructions").toString();
+                        String comments = data.get("comments").toString();
 
-                                                      StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
-                                                      int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
-                                                      try {
-                                                          File localFile = File.createTempFile("tempfile", ".jpg");
-                                                          storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                                              @Override
-                                                              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                                  Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                                                  Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                                                          category, comments, instructions, imgBitmap);
-                                                                  recipeDataList.add(recipe);
-                                                                  for (int i =1;i<=recipeDataList.size();i++){
-                                                                      recipeNames.add(recipeDataList.get(i-1).getTitle());
-                                                                  }
-                                                                  spinnerAdapter.notifyDataSetChanged();
-                                                              }
-                                                          }).addOnFailureListener(new OnFailureListener() {
-                                                              @Override
-                                                              public void onFailure(@NonNull Exception e) {
-                                                                  Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                                                          category, comments, instructions, null);
-                                                                  recipeDataList.add(recipe);
-                                                                  for (int i =1;i<=recipeDataList.size();i++){
-                                                                      recipeNames.add(recipeDataList.get(i-1).getTitle());
-                                                                  }
-                                                                  spinnerAdapter.notifyDataSetChanged();
-                                                              }
-                                                          });
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
+                        int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                        try {
+                            File localFile = File.createTempFile("tempfile", ".jpg");
+                            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions, imgBitmap);
+                                    recipeDataList.add(recipe);
+                                    for (int i =1;i<=recipeDataList.size();i++){
+                                        recipeNames.add(recipeDataList.get(i-1).getTitle());
+                                    }
+                                    spinnerAdapter.notifyDataSetChanged();
+//                                    recipeArrayAdapter.notifyDataSetChanged();
+//                                handleSortBy(0);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions, null);
+                                    recipeDataList.add(recipe);
+                                    String[] recipeNames = new String[recipeDataList.size()+1];
+                                    recipeNames[0] = "Recipe";
+                                    for (int i =1;i<=recipeDataList.size();i++){
+                                        recipeNames[i] = recipeDataList.get(i-1).getTitle();
+                                    }
+//                                    recipeArrayAdapter.notifyDataSetChanged();
+//                                handleSortBy(0);
+                                }
+                            });
 
-                                                      } catch (IOException e) {
+                        } catch (IOException e) {
 
-                                                      }
-                                                  }
+                        }
+                    }
 //                    recipeArrayAdapter.notifyDataSetChanged();
-                                              } catch (NullPointerException e) {
-                                              }
-                                          }
+                } catch (NullPointerException e) {
+                }
+            }
 
-                                      });
+        });
 //        FirestoreDatabase.fetchRecipesForMealPlan(recipeDataList);
 
 //        for (int i =0;i<recipestitle.length;i++){
@@ -262,7 +263,6 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 }
                                 else {
                                     recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
-
                                     Date date = null;
                                     try {
 //                                      date = stringToDate(date_text);
@@ -272,16 +272,16 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     }
                                     listener.addMeal(recipe, date);
                                 }
-                                }
                             }
+                        }
                     }).create();
         }
         else{
             spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
-            TextViewDate.setText(dateFormat.format(mealDay.getDate()).substring(0,10));
+            TextViewDate.setText(mealDay.getDate().toString());
             return builder
                     .setView(view)
-                    .setTitle("View Meal")
+                    .setTitle("Edit Meal")
                     .setNeutralButton("Cancel", null)
                     .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                         @Override

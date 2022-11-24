@@ -33,6 +33,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class toring all the Firestore Database related functionality
@@ -76,7 +77,22 @@ public class FirestoreDatabase {
     /**
      * To modify the existing ingredient
      * */
-    static void modifyIngredient() {};
+    static void modifyIngredient(Ingredient ingredient) {
+        ingredientsCol
+                .document(ingredient.id).update("amount", ingredient.getAmount(), "bestBefore", ingredient.getBestBefore(), "category", ingredient.getCategory(), "location", ingredient.getLocation(), "title", ingredient.getTitle(), "unit", ingredient.getUnit())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(IngredientsTAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(IngredientsTAG, "Error updating document", e);
+                    }
+                });
+    };
 
     /**
      * To delete an existing ingredient from the storage
@@ -396,7 +412,13 @@ public class FirestoreDatabase {
                         String comments = mealMap.get("comments").toString();
 //                        String id = mealMap.get("id").toString();
                         ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+
                         Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+//                        String imageTrackingData = mealMap.get("image_tracker").toString();
+                        if (mealMap.get("image_tracker") != null ) {
+                            loadImage(recipe);
+                        }
+
                         mealsfortheDay.add(recipe);
                     }
 
@@ -435,6 +457,31 @@ public class FirestoreDatabase {
             storageReference.putFile(uri);
         }
     };
+
+    public static void loadImage(Recipe recipe) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipe.getId()+".jpg");
+        try {
+            File localFile = File.createTempFile("tempfile",".jpg");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    recipe.setImageBitmap(imgBitmap);
+//                    recipeDataList.add(recipe);
+//                    recipeArrayAdapter.notifyDataSetChanged();
+//                    handleSortBy(0);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    loadImage(recipe);
+                }
+            });
+        } catch (IOException e) {
+
+        }
+    }
+
 
 
 }
