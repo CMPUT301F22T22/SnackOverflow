@@ -76,12 +76,6 @@ public class RecipeTest {
         // Click add recipe button
         solo.clickOnView(addRecipe);
 
-        // Go back to RecipeActivity
-        solo.goBack();
-
-        solo.sleep(5000);
-
-        solo.waitForText("Pasta", 1, 9000);
         // Check that the Recipe is added to list of Recipes
         assertTrue(solo.waitForText("Pasta", 1, 6000));
     }
@@ -91,6 +85,22 @@ public class RecipeTest {
         ListView listView = (ListView)solo.getView(R.id.recipe_list);
         View view = listView.getChildAt(0);
         solo.clickOnView(view);
+
+        View editRecipe = solo.getView("edit_recipe_button");
+        solo.clickOnView(editRecipe);
+
+        // wait for element to be visible
+        solo.sleep(1000);
+
+        solo.clearEditText((EditText) solo.getView(R.id.edit_recipe_title));
+        solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Soup");
+
+        View applyRecipeChanges = solo.getView("edit_recipe_button");
+        solo.clickOnView(applyRecipeChanges);
+
+
+
+
 
     }
 
