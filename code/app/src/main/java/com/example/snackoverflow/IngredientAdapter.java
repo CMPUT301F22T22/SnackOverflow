@@ -24,7 +24,7 @@ import java.util.Date;
 public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     private ArrayList<Ingredient> ingredients;
     private Context context;
-    private boolean recipeCheck;
+    private int recipeCheck;
 
     /**
      * Constructor for the Ingredient Adapter
@@ -35,7 +35,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         super(context, 0, ingredients);
         this.ingredients = ingredients;
         this.context = context;
-        this.recipeCheck = false;
+        this.recipeCheck = 0;
     }
 
     /**
@@ -49,10 +49,15 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         this.ingredients = ingredients;
         this.context = context;
         if (recipe == "recipe"){
-            this.recipeCheck = true;
+            this.recipeCheck = 1;
         }
         else{
-            this.recipeCheck = false;
+            if (recipe == "recipe_ingredient_preview"){
+                this.recipeCheck = 2;
+            }
+            else {
+                this.recipeCheck = 0;
+            }
         }
     }
 
@@ -61,7 +66,8 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 
-        if (recipeCheck == false){
+        if (recipeCheck == 0){
+            // Adapter used for Ingredient Storage
             if(view == null){
                 view = LayoutInflater.from(context).inflate(R.layout.ingredient_content, parent,false);
             }
@@ -74,31 +80,45 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
             ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
         }
         else{
-            if(view == null){
-                view = LayoutInflater.from(context).inflate(R.layout.recipe_ingredient_content, parent,false);
-                System.out.println("drawn");
+            if (recipeCheck == 1) {
+                // Adapter used for RecipeIngredientViewFragment
+                if (view == null) {
+                    view = LayoutInflater.from(context).inflate(R.layout.recipe_ingredient_content, parent, false);
+                    System.out.println("drawn");
+                }
+                Ingredient ingredient = ingredients.get(position);
+                TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
+                ingredientDescription.setText(ingredient.getTitle());
+                TextView ingredientAmount = view.findViewById(R.id.recipe_ingredient_amount);
+                TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
+                ingredientAmount.setText(String.valueOf(ingredient.getAmount()));
+                ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
+                ImageButton editIngredient = view.findViewById(R.id.edit_ingredient);
+                editIngredient.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new RecipeIngredientFragment(ingredient).show(((FragmentActivity) context).getSupportFragmentManager(), "Edit_Ingredient");
+                    }
+                });
+                ImageButton deleteIngredient = view.findViewById(R.id.delete_ingredient);
+                deleteIngredient.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new DeleteConformationFragment<Ingredient>(ingredient, ingredient.getTitle()).show(((FragmentActivity) context).getSupportFragmentManager(), "Delete_Ingredient");
+                    }
+                });
             }
-            Ingredient ingredient = ingredients.get(position);
-            TextView ingredientDescription = view.findViewById(R.id.ingredient_description);
-            ingredientDescription.setText(ingredient.getTitle());
-            TextView ingredientAmount = view.findViewById(R.id.recipe_ingredient_amount);
-            TextView ingredientUnit = view.findViewById(R.id.ingredient_unit);
-            ingredientAmount.setText(String.valueOf(ingredient.getAmount()));
-            ingredientUnit.setText(String.valueOf(ingredient.getUnit()));
-            ImageButton editIngredient = view.findViewById(R.id.edit_ingredient);
-            editIngredient.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new RecipeIngredientFragment(ingredient).show(((FragmentActivity)context).getSupportFragmentManager(), "Edit_Ingredient");
+            else{
+                if (position < 3) {
+                    if (view == null) {
+                        view = LayoutInflater.from(context).inflate(R.layout.textview, parent, false);
+                        System.out.println("drawn");
+                    }
+                    Ingredient ingredient = ingredients.get(ingredients.size() - position - 1);
+                    TextView title = view.findViewById(R.id.title_text);
+                    title.setText(ingredient.getTitle());
                 }
-            });
-            ImageButton deleteIngredient = view.findViewById(R.id.delete_ingredient);
-            deleteIngredient.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new DeleteConformationFragment<Ingredient>(ingredient, ingredient.getTitle()).show(((FragmentActivity)context).getSupportFragmentManager(), "Delete_Ingredient");
-                }
-            });
+            }
         }
         return view;
     }
