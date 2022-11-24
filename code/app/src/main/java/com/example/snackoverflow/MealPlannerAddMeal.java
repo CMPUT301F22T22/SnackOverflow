@@ -211,6 +211,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 spinner.setSelection(0);
 
                 unit.setVisibility(View.VISIBLE);
+                unit.setHint("Unit");
                 button.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
                 ingredientsView.setVisibility(View.VISIBLE);
@@ -225,7 +226,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
                 spinner.setSelection(0);
-                unit.setVisibility(View.GONE);
+                unit.setVisibility(View.VISIBLE);
+                unit.setHint("Servings");
                 button.setVisibility(View.GONE);
                 title.setVisibility(View.GONE);
                 ingredientsView.setVisibility(View.GONE);
@@ -267,9 +269,17 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 if(Objects.equals(date_text,"Date")){
                                     new ErrorFragment("Invalid Date Chosen").show(getParentFragmentManager(), "error");
                                 }
+                                if(!ingredientRadioButton.isChecked() && !recipeRadioButton.isChecked()){
+                                    new ErrorFragment("Chose recipe or ingredients").show(getParentFragmentManager(), "error");
+                                }
                                 else {
                                     if (recipeRadioButton.isChecked()) {
+                                        Integer servings = Integer.valueOf(unit.getEditText().getText().toString());
                                         recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
+                                        servings = (int)(Math.ceil(servings/recipe.getServings()));
+                                        for (Ingredient ingredient: recipe.getIngredients()){
+                                            ingredient.setUnit(ingredient.getUnit()*servings);
+                                        }
                                     }
                                     if (ingredientRadioButton.isChecked()){
                                         String text = title.getEditText().getText().toString();
@@ -290,24 +300,35 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         else{
             if (!Objects.equals(recipe.getRecipeCategory(), "Ingredient Recipe")) {
                 recipeRadioButton.setChecked(true);
+                recipeRadioButton.setClickable(false);
+                ingredientRadioButton.setClickable(false);
                 spinner.setVisibility(View.VISIBLE);
                 spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, recipeNames);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
                 spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
-                TextViewDate.setText(dateFormat.format(mealDay.getDate()).substring(0, 10));
+                spinner.setEnabled(false);
+                unit.setVisibility(View.VISIBLE);
+                unit.setHint("Servings");
+                unit.setEnabled(false);
+
             }
             else{
                 ingredientRadioButton.setChecked(true);
+                recipeRadioButton.setClickable(false);
+                ingredientRadioButton.setClickable(false);
                 spinner.setVisibility(View.VISIBLE);
                 spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, ingredientsNames);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
-                unit.setVisibility(View.VISIBLE);
-                button.setVisibility(View.VISIBLE);
+                spinner.setClickable(false);
+                unit.setVisibility(View.GONE);
                 title.setVisibility(View.VISIBLE);
+                title.setClickable(false);
                 ingredientsView.setVisibility(View.VISIBLE);
             }
+            TextViewDate.setText(dateFormat.format(mealDay.getDate()).substring(0, 10));
+            TextViewDate.setClickable(false);
             return builder
                     .setView(view)
                     .setTitle("View Meal")
