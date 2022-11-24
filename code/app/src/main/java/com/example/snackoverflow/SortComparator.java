@@ -1,6 +1,7 @@
 package com.example.snackoverflow;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 public class SortComparator {
     public static class TitleComparator implements Comparator<Object> {
@@ -8,7 +9,7 @@ public class SortComparator {
         public int compare(Object o1, Object o2) {
             String objectType = o1.getClass().toString();
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Recipe")) {
-                return ((Recipe) o1).getTitle().compareTo(((Recipe)o2).getTitle());
+                return ((Recipe) o1).getTitle().toLowerCase().compareTo(((Recipe)o2).getTitle().toLowerCase());
             }
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Ingredient")) {
                 return ((Ingredient) o1).getTitle().compareTo(((Ingredient)o2).getTitle());
@@ -29,7 +30,7 @@ public class SortComparator {
         public int compare(Object o1, Object o2) {
             String objectType = o1.getClass().toString();
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Recipe")) {
-                return ((Recipe) o1).getRecipeCategory().compareTo(((Recipe)o2).getRecipeCategory());
+                return ((Recipe) o1).getRecipeCategory().toLowerCase().compareTo(((Recipe)o2).getRecipeCategory().toLowerCase());
             }
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Ingredient")) {
                 return ((Ingredient) o1).getCategory().compareTo(((Ingredient)o2).getCategory());

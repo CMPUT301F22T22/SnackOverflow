@@ -70,6 +70,8 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     EditText editInstructionsText;
     EditText editCommentsText;
 
+    private int imageTracker = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +122,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                             imageView.setImageURI(uri);
                             imageView.setBackgroundResource(0);
                             imageView.setPadding(0, 0, 0, 0);
+                            imageTracker += 1;
                         }
                     }
                 });
@@ -131,6 +134,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
                     new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                    imageTracker = 0;
                 }
                 else {
                     ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);
@@ -221,7 +225,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                     data.put("instructions",instructionsItem);
                     data.put("comments",commentsItem);
                     data.put("ingredients",ingredients);
-                    data.put("image_tracker",0);
+                    data.put("image_tracker",imageTracker);
 
                     FirestoreDatabase.addRecipe(data,uri);
                     finish();
