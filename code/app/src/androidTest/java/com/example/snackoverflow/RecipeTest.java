@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -13,9 +14,12 @@ import com.robotium.solo.Solo;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RecipeTest {
     private Solo solo;
 
@@ -34,7 +38,7 @@ public class RecipeTest {
     }
 
     @Test
-    public void checkRecipe() {
+    public void step1_checkRecipe() {
         View fab = rule.getActivity().findViewById(R.id.add_recipe_button);
         solo.assertCurrentActivity("Wrong Activity", RecipeActivity.class);
         solo.clickOnView(fab);
@@ -44,8 +48,8 @@ public class RecipeTest {
     }
 
     @Test
-    public void checkAddRecipe() {
-        checkRecipe();
+    public void step2_checkAddRecipe() {
+        step1_checkRecipe();
         View addIngredient = solo.getView("recipe_add_ingredient");
         View addRecipe = solo.getView("recipe_add_recipe");
 
@@ -75,50 +79,23 @@ public class RecipeTest {
         // Go back to RecipeActivity
         solo.goBack();
 
+        solo.sleep(5000);
+
+        solo.waitForText("Pasta", 1, 9000);
         // Check that the Recipe is added to list of Recipes
-        assertTrue(solo.waitForText("Pasta", 1, 2000));
+        assertTrue(solo.waitForText("Pasta", 1, 6000));
     }
 
     @Test
-    public void checkModifyRecipe() {
+    public void step3_checkModifyRecipe() {
+        ListView listView = (ListView)solo.getView(R.id.recipe_list);
+        View view = listView.getChildAt(0);
+        solo.clickOnView(view);
 
-
-
-
-
-        View addIngredient = solo.getView("recipe_add_ingredient");
-        View addRecipe = solo.getView("recipe_add_recipe");
-
-        // fill in recipe details
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Pasta");
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_category), "Carbs");
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_servings), "3");
-        solo.enterText((EditText) solo.getView(R.id.edit_preptime), "30");
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_instructions), "Add sauce to pasta.");
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_comments), "Eat it warm.");
-
-        solo.clickOnView(solo.getView(R.id.recipe_add_ingredient));
-        solo.clickOnView(addIngredient);
-        solo.waitForFragmentByTag("Add_Ingredient",2000);
-
-        // Fill in ingredient fragment
-        solo.typeText((EditText)solo.getView("edit_ingredient_description"),"Tomato");
-        solo.typeText((EditText)solo.getView("edit_ingredient_amount"),"11");
-        solo.typeText((EditText)solo.getView("edit_ingredient_unit"),"13");
-        solo.typeText((EditText)solo.getView("edit_ingredient_category"),"vegetable");
-
-        // Add ingredient
-        solo.clickOnButton("Ok");
-        // Click add recipe button
-        solo.clickOnView(addRecipe);
-
-        // Go back to RecipeActivity
-        solo.goBack();
-
-        // Check that the Recipe is added to list of Recipes
-        solo.waitForText("Butter", 1, 2000);
     }
 
+
+    // check show more ingredients
 
 
 
