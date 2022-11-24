@@ -1,5 +1,7 @@
 package com.example.snackoverflow;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -19,15 +21,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class toring all the Firestore Database related functionality
@@ -323,7 +329,13 @@ public class FirestoreDatabase {
                         String comments = mealMap.get("comments").toString();
 //                        String id = mealMap.get("id").toString();
                         ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+
                         Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+//                        String imageTrackingData = mealMap.get("image_tracker").toString();
+                        if (mealMap.get("image_tracker") != null ) {
+                            loadImage(recipe);
+                        }
+
                         mealsfortheDay.add(recipe);
                     }
 
@@ -362,6 +374,31 @@ public class FirestoreDatabase {
             storageReference.putFile(uri);
         }
     };
+
+    public static void loadImage(Recipe recipe) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipe.getId()+".jpg");
+        try {
+            File localFile = File.createTempFile("tempfile",".jpg");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    recipe.setImageBitmap(imgBitmap);
+//                    recipeDataList.add(recipe);
+//                    recipeArrayAdapter.notifyDataSetChanged();
+//                    handleSortBy(0);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    loadImage(recipe);
+                }
+            });
+        } catch (IOException e) {
+
+        }
+    }
+
 
 
 }
