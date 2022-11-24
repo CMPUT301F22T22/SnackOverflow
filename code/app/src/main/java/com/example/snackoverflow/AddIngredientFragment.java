@@ -264,6 +264,7 @@ public class AddIngredientFragment extends DialogFragment {
                             initialIngredient.setUnit(ingredientUnitInt);
                             initialIngredient.setCategory(ingredientCategoryString);
                             initialIngredient.setLocation(ingredientLocationString);
+                            FirestoreDatabase.modifyIngredient(initialIngredient);
                         }
                     }).create();
 
