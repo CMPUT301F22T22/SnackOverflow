@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.EventListener;
 import java.lang.ref.Reference;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +51,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private final static ArrayList<String> toRemove = new ArrayList<>();
     private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
     private final static HashMap<String, Integer> firebase_ingredient_storage_hashmap = new HashMap<>();
+    private String currSortOrder = "inc";
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -212,6 +217,60 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
 
         });
 
+        String[] sortBySpinnerList = new String[] {"Title", "Category"};
+        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
+        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
+        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortOrderSpinner.setAdapter(sortOrderAdapter);
+
+        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
+        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
+
+        sortByLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBySpinner.performClick();
+            }
+        });
+
+        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortOrderSpinner.performClick();
+            }
+        });
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortBy(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortOrder(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         // Setting up NavBar
         NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.shoppinglist);
@@ -258,6 +317,37 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         });
 
 
+    }
+
+    public void handleSortBy(int position) {
+        switch (position) {
+            case 0:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(shoppingItems, new SortComparator.TitleComparator().reversed());
+                } else {
+                    Collections.sort(shoppingItems, new SortComparator.TitleComparator());
+                }
+                break;
+            case 1:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator().reversed());
+                } else {
+                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator());
+                }
+                break;
+        }
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
+    public void handleSortOrder(int position) {
+        if (position == 1 && currSortOrder.equals("inc")) {
+            Collections.reverse(shoppingItems);
+            currSortOrder = "dec";
+        } else if (position == 0 && currSortOrder.equals("dec")) {
+            Collections.reverse(shoppingItems);
+            currSortOrder = "inc";
+        }
+        shoppingListAdapter.notifyDataSetChanged();
     }
 
     /**
