@@ -71,7 +71,22 @@ public class FirestoreDatabase {
     /**
      * To modify the existing ingredient
      * */
-    static void modifyIngredient() {};
+    static void modifyIngredient(Ingredient ingredient) {
+        ingredientsCol
+                .document(ingredient.id).update("amount", ingredient.getAmount(), "bestBefore", ingredient.getBestBefore(), "category", ingredient.getCategory(), "location", ingredient.getLocation(), "title", ingredient.getTitle(), "unit", ingredient.getUnit())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(IngredientsTAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(IngredientsTAG, "Error updating document", e);
+                    }
+                });
+    };
 
     /**
      * To delete an existing ingredient from the storage
