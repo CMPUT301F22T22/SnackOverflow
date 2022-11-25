@@ -13,14 +13,17 @@
         android:layout_height="55dp"
         android:background="#E1E3E5" />
 
-    <TextView
+    <EditText
         android:id="@+id/text_view_date"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="15dp"
         android:background="#E1E3E5"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="Date"
-        android:textSize="20sp" />
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
+        android:focusableInTouchMode="false"
+        android:hint="Date"
+        android:textSize="16dp"/>
 
 </LinearLayout>
