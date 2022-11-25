@@ -14,6 +14,7 @@ public class SortComparator {
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Ingredient")) {
                 return ((Ingredient) o1).getTitle().compareTo(((Ingredient)o2).getTitle());
             }
+
             return -1;
         }
 
