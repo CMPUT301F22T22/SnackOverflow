@@ -46,6 +46,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private final static ArrayList<Ingredient> firebase_ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> shoppingItemsString = new ArrayList<>();
     private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
+    private final static HashMap<String, Integer> firebase_ingredient_ingredient_storage_hashmap = new HashMap<>();
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -127,7 +128,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     int count = firebase_ingredient_meal_plan_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_meal_plan_hashmap.get(ing.getTitle()) : 0;
                     firebase_ingredient_meal_plan_hashmap.put(ing.getTitle(), count + ing.getUnit());
                 }
-                
+                // Handle duplicated ingredients which are present in storage
                 for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
                     for (Ingredient elem: firebase_ingredient_storage_list) {
                         Log.d("inhere", elem.getTitle());
@@ -137,12 +138,26 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                             if (firebase_ingredient_meal_plan_hashmap.get(ing) > elem.getUnit()) {
                                 shoppingItems.add(new Ingredient(ing, elem.getAmount(), firebase_ingredient_meal_plan_hashmap.get(ing) - elem.getUnit(), elem.getCategory()));
                                 Log.d("deeb", shoppingItems.toString());
+                                firebase_ingredient_meal_plan_hashmap.remove(ing);
                                 shoppingListAdapter.notifyDataSetChanged();
                             }
                         }
                     }
                 }
 
+                // Handle ingredients (duplicated and non-duplicated in meal plan) which are NOT in storage
+                for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
+                    String ingCat = "Unknown";
+                    Integer ingAmount = 0;
+                    for (Ingredient ingMeal: firebase_ingredient_meal_plan_list) {
+                        if (ing == ingMeal.getTitle()) {
+                            ingCat = ingMeal.getCategory();
+                            ingAmount = ingMeal.getAmount();
+                        }
+                    }
+                    shoppingItems.add(new Ingredient(ing, ingAmount, firebase_ingredient_meal_plan_hashmap.get(ing), ingCat));
+                    shoppingListAdapter.notifyDataSetChanged();
+                }
             }
         });
 
