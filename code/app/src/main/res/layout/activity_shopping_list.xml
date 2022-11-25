@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ShoppingListActivity">
+    <include
+        layout="@layout/sort" />
 
     <ListView
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="60dp"
         android:id="@+id/shopping_list_storage_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="60dp"/>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

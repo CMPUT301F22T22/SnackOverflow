@@ -167,6 +167,11 @@ public class Ingredient implements Serializable  {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return title.equals(that.title);
+
+        return this.getTitle() == that.getTitle();
+    }
+
+    public boolean equalsTitle(String o) {
+        return this.getTitle().equals(o);
     }
 }
