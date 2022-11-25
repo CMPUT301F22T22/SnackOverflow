@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -34,12 +35,12 @@ public class RecipeTest {
     }
 
     @Test
-    public void start() throws Exception {
+    public void step1_start() throws Exception {
         Activity activity = rule.getActivity();
     }
 
     @Test
-    public void step1_checkRecipe() {
+    public void step2_checkRecipe() {
         View fab = rule.getActivity().findViewById(R.id.add_recipe_button);
         solo.assertCurrentActivity("Wrong Activity", RecipeActivity.class);
         solo.clickOnView(fab);
@@ -49,8 +50,8 @@ public class RecipeTest {
     }
 
     @Test
-    public void step2_checkShowIngredients() {
-        step1_checkRecipe();
+    public void step3_checkShowIngredients() {
+        step2_checkRecipe();
         View addIngredient = solo.getView("recipe_add_ingredient");
         solo.clickOnView(addIngredient);
 
@@ -69,17 +70,52 @@ public class RecipeTest {
         solo.clickOnView(showMore);
 
         assertTrue(solo.waitForText("Tomato", 1, 6000));
+    }
 
+
+    @Test
+    public void step4_checkEditIngredient() {
+        step3_checkShowIngredients();
+        ListView listView = (ListView)solo.getView(R.id.list);
+        View view = listView.getChildAt(0);
+        ImageButton editButton=(ImageButton)view.findViewById(R.id.edit_ingredient);
+        solo.clickOnView(editButton);
+        solo.clearEditText((EditText) solo.getView("edit_ingredient_description"));
+
+        solo.typeText((EditText)solo.getView("edit_ingredient_description"),"Onion");
+        solo.clickOnButton("Ok");
+
+        assertTrue(solo.waitForText("Onion", 1, 6000));
     }
 
     @Test
-    public void step3_checkAddRecipe() {
-        step1_checkRecipe();
+    public void step5_checkDeleteIngredient() {
+        step3_checkShowIngredients();
+        ListView listView = (ListView)solo.getView(R.id.list);
+        System.out.println("this is the initial sice");
+        System.out.println( listView.getAdapter().getCount() );
+        View view = listView.getChildAt(0);
+        ImageButton deleteButton=(ImageButton)view.findViewById(R.id.delete_ingredient);
+        solo.clickOnView(deleteButton);
+        solo.clickOnButton("Yes");
+
+        solo.sleep(1000);
+        
+        // check if list is empty
+        Boolean deleted = 0 == listView.getAdapter().getCount();
+
+        // Make sure ingredient is no longer there
+        assertTrue(deleted);
+    }
+
+    @Test
+    public void step6_checkAddRecipe() {
+        step2_checkRecipe();
         View addIngredient = solo.getView("recipe_add_ingredient");
         View addRecipe = solo.getView("recipe_add_recipe");
 
         // fill in recipe details
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Pasta");
+        solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Anchellini");
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_category), "Carbs");
         solo.enterText((EditText) solo.getView(R.id.edit_recipe_servings), "3");
         solo.enterText((EditText) solo.getView(R.id.edit_preptime), "30");
@@ -101,11 +137,11 @@ public class RecipeTest {
         solo.clickOnView(addRecipe);
 
         // Check that the Recipe is added to list of Recipes
-        assertTrue(solo.waitForText("Pasta", 1, 6000));
+        assertTrue(solo.waitForText("Anchellini", 1, 6000));
     }
 
     @Test
-    public void step4_checkModifyRecipe() {
+    public void step7_checkModifyRecipe() {
         ListView listView = (ListView)solo.getView(R.id.recipe_list);
         View view = listView.getChildAt(0);
         solo.clickOnView(view);
@@ -117,17 +153,17 @@ public class RecipeTest {
         solo.sleep(1000);
 
         solo.clearEditText((EditText) solo.getView(R.id.edit_recipe_title));
-        solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Soup");
+        solo.enterText((EditText) solo.getView(R.id.edit_recipe_title), "Alfabeto");
 
         View applyRecipeChanges = solo.getView("apply_recipe_button");
         solo.clickOnView(applyRecipeChanges);
 
         // Confirm that the Recipe is edited
-        assertTrue(solo.waitForText("Soup", 1, 6000));
+        assertTrue(solo.waitForText("Alfabeto", 1, 6000));
     }
 
     @Test
-    public void step5_checkDeleteRecipe() {
+    public void step8_checkDeleteRecipe() {
         ListView listView = (ListView)solo.getView(R.id.recipe_list);
         View view = listView.getChildAt(0);
         solo.clickOnView(view);
@@ -135,7 +171,7 @@ public class RecipeTest {
         View deleteRecipe = solo.getView("delete_recipe_button");
         solo.clickOnView(deleteRecipe);
 
-        assertFalse(solo.waitForText("Soup", 1, 5000));
+        assertFalse(solo.waitForText("Alfabeto", 1, 5000));
     }
 
     @After
