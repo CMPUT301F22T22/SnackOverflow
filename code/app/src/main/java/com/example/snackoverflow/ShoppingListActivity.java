@@ -44,9 +44,9 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private ArrayList<Ingredient> shoppingItems;
     private final static ArrayList<Ingredient> firebase_ingredient_meal_plan_list = new ArrayList<>();
     private final static ArrayList<Ingredient> firebase_ingredient_storage_list = new ArrayList<>();
-    private final static ArrayList<String> shoppingItemsString = new ArrayList<>();
+    private final static ArrayList<String> toRemove = new ArrayList<>();
     private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
-    private final static HashMap<String, Integer> firebase_ingredient_ingredient_storage_hashmap = new HashMap<>();
+    private final static HashMap<String, Integer> firebase_ingredient_storage_hashmap = new HashMap<>();
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -98,8 +98,9 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     //Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
                     return;
                 }
+                toRemove.clear();
                 firebase_ingredient_meal_plan_list.clear();
-                shoppingItemsString.clear();
+                shoppingItems.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
                     for (Object meal : mealsForDay) {
@@ -124,7 +125,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                 }
                 Log.d("arrlist", firebase_ingredient_meal_plan_list.toString());
                 firebase_ingredient_meal_plan_hashmap.clear();
-                firebase_ingredient_ingredient_storage_hashmap.clear();
+                firebase_ingredient_storage_hashmap.clear();
 
 
                 for (Ingredient ing: firebase_ingredient_meal_plan_list) {
@@ -133,10 +134,16 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                 }
 
                 for (Ingredient ing: firebase_ingredient_storage_list) {
-                    int count = firebase_ingredient_ingredient_storage_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_ingredient_storage_hashmap.get(ing.getTitle()) : 0;
-                    firebase_ingredient_ingredient_storage_hashmap.put(ing.getTitle(), count + ing.getUnit());
+                    int count = firebase_ingredient_storage_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_storage_hashmap.get(ing.getTitle()) : 0;
+                    firebase_ingredient_storage_hashmap.put(ing.getTitle(), count + ing.getUnit());
                 }
 
+                Log.d("mapmeal", firebase_ingredient_meal_plan_hashmap.toString());
+                Log.d("mapstorage", firebase_ingredient_storage_hashmap.toString());
+                Log.d("mapingredient", firebase_ingredient_storage_hashmap.toString());
+                Log.d("shoppinglistbefore", String.valueOf(shoppingItems.size()));
+
+                /*
                 // Handle duplicated ingredients which are present in storage
                 for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
                     for (Ingredient elem: firebase_ingredient_storage_list) {
@@ -152,10 +159,40 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                             }
                         }
                     }
+                 */
+                // Handle duplicated ingredients which are present in storage
+                String ingCatStorage = "unknown";
+                int ingAmountStorage = 0;
+                for (String ingMeal: firebase_ingredient_meal_plan_hashmap.keySet()) {
+                    for (String ingStorage: firebase_ingredient_storage_hashmap.keySet()) {
+                        if (ingMeal.equals(ingStorage)) {
+                            Log.d("itsequalbro", ingMeal);
+                            if (firebase_ingredient_meal_plan_hashmap.get(ingMeal) > firebase_ingredient_storage_hashmap.get(ingMeal)) {
+                                Log.d("itsmorebro", ingMeal);
+                                for (Ingredient ingObject: firebase_ingredient_storage_list) {
+                                    Log.d("why", firebase_ingredient_meal_plan_hashmap.get(ingMeal).toString());
+                                    if (ingMeal.equals(ingObject.getTitle()) && !toRemove.contains(ingMeal)) {
+                                        ingCatStorage = ingObject.getCategory();
+                                        ingAmountStorage = ingObject.getAmount();
+                                        toRemove.add(ingMeal);
+                                        shoppingItems.add(new Ingredient(ingMeal, ingAmountStorage, firebase_ingredient_meal_plan_hashmap.get(ingMeal) - firebase_ingredient_storage_hashmap.get(ingMeal), ingCatStorage));
+                                        Log.d("hey", "lol");
+                                        shoppingListAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                            else {
+                                toRemove.add(ingMeal);
+                            }
+                        }
                 }
+                Log.d("shoppinglistafter", String.valueOf(shoppingItems.size()));
+                Log.d("toremove", String.valueOf(toRemove.toString()));
 
-
-
+                }
+                for (String removeob: toRemove) {
+                    firebase_ingredient_meal_plan_hashmap.remove(removeob);
+                }
 
                 // Handle ingredients (duplicated and non-duplicated in meal plan) which are NOT in storage
                 for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
@@ -170,6 +207,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     shoppingItems.add(new Ingredient(ing, ingAmount, firebase_ingredient_meal_plan_hashmap.get(ing), ingCat));
                     shoppingListAdapter.notifyDataSetChanged();
                 }
+                Log.d("shoppinglistafter1", String.valueOf(shoppingItems.size()));
             }
 
         });
