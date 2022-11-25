@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Add Ingredient Fragment that pops up when a user wants to add an
@@ -106,33 +107,9 @@ public class AddIngredientFragment extends DialogFragment {
             }
         });
 
-        ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                // on below line we are setting date to our edit text.
-                                ingredientBestBefore.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                            }
-                        },
-                        year, month, day);
-
-                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
-                datePickerDialog.show();
-            }
-        });
-
         ingredientCategory.addTextChangedListener(new TextWatcher() {
             @Override
+
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
@@ -153,33 +130,154 @@ public class AddIngredientFragment extends DialogFragment {
             }
         });
 
-        return builder
-                .setView(view)
-                .setTitle("Add Ingredient")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String ingredientDescString = ingredientDesc.getText().toString();
-                        Integer ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
-                        Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
-                        String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
-                        Date ingredientBestBeforeDate = null;
-                        try {
-                            ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+        Bundle initialBundle = getArguments();
+
+        if (initialBundle == null) {
+
+            ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH);
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                            getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    // on below line we are setting date to our edit text.
+                                    ingredientBestBefore.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
+                                }
+                            },
+                            year, month, day);
+
+                    datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+                    datePickerDialog.show();
+                }
+            });
+
+            return builder
+                    .setView(view)
+                    .setTitle("Add Ingredient")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String ingredientDescString = ingredientDesc.getText().toString();
+                            Integer ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
+                            Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
+                            String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
+                            Date ingredientBestBeforeDate = null;
+                            try {
+                                ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
+                            ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
+                            String ingredientLocationString = ingredientLocation.getText().toString();
+
+                            String ingredientCategoryString = ingredientCategory.getText().toString();
+
+                            listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
                         }
+                    }).create();
+        } else {
+            Ingredient initialIngredient = (Ingredient) initialBundle.get("ingredient");
+            ingredientDesc.setText(initialIngredient.getTitle());
+            ingredientBestBefore.setText(dateFormat.format(initialIngredient.getBestBefore()));
+            ingredientUnit.setText(String.valueOf(initialIngredient.getUnit()));
+            ingredientAmount.setText(String.valueOf(initialIngredient.getAmount()));
+            ingredientCategory.setText(initialIngredient.getCategory());
+            String locationValue = initialIngredient.getLocation();
 
-                        int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
-                        ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
-                        String ingredientLocationString = ingredientLocation.getText().toString();
+            Date currentDate = initialIngredient.getBestBefore();
 
-                        String ingredientCategoryString = ingredientCategory.getText().toString();
+            ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Calendar c = Calendar.getInstance();
+                    c.setTime(currentDate);
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH);
+                    int day = c.get(Calendar.DAY_OF_MONTH);
 
-                        listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
-                    }
-                }).create();
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                            getContext(),
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    // on below line we are setting date to our edit text.
+                                    ingredientBestBefore.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
+                                }
+                            },
+                            year, month, day);
+
+                    datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+                    datePickerDialog.show();
+                }
+            });
+
+            if (Objects.equals(locationValue, "Freezer")) {
+                RadioButton location = view.findViewById(R.id.location_freezer);
+                location.setChecked(true);
+            } else if (Objects.equals(locationValue, "Fridge")) {
+                RadioButton location = view.findViewById(R.id.location_fridge);
+                location.setChecked(true);
+            } else if (Objects.equals(locationValue, "Pantry")) {
+                RadioButton location = view.findViewById(R.id.location_pantry);
+                location.setChecked(true);
+            }
+
+            return builder
+                    .setView(view)
+                    .setTitle("Edit Ingredient")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String ingredientDescString = ingredientDesc.getText().toString();
+                            Integer ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
+                            Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
+                            String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
+                            Date ingredientBestBeforeDate = null;
+                            try {
+                                ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
+                            ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
+                            String ingredientLocationString = ingredientLocation.getText().toString();
+
+                            String ingredientCategoryString = ingredientCategory.getText().toString();
+
+                            initialIngredient.setTitle(ingredientDescString);
+                            initialIngredient.setAmount(ingredientAmountInt);
+                            initialIngredient.setBestBefore(ingredientBestBeforeDate);
+                            initialIngredient.setUnit(ingredientUnitInt);
+                            initialIngredient.setCategory(ingredientCategoryString);
+                            initialIngredient.setLocation(ingredientLocationString);
+                            FirestoreDatabase.modifyIngredient(initialIngredient);
+                        }
+                    }).create();
+
+        }
+    }
+
+    static AddIngredientFragment newInstance(Ingredient ingredient) {
+        Bundle args = new Bundle();
+        args.putSerializable("ingredient", ingredient);
+
+        AddIngredientFragment fragment = new AddIngredientFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 }

@@ -43,6 +43,7 @@ public class RecipeIngredientFragment extends DialogFragment {
         this.ingredient = ingredient;
         edit = true;
     }
+
     /**
      * Implements the Fragment Interaction Listener and defines
      * the addIngredient and editIngredient function
@@ -89,7 +90,7 @@ public class RecipeIngredientFragment extends DialogFragment {
                     .setView(view)
                     .setTitle("Add Ingredient")
                     .setNegativeButton("Cancel", null)
-                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String Description = textInputDescription.getEditText().getText().toString();
