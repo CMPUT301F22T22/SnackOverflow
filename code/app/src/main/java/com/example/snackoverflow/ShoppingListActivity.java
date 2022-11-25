@@ -359,4 +359,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         // Add ingredient to list when 'OK' is pressed in the fragment
         shoppingListAdapter.add(selectedIngredient);
     }
+
+
 }
