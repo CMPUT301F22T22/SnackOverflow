@@ -124,10 +124,19 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                 }
                 Log.d("arrlist", firebase_ingredient_meal_plan_list.toString());
                 firebase_ingredient_meal_plan_hashmap.clear();
+                firebase_ingredient_ingredient_storage_hashmap.clear();
+
+
                 for (Ingredient ing: firebase_ingredient_meal_plan_list) {
                     int count = firebase_ingredient_meal_plan_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_meal_plan_hashmap.get(ing.getTitle()) : 0;
                     firebase_ingredient_meal_plan_hashmap.put(ing.getTitle(), count + ing.getUnit());
                 }
+
+                for (Ingredient ing: firebase_ingredient_storage_list) {
+                    int count = firebase_ingredient_ingredient_storage_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_ingredient_storage_hashmap.get(ing.getTitle()) : 0;
+                    firebase_ingredient_ingredient_storage_hashmap.put(ing.getTitle(), count + ing.getUnit());
+                }
+
                 // Handle duplicated ingredients which are present in storage
                 for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
                     for (Ingredient elem: firebase_ingredient_storage_list) {
@@ -145,6 +154,9 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     }
                 }
 
+
+
+
                 // Handle ingredients (duplicated and non-duplicated in meal plan) which are NOT in storage
                 for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
                     String ingCat = "Unknown";
@@ -159,6 +171,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     shoppingListAdapter.notifyDataSetChanged();
                 }
             }
+
         });
 
         // Setting up NavBar
