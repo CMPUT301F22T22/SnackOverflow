@@ -11,8 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -367,6 +370,30 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     public void onOkPressed(Ingredient selectedIngredient) {
         // Add ingredient to list when 'OK' is pressed in the fragment
         shoppingListAdapter.add(selectedIngredient);
+    }
+
+    public void onCheckChange(View view) {
+        String ingTitle;
+        String ingCat;
+        Integer ingAmount;
+        Integer ingUnit;
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+        int position = shoppingList.getPositionForView((View) view.getParent());
+
+        // Check which checkbox was clicked
+        if (checked) {
+            ingTitle = shoppingItems.get(position).getTitle();
+            HashMap<String, Object> sendToFirebase = new HashMap<>();
+            sendToFirebase.put("title", ingTitle);
+            sendToFirebase.put("isChecked", true);
+            FirestoreDatabase.addShoppingItem(sendToFirebase);
+        }
+        else {
+            ingTitle = shoppingItems.get(position).getTitle();
+            FirestoreDatabase.deleteShoppingItem(ingTitle);
+        }
+
     }
 
 }
