@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,7 @@ public class AddIngredientFragment extends DialogFragment {
     private RadioButton ingredientLocation;
     private RadioGroup locationRadioGroup;
     private EditText ingredientCategory;
+//    private TextView ingredientLocationText;
     private OnFragmentInteractionListener listener;
 
     @Override
@@ -69,6 +71,13 @@ public class AddIngredientFragment extends DialogFragment {
         }
     }
 
+//    private void setErrorMessage(EditText edt, String errorMessage) {
+//        edt.setError(errorMessage);
+//    }
+//    private void setErrorMessage(TextView txt, String errorMessage) {
+//        txt.setError(errorMessage);
+//    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -79,6 +88,7 @@ public class AddIngredientFragment extends DialogFragment {
         ingredientDesc = view.findViewById(R.id.ingredient_description_editText);
         ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore_editText);
         locationRadioGroup = view.findViewById(R.id.ingredient_location_radioGroup);
+//        ingredientLocationText = view.findViewById(R.id.location_textview);
         ingredientAmount = view.findViewById(R.id.ingredient_amount_editText);
         ingredientUnit = view.findViewById(R.id.ingredient_unit_editText);
         ingredientCategory = view.findViewById(R.id.ingredient_category_editText);
@@ -182,8 +192,37 @@ public class AddIngredientFragment extends DialogFragment {
                             String ingredientLocationString = ingredientLocation.getText().toString();
 
                             String ingredientCategoryString = ingredientCategory.getText().toString();
-
                             listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
+
+//                            boolean invalidInput = false;
+//                            if(ingredientDescString.isEmpty() || ingredientDescString.length() > 30) {
+//                                invalidInput = true;
+//                                setErrorMessage(ingredientDesc, "Title must not be empty and maximum character limit is 30");
+//                            }
+//                            if (ingredientAmountInt == 0) {
+//                                invalidInput = true;
+//                                setErrorMessage(ingredientAmount, "Amount cannot be empty");
+//                            }
+//                            if (ingredientUnitInt == 0) {
+//                                invalidInput = true;
+//                                setErrorMessage(ingredientUnit, "Unit cannot be empty");
+//                            }
+//                            if (ingredientBestBeforeString.isEmpty()) {
+//                                invalidInput = true;
+//                                setErrorMessage(ingredientBestBefore, "Best Before Date cannot be empty");
+//                            }
+//                            if (ingredientLocationString.isEmpty()) {
+//                                invalidInput = true;
+//                                setErrorMessage(ingredientLocationText, "Location cannot be empty");
+//                            }
+//                            if (ingredientCategoryString.isEmpty()) {
+//                                invalidInput = true;
+//                                setErrorMessage(ingredientCategory, "Category cannot be empty");
+//                            }
+//
+//                            if (!invalidInput) {
+//                                listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
+//                            }
                         }
                     }).create();
         } else {
