@@ -54,4 +54,12 @@ public class Mealday {
     public void setMeals(ArrayList<Recipe> meals) {
         this.meals = meals;
     }
+
+    public ArrayList<Recipe> getMealsWithoutImage() {
+        ArrayList<Recipe> mealsList = getMeals();
+        for (int i = 0; i < mealsList.size(); i++ ) {
+            mealsList.get(i).setImageBitmap(null);
+        }
+        return mealsList;
+    }
 }

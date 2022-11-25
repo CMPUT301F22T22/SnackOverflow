@@ -333,7 +333,7 @@ public class FirestoreDatabase {
 
     static void addMealPlan(Mealday mealDay) {
         MealPlanCol
-                .document(mealDay.getDate().toString()).set(Arrays.asList(mealDay))
+                .document(mealDay.getDate().toString()).set(mealDay)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -373,7 +373,7 @@ public class FirestoreDatabase {
 //
 //            MealPlanCol.document("Modi").set(city));
         MealPlanCol
-                .document(mealday.getDate().toString()).update("meals", Collections.singletonList(mealday.getMeals()))
+                .document(mealday.getDate().toString()).update("meals", mealday.getMealsWithoutImage())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -411,15 +411,19 @@ public class FirestoreDatabase {
                         float servings = Float.parseFloat(mealMap.get("servings").toString());
                         String recipeCategory = mealMap.get("recipeCategory").toString();
                         String comments = mealMap.get("comments").toString();
-//                        String id = mealMap.get("id").toString();
                         ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
-
-                        Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+                        String id = null;
+                        if (mealMap.get("id") != null) {
+                            id = mealMap.get("id").toString();
+                        }
+                        Recipe recipe = new Recipe(id,title,preptime,servings,recipeCategory,comments,instructions,ingredients,null);
 //                        String imageTrackingData = mealMap.get("image_tracker").toString();
-                        if (mealMap.get("image_tracker") != null ) {
+                        try {
                             loadImage(recipe);
                         }
-
+                        catch(Exception e){
+                            mealsfortheDay.add(recipe);
+                        }
                         mealsfortheDay.add(recipe);
                     }
 
