@@ -282,6 +282,27 @@ public class FirestoreDatabase {
                     }
    });
 };
+    static void modifyMealServings(Mealday mealday) {
+//            System.out.println("Im here ar modify");
+//            Map<String,Object> city = new HashMap<>();
+//            city.put("name","LA");
+//
+//            MealPlanCol.document("Modi").set(city));
+        MealPlanCol
+                .document(mealday.getDate().toString()).update("servings", mealday.getServings())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error updating document", e);
+                    }
+                });
+    };
 
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
                                ArrayList<Mealday> meals) {
@@ -297,6 +318,7 @@ public class FirestoreDatabase {
                     Log.d(MealsTag, "Meal plan fetched successfully");
                     Date date = doc.getDate("date");
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                    ArrayList<Double> mealServings = (ArrayList<Double>)doc.getData().get("servings");
                     ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
                     for (Object meal:mealsForDay) {
                         Map<String, Object> mealMap = (Map<String, Object>) meal;
@@ -307,14 +329,20 @@ public class FirestoreDatabase {
                         String recipeCategory = mealMap.get("recipeCategory").toString();
                         String comments = mealMap.get("comments").toString();
 //                        String id = mealMap.get("id").toString();
-                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
+                        ArrayList<Object> ingredientArray = (ArrayList<Object>) mealMap.get("ingredients");
+                        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+                        for (int i = 0; i < ingredientArray.size(); i++) {
+                            Map<String, Object> ingredientMap = (Map<String, Object>) ingredientArray.get(i);
+                            ingredients.add(new Ingredient(ingredientMap.get("title").toString(), Integer.valueOf(ingredientMap.get("amount").toString()),
+                                    Integer.valueOf(ingredientMap.get("unit").toString()), ingredientMap.get("category").toString()));
+                        }
                         Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
                         mealsfortheDay.add(recipe);
                     }
 
 //                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
                     //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
-                    meals.add(new Mealday( date,  mealsfortheDay));
+                    meals.add(new Mealday( date,  mealsfortheDay, mealServings));
                     Collections.sort(meals, new Comparator<Mealday>() {
                         @Override
                         public int compare(Mealday mealday, Mealday t1) {

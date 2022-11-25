@@ -56,7 +56,12 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
                 this.recipeCheck = 2;
             }
             else {
-                this.recipeCheck = 0;
+                if (recipe == "meal_ingredients"){
+                    this.recipeCheck = 3;
+                }
+                else {
+                    this.recipeCheck = 0;
+                }
             }
         }
     }
@@ -109,15 +114,32 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
                 });
             }
             else{
-                if (position < 3) {
+                if (recipeCheck == 2) {
+                    if (position < 3) {
+                        if (view == null) {
+                            view = LayoutInflater.from(context).inflate(R.layout.textview, parent, false);
+                            System.out.println("drawn");
+                        }
+                        System.out.println("START TEST");
+                        for (int i = 0; i < ingredients.size(); i++) {
+                            System.out.println(i);
+                            System.out.println(ingredients.get(i).getTitle());
+                        }
+                        System.out.println("out");
+                        Ingredient ingredient = ingredients.get(position);
+                        TextView title = view.findViewById(R.id.title_text);
+                        title.setText(ingredient.getTitle());
+                    }
+                }
+                else{
                     if (view == null) {
                         view = LayoutInflater.from(context).inflate(R.layout.textview, parent, false);
                         System.out.println("drawn");
                     }
                     System.out.println("START TEST");
-                    for (int i = 0; i < ingredients.size(); i++){
+                    for (int i = 0; i < ingredients.size(); i++) {
                         System.out.println(i);
-                        System.out.println(ingredients.get(i).getTitle());
+                            System.out.println(ingredients.get(i).getTitle());
                     }
                     System.out.println("out");
                     Ingredient ingredient = ingredients.get(position);

@@ -11,6 +11,7 @@ import java.util.Date;
 public class Mealday {
     private Date date;
     private ArrayList<Recipe> meals;
+    private ArrayList<Double> servings;
     protected String id;
 
     /**
@@ -18,9 +19,10 @@ public class Mealday {
      * @param date the date for which the meal day is initialized
      * @param meals the meals to add to the day
      * */
-    public Mealday(Date date, ArrayList<Recipe> meals) {
+    public Mealday(Date date, ArrayList<Recipe> meals, ArrayList<Double> servings) {
         this.meals = meals;
         this.date = date;
+        this.servings = servings;
     }
 
     /**
@@ -46,6 +48,8 @@ public class Mealday {
     public ArrayList<Recipe> getMeals() {
         return meals;
     }
+
+    public ArrayList<Double> getServings(){return servings;}
 
     /**
      * Setter for meals

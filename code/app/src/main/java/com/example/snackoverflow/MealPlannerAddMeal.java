@@ -29,6 +29,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.security.DomainLoadStoreParameter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     ArrayList<Recipe> recipeDataList;
     ArrayList<Ingredient> ingredientDataList;
     ArrayList<Ingredient> addedIngredients;
+    private Double servingFinal;
     // Data storage
     private Spinner spinner;
     private ArrayAdapter<CharSequence> spinnerAdapter;
@@ -83,17 +85,18 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
      * @param mealDay the meal day
      * @param recipe the recipe to be added
      * */
-    public MealPlannerAddMeal(Mealday mealDay, Recipe recipe){
+    public MealPlannerAddMeal(Mealday mealDay, Recipe recipe, Double serving){
         this.edit = true;
         this.mealDay = mealDay;
         this.recipe = recipe;
+        this.servingFinal = serving;
     }
 
     /**
      * interface for OnFragmentInteractionListener
      * */
     public interface OnFragmentInteractionListener {
-        void addMeal(Recipe recipe, Date date);
+        void addMeal(Recipe recipe, Date date, Double serving);
 
         void deleteMeal(Mealday mealday);
 
@@ -131,7 +134,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         ingredientDataList = new ArrayList<Ingredient>();
         addedIngredients = new ArrayList<Ingredient>();
 
-        if (edit == true){
+        if (edit){
             addedIngredients = recipe.getIngredients();
         }
 
@@ -177,14 +180,13 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         int [] servings = {1,2};
         String []categories = {"Lunch","Dinner","nice"};
 
-        for (int i =0;i<recipestitle.length;i++){
-            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", null));
-        }
-
         String[]ingredirenttitle = {"apple", "banana", "mango", "fish"};
 
         for (int i =0;i<ingredirenttitle.length;i++){
             ingredientDataList.add(new Ingredient(ingredirenttitle[i], 1, 2, "fruit"));
+        }
+        for (int i =0;i<recipestitle.length;i++){
+            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", ingredientDataList));
         }
         //
 
@@ -234,7 +236,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
             }
         });
 
-        ingredientArrayAdapter = new IngredientAdapter(this.getContext(), addedIngredients, "recipe_ingredient_preview");
+        ingredientArrayAdapter = new IngredientAdapter(this.getContext(), addedIngredients, "meal_ingredients");
         ingredientsView.setAdapter(ingredientArrayAdapter);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -274,16 +276,20 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 }
                                 else {
                                     if (recipeRadioButton.isChecked()) {
-                                        Integer servings = Integer.valueOf(unit.getEditText().getText().toString());
+                                        Double servings = Double.valueOf(unit.getEditText().getText().toString());
+                                        servingFinal = servings;
                                         recipe = recipeDataList.get(spinner.getSelectedItemPosition() - 1);
-                                        servings = (int)(Math.ceil(servings/recipe.getServings()));
+                                        servings = (servings/recipe.getServings());
                                         for (Ingredient ingredient: recipe.getIngredients()){
-                                            ingredient.setUnit(ingredient.getUnit()*servings);
+                                            Integer unit = ingredient.getUnit();
+                                            unit = (int)Math.ceil(unit*servings);
+                                            ingredient.setUnit(unit);
                                         }
                                     }
                                     if (ingredientRadioButton.isChecked()){
                                         String text = title.getEditText().getText().toString();
                                         recipe = new Recipe(text, 0, 1, "Ingredient Recipe", "", "", addedIngredients);
+                                        servingFinal = 1.0d;
                                     }
                                     Date date = null;
                                     try {
@@ -291,7 +297,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                    listener.addMeal(recipe, date);
+                                    listener.addMeal(recipe, date, servingFinal);
                                 }
                                 }
                             }
@@ -310,6 +316,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 spinner.setEnabled(false);
                 unit.setVisibility(View.VISIBLE);
                 unit.setHint("Servings");
+                unit.getEditText().setText(servingFinal.toString());
                 unit.setEnabled(false);
 
             }
@@ -321,9 +328,10 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, ingredientsNames);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
-                spinner.setClickable(false);
+                spinner.setEnabled(false);
                 unit.setVisibility(View.GONE);
                 title.setVisibility(View.VISIBLE);
+                title.getEditText().setText(recipe.getTitle());
                 title.setClickable(false);
                 ingredientsView.setVisibility(View.VISIBLE);
             }
