@@ -350,6 +350,15 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         shoppingListAdapter.notifyDataSetChanged();
     }
 
+    public void addSelectedIngredientToStorage(View v) {
+        int position = shoppingList.getPositionForView((View) v.getParent());
+        Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
+        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "ADD_SHOPPING_ITEMS");
+//        FirestoreDatabase.addIngredient(selectedIngredient);
+        shoppingItems.remove(selectedIngredient);
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
     /**
      * Add ingredient to the listview when the OK button is pressed in the user-friendly fragment
      * @param selectedIngredient
@@ -359,6 +368,5 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         // Add ingredient to list when 'OK' is pressed in the fragment
         shoppingListAdapter.add(selectedIngredient);
     }
-
 
 }

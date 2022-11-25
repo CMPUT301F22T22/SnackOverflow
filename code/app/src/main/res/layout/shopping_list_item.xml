@@ -103,7 +103,7 @@
             android:background="@android:color/transparent"
             app:srcCompat="@android:drawable/ic_input_add"
             app:tint="@android:color/darker_gray"
-            />
+            android:onClick="addSelectedIngredientToStorage"/>
     </LinearLayout>
 
 </LinearLayout>
