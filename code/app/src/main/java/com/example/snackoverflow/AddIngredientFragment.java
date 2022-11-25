@@ -45,38 +45,65 @@ public class AddIngredientFragment extends DialogFragment {
     private RadioButton ingredientLocation;
     private RadioGroup locationRadioGroup;
     private EditText ingredientCategory;
-//    private TextView ingredientLocationText;
-    private OnFragmentInteractionListener listener;
 
     @Override
     public void onStart() {
         super.onStart();
     }
 
-    /**
-     * Implements the Fragment Interaction Listener and defines
-     * the onOkPressed function
-     * */
-    public interface OnFragmentInteractionListener {
-        void onOkPressed(Ingredient selectedIngredient);
+    public void setCalendarForBestBefore(EditText ingredientBestBefore, Date currentDate) {
+        ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                if (currentDate != null) {
+                    c.setTime(currentDate);
+                }
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // on below line we are setting date to our edit text.
+                                ingredientBestBefore.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
+                            }
+                        },
+                        year, month, day);
+
+                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+                datePickerDialog.show();
+            }
+        });
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString());
-        }
-    }
+    public void setErrors(EditText field, TextInputLayout layout) {
+        field.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-//    private void setErrorMessage(EditText edt, String errorMessage) {
-//        edt.setError(errorMessage);
-//    }
-//    private void setErrorMessage(TextView txt, String errorMessage) {
-//        txt.setError(errorMessage);
-//    }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() > layout.getCounterMaxLength()) {
+                    layout.setError("Max character length is " + layout.getCounterMaxLength());
+                } else {
+                    layout.setError(null);
+                }
+            }
+        });
+    }
 
     @NonNull
     @Override
@@ -88,86 +115,21 @@ public class AddIngredientFragment extends DialogFragment {
         ingredientDesc = view.findViewById(R.id.ingredient_description_editText);
         ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore_editText);
         locationRadioGroup = view.findViewById(R.id.ingredient_location_radioGroup);
-//        ingredientLocationText = view.findViewById(R.id.location_textview);
         ingredientAmount = view.findViewById(R.id.ingredient_amount_editText);
         ingredientUnit = view.findViewById(R.id.ingredient_unit_editText);
         ingredientCategory = view.findViewById(R.id.ingredient_category_editText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        ingredientDesc.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        setErrors(ingredientDesc, ingredientDescLayout);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                if (s.length() > ingredientDescLayout.getCounterMaxLength()) {
-                    ingredientDescLayout.setError("Max character length is " + ingredientDescLayout.getCounterMaxLength());
-                } else {
-                    ingredientDescLayout.setError(null);
-                }
-            }
-        });
-
-        ingredientCategory.addTextChangedListener(new TextWatcher() {
-            @Override
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                if (s.length() > ingredientCategoryLayout.getCounterMaxLength()) {
-                    ingredientCategoryLayout.setError("Max character length is " + ingredientCategoryLayout.getCounterMaxLength());
-                } else {
-                    ingredientCategoryLayout.setError(null);
-                }
-            }
-        });
+        setErrors(ingredientCategory, ingredientCategoryLayout);
 
         Bundle initialBundle = getArguments();
 
         if (initialBundle == null) {
 
-            ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
-                    int year = c.get(Calendar.YEAR);
-                    int month = c.get(Calendar.MONTH);
-                    int day = c.get(Calendar.DAY_OF_MONTH);
-
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(
-                            getContext(),
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year,
-                                                      int monthOfYear, int dayOfMonth) {
-                                    // on below line we are setting date to our edit text.
-                                    ingredientBestBefore.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                                }
-                            },
-                            year, month, day);
-
-                    datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
-                    datePickerDialog.show();
-                }
-            });
+            setCalendarForBestBefore(ingredientBestBefore, null);
 
             return builder
                     .setView(view)
@@ -192,75 +154,26 @@ public class AddIngredientFragment extends DialogFragment {
                             String ingredientLocationString = ingredientLocation.getText().toString();
 
                             String ingredientCategoryString = ingredientCategory.getText().toString();
-                            listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
-
-//                            boolean invalidInput = false;
-//                            if(ingredientDescString.isEmpty() || ingredientDescString.length() > 30) {
-//                                invalidInput = true;
-//                                setErrorMessage(ingredientDesc, "Title must not be empty and maximum character limit is 30");
-//                            }
-//                            if (ingredientAmountInt == 0) {
-//                                invalidInput = true;
-//                                setErrorMessage(ingredientAmount, "Amount cannot be empty");
-//                            }
-//                            if (ingredientUnitInt == 0) {
-//                                invalidInput = true;
-//                                setErrorMessage(ingredientUnit, "Unit cannot be empty");
-//                            }
-//                            if (ingredientBestBeforeString.isEmpty()) {
-//                                invalidInput = true;
-//                                setErrorMessage(ingredientBestBefore, "Best Before Date cannot be empty");
-//                            }
-//                            if (ingredientLocationString.isEmpty()) {
-//                                invalidInput = true;
-//                                setErrorMessage(ingredientLocationText, "Location cannot be empty");
-//                            }
-//                            if (ingredientCategoryString.isEmpty()) {
-//                                invalidInput = true;
-//                                setErrorMessage(ingredientCategory, "Category cannot be empty");
-//                            }
-//
-//                            if (!invalidInput) {
-//                                listener.onOkPressed(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
-//                            }
+                            FirestoreDatabase.addIngredient(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
                         }
                     }).create();
         } else {
             Ingredient initialIngredient = (Ingredient) initialBundle.get("ingredient");
+            boolean isShoppingListItem = false;
             ingredientDesc.setText(initialIngredient.getTitle());
-            ingredientBestBefore.setText(dateFormat.format(initialIngredient.getBestBefore()));
+            try {
+                ingredientBestBefore.setText(dateFormat.format(initialIngredient.getBestBefore()));
+            } catch (NullPointerException e) {
+                isShoppingListItem = true;
+                ingredientBestBefore.setText("");
+            }
+
             ingredientUnit.setText(String.valueOf(initialIngredient.getUnit()));
             ingredientAmount.setText(String.valueOf(initialIngredient.getAmount()));
             ingredientCategory.setText(initialIngredient.getCategory());
             String locationValue = initialIngredient.getLocation();
 
-            Date currentDate = initialIngredient.getBestBefore();
-
-            ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
-                    c.setTime(currentDate);
-                    int year = c.get(Calendar.YEAR);
-                    int month = c.get(Calendar.MONTH);
-                    int day = c.get(Calendar.DAY_OF_MONTH);
-
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(
-                            getContext(),
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year,
-                                                      int monthOfYear, int dayOfMonth) {
-                                    // on below line we are setting date to our edit text.
-                                    ingredientBestBefore.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                                }
-                            },
-                            year, month, day);
-
-                    datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
-                    datePickerDialog.show();
-                }
-            });
+            setCalendarForBestBefore(ingredientBestBefore, initialIngredient.getBestBefore());
 
             if (Objects.equals(locationValue, "Freezer")) {
                 RadioButton location = view.findViewById(R.id.location_freezer);
@@ -273,9 +186,17 @@ public class AddIngredientFragment extends DialogFragment {
                 location.setChecked(true);
             }
 
+            String fragmentTitle;
+            if (isShoppingListItem) {
+                fragmentTitle = "Add Ingredient to Storage";
+            } else {
+                fragmentTitle = "Edit Ingredient";
+            }
+
+            boolean finalIsShoppingListItem = isShoppingListItem;
             return builder
                     .setView(view)
-                    .setTitle("Edit Ingredient")
+                    .setTitle(fragmentTitle)
                     .setNegativeButton("Cancel", null)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -303,10 +224,13 @@ public class AddIngredientFragment extends DialogFragment {
                             initialIngredient.setUnit(ingredientUnitInt);
                             initialIngredient.setCategory(ingredientCategoryString);
                             initialIngredient.setLocation(ingredientLocationString);
-                            FirestoreDatabase.modifyIngredient(initialIngredient);
+                            if (finalIsShoppingListItem) {
+                                FirestoreDatabase.addIngredient(initialIngredient);
+                            } else {
+                                FirestoreDatabase.modifyIngredient(initialIngredient);
+                            }
                         }
                     }).create();
-
         }
     }
 

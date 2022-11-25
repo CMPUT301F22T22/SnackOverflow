@@ -25,7 +25,7 @@ public class Ingredient implements Serializable  {
      * */
     public Ingredient(String description, int amount, int unit, String category)  {
         this.title = description;
-        this.location = null;
+        this.location = "";
         this.amount = amount;
         this.unit = unit;
         this.category = category;
