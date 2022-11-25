@@ -10,13 +10,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Ingredient Storage Activity to display the list of ingredients in the storage
@@ -31,6 +34,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
+    private String currSortOrder = "inc";
 
     // TODO: Maybe change location to radio buttons for user to select
     // TODO: Error Check if the user adds an ingredient with incomplete details
@@ -45,6 +49,60 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
 
         ingredientStorageList.setAdapter(ingredientArrayAdapter);
         FirestoreDatabase.fetchIngredients(ingredientArrayAdapter, ingredients);
+
+        String[] sortBySpinnerList = new String[] {"Title", "Best Before", "Location", "Category"};
+        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
+        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
+        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortOrderSpinner.setAdapter(sortOrderAdapter);
+
+        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
+        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
+
+        sortByLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBySpinner.performClick();
+            }
+        });
+
+        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortOrderSpinner.performClick();
+            }
+        });
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortBy(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortOrder(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         ingredientStorageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,6 +156,51 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
 
     }
 
+    public void handleSortBy(int position) {
+        switch (position) {
+            case 0:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(ingredients, new SortComparator.TitleComparator().reversed());
+                } else {
+                    Collections.sort(ingredients, new SortComparator.TitleComparator());
+                }
+                break;
+            case 1:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(ingredients, new SortComparator.BestBeforeComparator().reversed());
+                } else {
+                    Collections.sort(ingredients, new SortComparator.BestBeforeComparator());
+                }
+                break;
+            case 2:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(ingredients, new SortComparator.LocationComparator().reversed());
+                } else {
+                    Collections.sort(ingredients, new SortComparator.LocationComparator());
+                }
+                break;
+            case 3:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(ingredients, new SortComparator.CategoryComparator().reversed());
+                } else {
+                    Collections.sort(ingredients, new SortComparator.CategoryComparator());
+                }
+                break;
+        }
+        ingredientArrayAdapter.notifyDataSetChanged();
+    }
+
+    public void handleSortOrder(int position) {
+        if (position == 1 && currSortOrder.equals("inc")) {
+            Collections.reverse(ingredients);
+            currSortOrder = "dec";
+        } else if (position == 0 && currSortOrder.equals("dec")) {
+            Collections.reverse(ingredients);
+            currSortOrder = "inc";
+        }
+        ingredientArrayAdapter.notifyDataSetChanged();
+    }
+
     /**
      * Deletes the particular ingredient when prompted by the delete icon
      * @param v view that the icon is present on
@@ -106,6 +209,12 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
         FirestoreDatabase.deleteIngredient(selectedIngredient);
+    }
+
+    public void editIngredientAtPosition(View v) {
+        int position = ingredientStorageList.getPositionForView((View) v.getParent());
+        Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
+        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
     }
 
     @Override
