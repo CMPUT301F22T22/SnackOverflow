@@ -15,7 +15,9 @@
         <CheckBox
             android:id="@+id/check_shopping_list_item"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></CheckBox>
+            android:layout_height="wrap_content"
+            android:onClick="onCheckChange"
+            ></CheckBox>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
