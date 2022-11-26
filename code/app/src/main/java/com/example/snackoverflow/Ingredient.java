@@ -14,6 +14,7 @@ public class Ingredient implements Serializable  {
     private int amount;
     private int unit;
     private String category;
+    private Boolean isCheckedShoppingList;
     protected String id;
 
     /**
@@ -30,6 +31,7 @@ public class Ingredient implements Serializable  {
         this.unit = unit;
         this.category = category;
         this.bestBefore = null;
+        this.isCheckedShoppingList = false;
     }
 
     /**
@@ -48,6 +50,7 @@ public class Ingredient implements Serializable  {
         this.unit = unit;
         this.bestBefore = date;
         this.category = category;
+        this.isCheckedShoppingList = false;
     }
 
     /**
@@ -156,6 +159,14 @@ public class Ingredient implements Serializable  {
      * */
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean getCheckedShoppingList() {
+        return isCheckedShoppingList;
+    }
+
+    public void setIsCheckedShoppingList(boolean check) {
+        isCheckedShoppingList = check;
     }
 
     /**
