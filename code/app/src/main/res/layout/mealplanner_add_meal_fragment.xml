@@ -31,7 +31,7 @@
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/text_view_date"
                 android:layout_marginTop="16dp"
                 android:background="#E1E3E5"

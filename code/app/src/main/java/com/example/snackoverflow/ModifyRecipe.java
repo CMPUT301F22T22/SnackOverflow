@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -302,11 +303,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent modifyIntent = new Intent();
-                modifyIntent.putExtra("ACTION_TYPE", "DELETE");
-                modifyIntent.putExtra("recipeId", recipeId);
-                setResult(RESULT_OK, modifyIntent);
-                finish();
+                new DeleteConformationFragment<Recipe>(recipe, recipe.getTitle()).show(getSupportFragmentManager(), "Delete_Ingredient");
             }
         });
     }
@@ -453,6 +450,13 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                         System.out.println(e);
                     }
                 });
+            }
+            else{
+                Intent modifyIntent = new Intent();
+                modifyIntent.putExtra("ACTION_TYPE", "DELETE");
+                modifyIntent.putExtra("recipeId", recipeId);
+                setResult(RESULT_OK, modifyIntent);
+                finish();
             }
         }
     }
