@@ -376,6 +376,10 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
 
     }
 
+    /**
+     * Function to update shopping list ingredients after
+     * the user adds ingredient to ingredient storage
+     */
     public void removeIngredient(){
         shoppingItems.remove(this.currIngredientSelected);
         shoppingListAdapter.notifyDataSetChanged();
