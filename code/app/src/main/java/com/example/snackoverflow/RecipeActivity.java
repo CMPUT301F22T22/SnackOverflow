@@ -55,6 +55,7 @@ public class RecipeActivity extends AppCompatActivity {
     ListView recipeList;
     ArrayAdapter<Recipe> recipeArrayAdapter;
     ArrayList<Recipe> recipeDataList;
+    int imageTrackingData = 0;
     String currSortOrder = "inc";
 
 
@@ -217,7 +218,6 @@ public class RecipeActivity extends AppCompatActivity {
                         String comments = data.get("comments").toString();
                         Recipe recipe = new Recipe(id, title, prep_time, servings,
                                 category, comments, instructions, null);
-                        int imageTrackingData;
                         imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
                         if (imageTrackingData > 0) {
                             loadImage(recipe);
@@ -237,6 +237,7 @@ public class RecipeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(RecipeActivity.this, ModifyRecipe.class);
                 intent.putExtra("recipe", (Parcelable) recipeDataList.get(position));
+                intent.putExtra("imageTracker", imageTrackingData);
                 getModifiedData.launch(intent);
             }
         });

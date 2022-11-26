@@ -140,29 +140,24 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        textViewDate.setOnClickListener(new View.OnClickListener(){
+        TextViewDate.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                DatePickerDialog dialog = new DatePickerDialog(
                         getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                // on below line we are setting date to our edit text.
-                                textViewDate.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                            }
-                        },
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        onDateSetListener,
                         year, month, day);
-
-                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
-                datePickerDialog.show();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 518400000L);
+                dialog.getDatePicker().setMinDate(cal.getTimeInMillis());
+                dialog.show();
             }
         });
         onDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -171,11 +166,11 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 month = month + 1;
                 if (day <= 9){
                     String date_s = year + "-" + month + "-0" + day;
-                    textViewDate.setText(date_s);
+                    TextViewDate.setText(date_s);
                 }
                 else {
                     String date_s = year + "-" + month + "-" + day;
-                    textViewDate.setText(date_s);
+                    TextViewDate.setText(date_s);
                 }
             }
         };
@@ -271,7 +266,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 new ErrorFragment("No Ingredients Chosen").show(getParentFragmentManager(), "error");
                             }
                             else{
-                                String date_text = textViewDate.getText().toString();
+                                String date_text = TextViewDate.getText().toString();
                                 //TODO: is this check necessary?
                                 if(Objects.equals(date_text,"Date")){
                                     new ErrorFragment("Invalid Date Chosen").show(getParentFragmentManager(), "error");
@@ -353,7 +348,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //                            FirestoreDatabase.modifyMealPlan(mealDay);
                             listener.deleteMealPlan(mealDay,recipe);
                             if (mealDay.getMeals().size() == 0){
-                                String date_text = textViewDate.getText().toString();
+                                String date_text = TextViewDate.getText().toString();
                                 Date date = null;
                                 try {
                                     date = dateFormat.parse(date_text);

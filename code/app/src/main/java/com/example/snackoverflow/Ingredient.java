@@ -25,7 +25,7 @@ public class Ingredient implements Serializable  {
      * */
     public Ingredient(String description, int amount, int unit, String category)  {
         this.title = description;
-        this.location = "";
+        this.location = null;
         this.amount = amount;
         this.unit = unit;
         this.category = category;
@@ -167,11 +167,6 @@ public class Ingredient implements Serializable  {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-
-        return this.getTitle() == that.getTitle();
-    }
-
-    public boolean equalsTitle(String o) {
-        return this.getTitle().equals(o);
+        return title.equals(that.title);
     }
 }
