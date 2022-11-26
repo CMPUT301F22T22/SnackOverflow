@@ -31,6 +31,7 @@ import com.google.firebase.firestore.EventListener;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
