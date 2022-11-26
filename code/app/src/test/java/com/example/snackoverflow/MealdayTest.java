@@ -42,7 +42,7 @@ public class MealdayTest {
         return random;
     }
     @Test
-    void testAddException(){
+    public void testAddException(){
         Mealday MockMeal = MockMeal();
         assertEquals(6, MockMeal.getMeals().size());
         MockMeal.getMeals().add(mockRecipe());
@@ -50,7 +50,7 @@ public class MealdayTest {
         assertTrue(MockMeal.getMeals().contains(mockRecipe()));
     }
     @Test
-    void testRemoveException(){
+    public void testRemoveException(){
         Mealday MockMeal = MockMeal();
         assertEquals(6, MockMeal.getMeals().size());
         MockMeal.getMeals().add(mockRecipe());

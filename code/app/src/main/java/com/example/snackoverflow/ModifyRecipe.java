@@ -141,7 +141,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
                     new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
-                    imageTracker = 0;
+                    imageTracker += 1;
+                    Uri defaultUri = Uri.parse("android.resource://com.example.snackoverflow/drawable/food_icon");
+                    uploadImage(defaultUri, recipeId);
                 }
                 else {
                     if (applyButton.getVisibility() == View.VISIBLE) {
@@ -245,7 +247,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putExtra("servings", Float.valueOf(servings));
                     modifyIntent.putExtra("prep_time", Integer.valueOf(prepTime));
                     modifyIntent.putExtra("instructions", instructions);
-                    modifyIntent.putExtra("image_tracker", imageTracker);
+                    modifyIntent.putExtra("image_tracker", imageTracker+2);
                     ArrayList<String> ingredientTitles = new ArrayList<>();
                     ArrayList<String> ingredientUnit = new ArrayList<>();
                     ArrayList<String> ingredientAmount = new ArrayList<>();
@@ -450,18 +452,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 ((CircleImageView) object).setBackground(imageViewBackground);
                 ((CircleImageView) object).setImageDrawable(imageViewDrawable);
                 ((CircleImageView) object).setPadding(4,7,6,10);
-                StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
-                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        System.out.println("File Deleted Successfully");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        System.out.println(e);
-                    }
-                });
             }
         }
     }
