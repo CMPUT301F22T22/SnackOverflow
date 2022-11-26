@@ -21,6 +21,7 @@ import java.util.ArrayList;
     private Context context;
     private Mealday mealDay;
     private ArrayList<Recipe> meals;
+    private ArrayList<Double> servings;
     private FragmentManager fm;
 
     public MealPlannerAdapter(Context context, Mealday mealDay, FragmentManager fm) {
@@ -28,6 +29,7 @@ import java.util.ArrayList;
         this.mealDay = mealDay;
         this.meals = mealDay.getMeals();
         this.fm = fm;
+        this.servings = mealDay.getServings();
     }
 
     @Override
@@ -55,7 +57,7 @@ import java.util.ArrayList;
         mealImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MealPlannerAddMeal(mealDay, meals.get(position)).show(fm,"Edit_meal");
+                new MealPlannerAddMeal(mealDay, meals.get(position), (double)servings.get(position)).show(fm,"Edit_meal");
             }
         });
 

@@ -59,20 +59,20 @@ public class FirestoreDatabase {
      * */
     static void addIngredient(Ingredient newIngredient) {
         ingredientsCol
-        .add(newIngredient)
-        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(IngredientsTAG, "Ingredient document snapshot written with ID: " + documentReference.getId());
-                newIngredient.id = documentReference.getId();
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(IngredientsTAG, "Error adding ingredient document", e);
-            }
-        });
+                .add(newIngredient)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(IngredientsTAG, "Ingredient document snapshot written with ID: " + documentReference.getId());
+                        newIngredient.id = documentReference.getId();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(IngredientsTAG, "Error adding ingredient document", e);
+                    }
+                });
     };
 
     /**
@@ -101,20 +101,20 @@ public class FirestoreDatabase {
      * */
     static void deleteIngredient(Ingredient ingredient) {
         ingredientsCol
-        .document(ingredient.id)
-        .delete()
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(IngredientsTAG, "Ingredient document snapshot successfully deleted!");
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(IngredientsTAG, "Error deleting ingredient document", e);
-            }
-        });
+                .document(ingredient.id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(IngredientsTAG, "Ingredient document snapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(IngredientsTAG, "Error deleting ingredient document", e);
+                    }
+                });
     };
 
     /**
@@ -307,22 +307,22 @@ public class FirestoreDatabase {
 
     static void addRecipe(HashMap<String, Object> data, Uri uri) {
         recipeCol
-            .add(data)
-            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
-                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(RecipeTag, "Error adding recipe document", e);
-                }
-            });
+                .add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
+                        FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(RecipeTag, "Error adding recipe document", e);
+                    }
+                });
     };
-    
+
     /**
      * deletes a recipe from the storage
      * @param id id of the recipe to be deleted
@@ -366,7 +366,7 @@ public class FirestoreDatabase {
 
     };
 
-        static void modifyMealPlan(Mealday mealday) {
+    static void modifyMealPlan(Mealday mealday) {
 //            System.out.println("Im here ar modify");
 //            Map<String,Object> city = new HashMap<>();
 //            city.put("name","LA");
@@ -385,61 +385,89 @@ public class FirestoreDatabase {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(MealsTag, "Error updating document", e);
                     }
-   });
-};
+                });
+    };
+    static void modifyMealServings(Mealday mealday) {
+//            System.out.println("Im here ar modify");
+//            Map<String,Object> city = new HashMap<>();
+//            city.put("name","LA");
+//
+//            MealPlanCol.document("Modi").set(city));
+        MealPlanCol
+                .document(mealday.getDate().toString()).update("servings", mealday.getServings())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(MealsTag, "Error updating document", e);
+                    }
+                });
+    };
 
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
                                ArrayList<Mealday> meals) {
         MealPlanCol
-            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                meals.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                            FirebaseFirestoreException error) {
+                        meals.clear();
+                        for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
 
-                {
-                    Log.d(MealsTag, "Meal plan fetched successfully");
-                    Date date = doc.getDate("date");
-                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
-                    ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
-                    for (Object meal:mealsForDay) {
-                        Map<String, Object> mealMap = (Map<String, Object>) meal;
-                        String title = mealMap.get("title").toString();
-                        String instructions = mealMap.get("instructions").toString();
-                        int preptime = Integer.parseInt(mealMap.get("preptime").toString());
-                        float servings = Float.parseFloat(mealMap.get("servings").toString());
-                        String recipeCategory = mealMap.get("recipeCategory").toString();
-                        String comments = mealMap.get("comments").toString();
-                        ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) mealMap.get("ingredients");
-                        String id = null;
-                        if (mealMap.get("id") != null) {
-                            id = mealMap.get("id").toString();
-                        }
-                        Recipe recipe = new Recipe(id,title,preptime,servings,recipeCategory,comments,instructions,ingredients,null);
-//                        String imageTrackingData = mealMap.get("image_tracker").toString();
-                        try {
-                            loadImage(recipe);
-                        }
-                        catch(Exception e){
-                            mealsfortheDay.add(recipe);
-                        }
-                        mealsfortheDay.add(recipe);
-                    }
+                        {
+                            Log.d(MealsTag, "Meal plan fetched successfully");
+                            Date date = doc.getDate("date");
+                            ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
+                            ArrayList<Double> mealServings = (ArrayList<Double>)doc.getData().get("servings");
+                            ArrayList<Recipe> mealsfortheDay = new ArrayList<>();
+                            for (Object meal:mealsForDay) {
+                                Map<String, Object> mealMap = (Map<String, Object>) meal;
+                                String title = mealMap.get("title").toString();
+                                String instructions = mealMap.get("instructions").toString();
+                                int preptime = Integer.parseInt(mealMap.get("preptime").toString());
+                                float servings = Float.parseFloat(mealMap.get("servings").toString());
+                                String recipeCategory = mealMap.get("recipeCategory").toString();
+                                String comments = mealMap.get("comments").toString();
+//                        String id = mealMap.get("id").toString();
+                                ArrayList<Object> ingredientArray = (ArrayList<Object>) mealMap.get("ingredients");
+                                ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+                                for (int i = 0; i < ingredientArray.size(); i++) {
+                                    Map<String, Object> ingredientMap = (Map<String, Object>) ingredientArray.get(i);
+                                    ingredients.add(new Ingredient(ingredientMap.get("title").toString(), Integer.valueOf(ingredientMap.get("amount").toString()),
+                                            Integer.valueOf(ingredientMap.get("unit").toString()), ingredientMap.get("category").toString()));
+                                }
+                                String id = null;
+                                if(mealMap.get("id")!=null){
+                                    id = mealMap.get("id").toString();
+                                }
+                                Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+                                try{
+                                    loadImage(recipe);
+                                }
+                                catch(Exception e){
+                                    mealsfortheDay.add(recipe);
+                                }
+                                mealsfortheDay.add(recipe);
+                            }
 
 //                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
-                    //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
-                    meals.add(new Mealday( date,  mealsfortheDay));
-                    Collections.sort(meals, new Comparator<Mealday>() {
-                        @Override
-                        public int compare(Mealday mealday, Mealday t1) {
-                            return mealday.getDate().compareTo(t1.getDate());
+                            //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
+                            meals.add(new Mealday( date,  mealsfortheDay, mealServings));
+                            Collections.sort(meals, new Comparator<Mealday>() {
+                                @Override
+                                public int compare(Mealday mealday, Mealday t1) {
+                                    return mealday.getDate().compareTo(t1.getDate());
+                                }
+                            });// Adding the meal days from FireStore
                         }
-                    });// Adding the meal days from FireStore
-                }
-                ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
-            }
-        });
+                        ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
+                    }
+                });
     };
 
     static void addShoppingList() {};
