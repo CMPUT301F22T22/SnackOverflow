@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -35,6 +36,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +54,8 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private final static ArrayList<Ingredient> firebase_ingredient_meal_plan_list = new ArrayList<>();
     private final static ArrayList<Ingredient> firebase_ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> toRemove = new ArrayList<>();
+    private final static ArrayList<String> checkedList = new ArrayList<>();
+    private final static ArrayList<Integer> mealServing = new ArrayList<>();
     private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
     private final static HashMap<String, Integer> firebase_ingredient_storage_hashmap = new HashMap<>();
     private String currSortOrder = "inc";
@@ -74,6 +78,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         FirebaseFirestore db_instance = FirebaseFirestore.getInstance();
         CollectionReference ingredientsCol = db_instance.collection("ingredient");
         CollectionReference MealPlanCol = db_instance.collection("meal_plan");
+        CollectionReference checkedCol = db_instance.collection("shopping_list");
 
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -115,9 +120,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                         Map<String, Object> mealMap = (Map<String, Object>) meal;
 //                        String id = mealMap.get("id").toString();
                         Object servings = (Object) mealMap.get("servings");
-                        Double servingInDouble = Double.parseDouble(servings.toString());
-                        Integer servingInInt = servingInDouble.intValue();
-                        Log.d("brother", servings.toString());
                         //Integer servingsInt = servings.intValue();
                         ArrayList<Object> ingredients = (ArrayList<Object>) mealMap.get("ingredients");
                         //ArrayList<Ingredient> ingredients2 = new ArrayList<>();
@@ -125,7 +127,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                             Map<String, Object> ingredMap = (Map<String, Object>) ing;
                             String title = ingredMap.get("title").toString();
                             String category = ingredMap.get("category").toString();
-                            Integer unit = Integer.parseInt(ingredMap.get("unit").toString())*servingInInt;
+                            Integer unit = Integer.parseInt(ingredMap.get("unit").toString());
                             Integer amount = Integer.parseInt(ingredMap.get("amount").toString());
                             firebase_ingredient_meal_plan_list.add(new Ingredient(title, amount, unit, category));
                         }
@@ -151,23 +153,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                 Log.d("mapingredient", firebase_ingredient_storage_hashmap.toString());
                 Log.d("shoppinglistbefore", String.valueOf(shoppingItems.size()));
 
-                /*
-                // Handle duplicated ingredients which are present in storage
-                for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
-                    for (Ingredient elem: firebase_ingredient_storage_list) {
-                        Log.d("inhere", elem.getTitle());
-                        if (ing.equals(elem.getTitle())) {
-                            Log.d("herenow", firebase_ingredient_meal_plan_hashmap.get(ing).toString());
-                            Log.d("herenow2", String.valueOf(elem.getUnit()));
-                            if (firebase_ingredient_meal_plan_hashmap.get(ing) > elem.getUnit()) {
-                                shoppingItems.add(new Ingredient(ing, elem.getAmount(), firebase_ingredient_meal_plan_hashmap.get(ing) - elem.getUnit(), elem.getCategory()));
-                                Log.d("deeb", shoppingItems.toString());
-                                firebase_ingredient_meal_plan_hashmap.remove(ing);
-                                shoppingListAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                 */
                 // Handle duplicated ingredients which are present in storage
                 String ingCatStorage = "unknown";
                 int ingAmountStorage = 0;
@@ -216,6 +201,36 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     shoppingListAdapter.notifyDataSetChanged();
                 }
                 Log.d("shoppinglistafter1", String.valueOf(shoppingItems.size()));
+
+
+                checkedCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        checkedList.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            Object isCheckedItem = doc.getData().get("title");
+                            Log.d("founditem", isCheckedItem.toString());
+                            checkedList.add(isCheckedItem.toString());
+                        }
+                    }
+                });
+
+                Log.d("checkedlistafter2", String.valueOf(checkedList.size()));
+                Log.d("shoppinglistafter2", String.valueOf(shoppingItems.size()));
+
+                for (Ingredient ing: shoppingItems) {
+                    Log.d("whyman", ing.getTitle());
+                    for (String ing1: checkedList) {
+                        Log.d("whyman1", ing.getTitle());
+                        if (ing.getTitle().equals(ing1)) {
+                            Log.d("iminherebro", String.valueOf(shoppingItems.indexOf(ing)));
+                            ing.setIsCheckedShoppingList(true);
+                            shoppingListAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                }
+
             }
 
         });
