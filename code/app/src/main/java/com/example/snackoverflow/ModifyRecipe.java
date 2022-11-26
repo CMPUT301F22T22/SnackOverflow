@@ -114,7 +114,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         imageViewRadius = imageView.getLayoutParams().width;
         //
 
-        imageTracker = intent.getIntExtra("imageTracker", 0);
+        getImageTracker();
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -188,7 +188,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
         ingredients = new ArrayList<Ingredient>();
 
-        fetchIngredients(recipeId);
+        fetchIngredients();
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +237,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
                 if (titleField.equals("") || category.equals("") || servings.equals("") ||
-                        ingredients.equals("") || comments.equals("")) {
+                        ingredients.equals("")) {
                 } else {
                     Intent modifyIntent = new Intent();
                     modifyIntent.putExtra("ACTION_TYPE", "EDIT");
@@ -394,7 +394,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         deleteButton.setEnabled(state);
     }
 
-    public void fetchIngredients(String recipeId) {
+    public void fetchIngredients() {
         FirebaseFirestore.getInstance()
                 .collection("recipe")
                 .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -424,6 +424,18 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         // Set ingredients text view
     }
 
+    public void getImageTracker() {
+        FirebaseFirestore.getInstance()
+                .collection("recipe")
+                .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        Map<String, Object> data = doc.getData();
+                        imageTracker = Integer.parseInt(data.get("image_tracker").toString());
+                    }
+                });
+    }
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {

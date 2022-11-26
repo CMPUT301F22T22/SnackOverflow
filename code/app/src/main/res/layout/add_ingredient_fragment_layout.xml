@@ -39,7 +39,8 @@
             android:id="@+id/ingredient_bestBefore_editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Best Before Date" />
+            android:hint="Best Before Date"
+            android:focusableInTouchMode="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -104,6 +105,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/location_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location"
