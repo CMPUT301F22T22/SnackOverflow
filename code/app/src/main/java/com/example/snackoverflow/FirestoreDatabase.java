@@ -445,7 +445,7 @@ public class FirestoreDatabase {
                                 if(mealMap.get("id")!=null){
                                     id = mealMap.get("id").toString();
                                 }
-                                Recipe recipe = new Recipe(title,preptime,servings,recipeCategory,comments,instructions,ingredients);
+                                Recipe recipe = new Recipe(id,title,preptime,servings,recipeCategory,comments,instructions,ingredients,null);
                                 try{
                                     loadImage(recipe);
                                 }

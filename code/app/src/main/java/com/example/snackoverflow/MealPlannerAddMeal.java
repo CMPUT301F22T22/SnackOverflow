@@ -245,6 +245,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     for (int i =1;i<=recipeDataList.size();i++){
                                         recipeNames.add(recipeDataList.get(i-1).getTitle());
                                     }
+                                    spinner.setAdapter(spinnerAdapter);
+                                    spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
                                     spinnerAdapter.notifyDataSetChanged();
 //                                    recipeArrayAdapter.notifyDataSetChanged();
 //                                handleSortBy(0);
@@ -260,6 +262,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     for (int i =1;i<=recipeDataList.size();i++){
                                         recipeNames[i] = recipeDataList.get(i-1).getTitle();
                                     }
+                                    spinner.setAdapter(spinnerAdapter);
+                                    spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
                                     spinnerAdapter.notifyDataSetChanged();
 //                                    recipeArrayAdapter.notifyDataSetChanged();
 //                                handleSortBy(0);
@@ -407,9 +411,9 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                     }).create();
         }
         else{
-            spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
+//            spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
             System.out.println(recipeNames);
-            TextViewDate.setText(mealDay.getDate().toString());
+//            TextViewDate.setText(mealDay.getDate().toString());
             if (!Objects.equals(recipe.getRecipeCategory(), "Ingredient Recipe")) {
                 recipeRadioButton.setChecked(true);
                 recipeRadioButton.setClickable(false);
