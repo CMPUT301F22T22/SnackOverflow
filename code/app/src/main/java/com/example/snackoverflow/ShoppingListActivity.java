@@ -234,7 +234,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
             }
 
         });
-
         String[] sortBySpinnerList = new String[] {"Title", "Category"};
         String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
         Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
