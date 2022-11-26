@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -25,7 +26,7 @@ public class MealdayTest {
 
         Mealday MockMeal = null;
         try {
-            MockMeal = new Mealday(dateFormat.parse("2022-10-21"),MockRecipe);
+            MockMeal = new Mealday(dateFormat.parse("2022-10-21"),MockRecipe, MockServings);
         } catch (ParseException e) {
             e.printStackTrace();
         }
