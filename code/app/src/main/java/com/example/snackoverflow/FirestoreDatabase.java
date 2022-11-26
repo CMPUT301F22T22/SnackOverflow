@@ -39,6 +39,7 @@ public class FirestoreDatabase {
     final static CollectionReference recipeCol = db.collection("recipe");
     final static CollectionReference ingredientsCol = db.collection("ingredient");
     final static CollectionReference MealPlanCol = db.collection("meal_plan");
+    final static CollectionReference ShoppingListCol = db.collection("shopping_list");
 
     private final static ArrayList<Ingredient> ingredient_storage_list = new ArrayList<>();
     private final static ArrayList<String> ingredient_meal_plan_list = new ArrayList<>();
@@ -126,6 +127,7 @@ public class FirestoreDatabase {
                     return;
                 }
                 ingredients.clear();
+
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     Log.d(IngredientsTAG, "Ingredients retrieved successfully");
@@ -156,64 +158,44 @@ public class FirestoreDatabase {
     };
 
     /**
-     * Gets the Ingredient Storage List form the Database
-     * @return an arraylist conatining all the ingredients from the storage
+     * Add an ShoppingList Item to the Firebase Storage
      * */
-    static ArrayList<Ingredient> getIngredientsStorageList() {
-        ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
-                    return;
+    static void addShoppingItem(HashMap<String, Object> data) {
+        ShoppingListCol
+            .document(data.get("title").toString()).set(data)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("ShoppingTAG", "Shopping List document snapshot written with ID: ");
                 }
-                ingredient_storage_list.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    Log.d("lol", "Ingredients retrieved successfully");
-                    String id = doc.getId();
-                    String title = (String) doc.getData().get("title");
-                    String location = (String) doc.getData().get("location");
-                    int amount = doc.getLong("amount").intValue();
-                    int unit = doc.getLong("unit").intValue();
-                    Date bestBefore = doc.getDate("bestBefore");
-                    String category = (String) doc.getData().get("category");
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("ShoppingTAG", "Error adding shopping list document", e);
+                }
 
-                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-                    ingredientItem.id = id;
-                    ingredient_storage_list.add(ingredientItem); // Adding the ingredients from FireStore
-                }
-            }
-        });
-        return ingredient_storage_list;
+            });
     }
 
-    static ArrayList<String> getIngredientsMealPlanList() {
-        MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
-                    return;
-                }
-                ingredient_meal_plan_list.clear();
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
-                    for (Object obj : mealsForDay) {
-                        Map<String, Object> mapping = (Map<String, Object>) obj;
-                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
-                        for (String mealplaningredient : mealplaningredients) {
-                            ingredient_meal_plan_list.add(mealplaningredient);
-                        }
+    static void deleteShoppingItem(String data) {
+        ShoppingListCol
+                .document(data)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(IngredientsTAG, "Shopping List document snapshot successfully deleted!");
                     }
-                }
-            }
-        });
-        //System.out.println(ingredient_meal_plan_list.size());
-        return ingredient_meal_plan_list;
-    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(IngredientsTAG, "Error deleting shopping list document", e);
+                    }
+                });
+    };
+
 
     static void addRecipe(HashMap<String, Object> data, Uri uri) {
         recipeCol
