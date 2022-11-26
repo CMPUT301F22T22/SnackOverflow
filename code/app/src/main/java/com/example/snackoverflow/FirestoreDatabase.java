@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -222,7 +223,11 @@ public class FirestoreDatabase {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
-                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    if (uri != null) {
+                        FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    } else {
+                        FirestoreDatabase.uploadImage(Uri.parse("android.resource://com.example.s"), documentReference.getId());
+                    }
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
