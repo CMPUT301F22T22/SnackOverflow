@@ -204,7 +204,13 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     public void deleteMealPlan(Mealday mealday, Recipe recipe) {
         Integer pos = mealday.getMeals().indexOf(recipe);
         mealday.getMeals().remove(recipe);
-        mealday.getServings().remove(mealday.getServings().get(pos));
+        ArrayList<Double> temp = new ArrayList<Double>();
+        for (int i = 0; i < mealday.getServings().size(); i++){
+            if(i != pos){
+                temp.add(mealday.getServings().get(i));
+            }
+        }
+        mealday.setServings(temp);
         FirestoreDatabase.modifyMealPlan(mealday);
         mealslist.setAdapter(mealdayAdapter);
         FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);

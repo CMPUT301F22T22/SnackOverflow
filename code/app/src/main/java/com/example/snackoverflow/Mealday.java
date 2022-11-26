@@ -51,6 +51,8 @@ public class Mealday {
 
     public ArrayList<Double> getServings(){return servings;}
 
+    public void setServings(ArrayList<Double> servings){this.servings = servings;}
+
     /**
      * Setter for meals
      * @param meals all the meals for the current mealday
