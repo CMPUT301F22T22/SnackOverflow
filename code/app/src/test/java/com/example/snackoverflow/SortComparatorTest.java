@@ -1,2 +1,4 @@
-package com.example.snackoverflow;public class SortComparatorTest {
+package com.example.snackoverflow;
+
+public class SortComparatorTest {
 }
