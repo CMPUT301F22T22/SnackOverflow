@@ -257,10 +257,10 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     Recipe recipe = new Recipe(id, title, prep_time, servings,
                                             category, comments, instructions, null);
                                     recipeDataList.add(recipe);
-                                    for (int i =1;i<=recipeDataList.size();i++){
-                                        recipeNames.add(recipeDataList.get(i-1).getTitle());
-                                    }
-                                    spinnerAdapter.notifyDataSetChanged();
+//                                    for (int i =1;i<=recipeDataList.size();i++){
+//                                        recipeNames.add(recipeDataList.get(i-1).getTitle());
+//                                    }
+//                                    spinnerAdapter.notifyDataSetChanged();
 //                                    spinner.setAdapter(spinnerAdapter);
 //                                    spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
 //                                    spinnerAdapter.notifyDataSetChanged();
