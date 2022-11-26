@@ -59,6 +59,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
     private final static HashMap<String, Integer> firebase_ingredient_storage_hashmap = new HashMap<>();
     private String currSortOrder = "inc";
+    private Ingredient currIngredientSelected;
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -370,9 +371,13 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     public void addSelectedIngredientToStorage(View v) {
         int position = shoppingList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
+        currIngredientSelected = selectedIngredient;
         new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "ADD_SHOPPING_ITEMS");
-//        FirestoreDatabase.addIngredient(selectedIngredient);
-        shoppingItems.remove(selectedIngredient);
+
+    }
+
+    public void removeIngredient(){
+        shoppingItems.remove(this.currIngredientSelected);
         shoppingListAdapter.notifyDataSetChanged();
     }
 
