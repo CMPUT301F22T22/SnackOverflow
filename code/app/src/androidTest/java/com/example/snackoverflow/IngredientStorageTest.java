@@ -48,7 +48,6 @@ public class IngredientStorageTest {
         solo.enterText((EditText) solo.getView(R.id.ingredient_category_editText), "Baking");
         solo.enterText((EditText) solo.getView(R.id.ingredient_amount_editText), "3");
         solo.enterText((EditText) solo.getView(R.id.ingredient_unit_editText), "1");
-        //solo.typeText((EditText) solo.getView(R.id.ingredient_bestBefore_editText), "2023-09-08");
 
         View dateTextBox = solo.getView(R.id.ingredient_bestBefore_editText);
         solo.clickOnView(dateTextBox);
@@ -60,16 +59,6 @@ public class IngredientStorageTest {
 
         assertTrue(solo.waitForText("Acai", 1, 2000));
     }
-
-//    @Test
-//    public void checkDeleteIngredient() {
-//        checkIngredientStorage();
-//        ListView listView = (ListView)solo.getView(R.id.ingredient_storage_list);
-//        View view = listView.getChildAt(0);
-//        solo.clickOnView(view);
-//
-//
-//    }
 
     @Test
     public void step3_checkViewIngredient() {
