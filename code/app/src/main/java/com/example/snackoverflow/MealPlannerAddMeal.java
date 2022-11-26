@@ -78,7 +78,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     private Double servingFinal;
     // Data storage
     private Spinner spinner;
-    private ArrayAdapter<CharSequence> spinnerAdapter;
+    ArrayAdapter<CharSequence> spinnerAdapter;
     private TextView TextViewDate;
     private RadioButton ingredientRadioButton;
     private RadioButton recipeRadioButton;
@@ -206,7 +206,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //        for (int i =1;i<=recipeDataList.size();i++){
 //            recipeNames[i] = recipeDataList.get(i-1).getTitle();
 //        }
-        ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(),
+        spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(),
                 android.R.layout.simple_spinner_item,
                 recipeNames);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -260,6 +260,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     for (int i =1;i<=recipeDataList.size();i++){
                                         recipeNames[i] = recipeDataList.get(i-1).getTitle();
                                     }
+                                    spinnerAdapter.notifyDataSetChanged();
 //                                    recipeArrayAdapter.notifyDataSetChanged();
 //                                handleSortBy(0);
                                 }
@@ -290,7 +291,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //            recipeDataList.add(new Recipe(recipestitle[i], 120,2.0f,"Lunch","HAHA","boil", ingredientDataList));
 //        }
         //
-
+//
 //        String[] recipeNames = new String[recipeDataList.size()+1];
 //        recipeNames[0] = "Recipe";
 //        for (int i =1;i<=recipeDataList.size();i++){
@@ -399,7 +400,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                    listener.addMeal(recipe, date);
+                                    listener.addMeal(recipe, date, servingFinal);
                                 }
                             }
                         }
@@ -407,6 +408,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         }
         else{
             spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
+            System.out.println(recipeNames);
             TextViewDate.setText(mealDay.getDate().toString());
             if (!Objects.equals(recipe.getRecipeCategory(), "Ingredient Recipe")) {
                 recipeRadioButton.setChecked(true);
