@@ -60,20 +60,20 @@ public class FirestoreDatabase {
      * */
     static void addIngredient(Ingredient newIngredient) {
         ingredientsCol
-                .add(newIngredient)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(IngredientsTAG, "Ingredient document snapshot written with ID: " + documentReference.getId());
-                        newIngredient.id = documentReference.getId();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(IngredientsTAG, "Error adding ingredient document", e);
-                    }
-                });
+        .add(newIngredient)
+        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d(IngredientsTAG, "Ingredient document snapshot written with ID: " + documentReference.getId());
+                newIngredient.id = documentReference.getId();
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(IngredientsTAG, "Error adding ingredient document", e);
+            }
+        });
     };
 
     /**
@@ -102,20 +102,20 @@ public class FirestoreDatabase {
      * */
     static void deleteIngredient(Ingredient ingredient) {
         ingredientsCol
-                .document(ingredient.id)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(IngredientsTAG, "Ingredient document snapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(IngredientsTAG, "Error deleting ingredient document", e);
-                    }
-                });
+        .document(ingredient.id)
+        .delete()
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(IngredientsTAG, "Ingredient document snapshot successfully deleted!");
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(IngredientsTAG, "Error deleting ingredient document", e);
+            }
+        });
     };
 
     /**
@@ -289,20 +289,20 @@ public class FirestoreDatabase {
 
     static void addRecipe(HashMap<String, Object> data, Uri uri) {
         recipeCol
-                .add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
-                        FirestoreDatabase.uploadImage(uri, documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(RecipeTag, "Error adding recipe document", e);
-                    }
-                });
+            .add(data)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
+                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(RecipeTag, "Error adding recipe document", e);
+                }
+            });
     };
 
     /**

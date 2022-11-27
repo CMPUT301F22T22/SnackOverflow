@@ -98,7 +98,7 @@ public class RecipeIngredientFragment extends DialogFragment {
                             Integer Unit = Integer.valueOf(textInputUnit.getEditText().getText().toString());
                             String Category = textInputCategory.getEditText().getText().toString();
 
-                            listener.addIngredient(new Ingredient(Description, null, null, Amount, Unit, Category));
+                            listener.addIngredient(new Ingredient(Description, null, null,Amount, Unit, Category));
                             listener = null;
                         }
                     }).create();

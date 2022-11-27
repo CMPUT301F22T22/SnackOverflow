@@ -230,6 +230,13 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                         String category = data.get("category").toString();
                         String instructions = data.get("instructions").toString();
                         String comments = data.get("comments").toString();
+                        ArrayList<Object> ingredientArray = (ArrayList<Object>) data.get("ingredients");
+                        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+                        for (int i = 0; i < ingredientArray.size(); i++) {
+                            Map<String, Object> ingredientMap = (Map<String, Object>) ingredientArray.get(i);
+                            ingredients.add(new Ingredient(ingredientMap.get("title").toString(), Integer.valueOf(ingredientMap.get("amount").toString()),
+                                    Integer.valueOf(ingredientMap.get("unit").toString()), ingredientMap.get("category").toString()));
+                        }
 //
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
                         int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
@@ -240,7 +247,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                     Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                     Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                            category, comments, instructions, imgBitmap);
+                                            category, comments, instructions,ingredients, imgBitmap);
                                     recipeDataList.add(recipe);
                                     for (int i =1;i<=recipeDataList.size();i++){
                                         recipeNames.add(recipeDataList.get(i-1).getTitle());
@@ -255,7 +262,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                            category, comments, instructions, null);
+                                            category, comments, instructions,ingredients, null);
                                     recipeDataList.add(recipe);
 //                                    for (int i =1;i<=recipeDataList.size();i++){
 //                                        recipeNames.add(recipeDataList.get(i-1).getTitle());
