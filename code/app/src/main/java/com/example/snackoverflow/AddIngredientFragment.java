@@ -267,7 +267,6 @@ public class AddIngredientFragment extends DialogFragment {
                             if (finalIsShoppingListItem) {
                                 FirestoreDatabase.addIngredient(initialIngredient);
                                 FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
-                                ((ShoppingListActivity) getActivity()).removeIngredient();
                             } else {
                                 FirestoreDatabase.modifyIngredient(initialIngredient);
                             }

@@ -9,16 +9,14 @@ import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class RecipeTest {
     private Recipe mockRecipe(){
         Ingredient eggs = new Ingredient("Eggs", new Date(),"Pantry",12,2,"Vegetarian");
         Ingredient milk = new Ingredient("Milk",new Date(),"Fridge",2,2,"Vegetarian");
-        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 
-        Recipe random = new Recipe("Pizza",120,2.5f,"Lunch","Tasty","Boil", ingredients);
+        Recipe random = new Recipe("Pizza",120,2.5f,"Lunch","Tasty","Boil" );
         random.addIngredient(eggs);
         random.addIngredient(milk);
 
@@ -32,7 +30,7 @@ public class RecipeTest {
     }
 
     @Test
-    public void testAddException(){
+    void testAddException(){
         Recipe recipe = mockRecipe();
         assertEquals(2, recipe.getIngredients().size());
         recipe.addIngredient(mockIngredient());
@@ -41,7 +39,7 @@ public class RecipeTest {
     }
 
     @Test
-    public void testremoveIngredient(){
+    void testremoveIngredient(){
         Recipe recipe = mockRecipe();
         assertThrows(IllegalArgumentException.class,()->{
             recipe.removeIngredient(mockIngredient());

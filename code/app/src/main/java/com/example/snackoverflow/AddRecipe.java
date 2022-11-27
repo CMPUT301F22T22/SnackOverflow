@@ -234,15 +234,9 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         });
     }
 
-    /**
-     * Sets Error for EditText view
-     * @param edt the EditText view
-     * @param errorMessage the error message
-     * */
     private void setErrorMessage(EditText edt, String errorMessage) {
         edt.setError(errorMessage);
     }
-
     /**
      * Adds the particular ingredient when prompted by the RecipeIngredientFragment
      * @param ingredient the ingredient user wants to add
