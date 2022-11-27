@@ -40,10 +40,11 @@ public class MealPlanTest {
         View fab = rule.getActivity().findViewById(R.id.add_mealplan);
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnView(fab);
-        TextView date = rule.getActivity().findViewById(R.id.text_view_date);
-        date.setText("2022-11-03");
+        TextView date = (TextView) solo.getView("text_view_date");
+        solo.clickOnView(date);
+        solo.clickOnButton(2);
         solo.clickOnRadioButton(0);
-        Spinner spinner = fab.findViewById(R.id.spinner);
+        Spinner spinner = (Spinner)solo.getView("spinner");
         spinner.setSelection(1);
         String title = (String) spinner.getAdapter().getItem(1);
         solo.enterText(((TextInputLayout)solo.getView(R.id.unit)).getEditText(), "2" );

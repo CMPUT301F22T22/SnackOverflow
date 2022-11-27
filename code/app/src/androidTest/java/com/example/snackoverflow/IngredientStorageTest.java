@@ -41,7 +41,7 @@ public class IngredientStorageTest {
         solo.enterText((EditText) solo.getView(R.id.ingredient_description_editText), "Butter");
         solo.enterText((EditText) solo.getView(R.id.ingredient_category_editText), "Baking");
         solo.enterText((EditText) solo.getView(R.id.ingredient_amount_editText), "3");
-        solo.enterText((EditText) solo.getView(R.id.ingredient_location_editText), "Fridge");
+//        solo.enterText((EditText) solo.getView(R.id.ingredient_location_editText), "Fridge");
         solo.enterText((EditText) solo.getView(R.id.ingredient_unit_editText), "1");
         solo.enterText((EditText) solo.getView(R.id.ingredient_bestBefore_editText), "2022-09-08");
         solo.clickOnButton("OK");
