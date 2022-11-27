@@ -237,9 +237,39 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 String prepTime = prepField.getText().toString();
                 String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
-                if (titleField.equals("") || category.equals("") || servings.equals("") ||
-                        ingredients.equals("") || comments.equals("")) {
-                } else {
+
+                boolean invalidInput = false;
+
+                if (title.isEmpty()) {
+                    invalidInput = true;
+                    setErrorMessage(titleField, "Title must not be empty");
+                }
+                if (category.isEmpty() ) {
+                    invalidInput = true;
+                    setErrorMessage(categoryField, "Category must not be empty");
+                }
+                if (servings.isEmpty() || Float.parseFloat(servings) == 0) {
+                    invalidInput = true;
+                    setErrorMessage(servingsField,
+                            "Serving size must be a number greater than zero");
+                }
+                if (prepTime.isEmpty() || Integer.parseInt(prepTime) == 0) {
+                    invalidInput = true;
+                    setErrorMessage(prepField,
+                            "Prep time must be a number greater than zero");
+                }
+                if (instructions.isEmpty()) {
+                    System.out.println("in instructions empty");
+                    invalidInput = true;
+                    setErrorMessage(instructionsField,
+                            "Instructions must not be empty");
+                }
+                if(ingredients.isEmpty()) {
+                    invalidInput = true;
+                    addIngredient.setError("At least one ingredient is required");
+                }
+                
+                if (!invalidInput){
                     Intent modifyIntent = new Intent();
                     modifyIntent.putExtra("ACTION_TYPE", "EDIT");
                     modifyIntent.putExtra("recipeId", recipeId);
@@ -266,6 +296,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putStringArrayListExtra("ingredientCategory", ingredientCategory);
                     setResult(RESULT_OK, modifyIntent);
                     finish();
+
                 }
             }
         });
@@ -306,6 +337,15 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 new DeleteConformationFragment<Recipe>(recipe, recipe.getTitle()).show(getSupportFragmentManager(), "Delete_Ingredient");
             }
         });
+    }
+
+    /**
+     * Sets Error for EditText view
+     * @param edt the EditText view
+     * @param errorMessage the error message
+     * */
+    private void setErrorMessage(EditText edt, String errorMessage) {
+        edt.setError(errorMessage);
     }
 
     /**

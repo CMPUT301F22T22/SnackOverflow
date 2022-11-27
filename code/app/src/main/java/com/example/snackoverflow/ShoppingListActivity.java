@@ -56,6 +56,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
     private final static HashMap<String, Integer> firebase_ingredient_storage_hashmap = new HashMap<>();
     private String currSortOrder = "inc";
+    private Ingredient currIngredientSelected;
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -297,6 +298,54 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         });
 
 
+    }
+
+    public void handleSortBy(int position) {
+        switch (position) {
+            case 0:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(shoppingItems, new SortComparator.TitleComparator().reversed());
+                } else {
+                    Collections.sort(shoppingItems, new SortComparator.TitleComparator());
+                }
+                break;
+            case 1:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator().reversed());
+                } else {
+                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator());
+                }
+                break;
+        }
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
+    public void handleSortOrder(int position) {
+        if (position == 1 && currSortOrder.equals("inc")) {
+            Collections.reverse(shoppingItems);
+            currSortOrder = "dec";
+        } else if (position == 0 && currSortOrder.equals("dec")) {
+            Collections.reverse(shoppingItems);
+            currSortOrder = "inc";
+        }
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
+    public void addSelectedIngredientToStorage(View v) {
+        int position = shoppingList.getPositionForView((View) v.getParent());
+        Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
+        currIngredientSelected = selectedIngredient;
+        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "ADD_SHOPPING_ITEMS");
+
+    }
+
+    /**
+     * Function to update shopping list ingredients after
+     * the user adds ingredient to ingredient storage
+     */
+    public void removeIngredient(){
+        shoppingItems.remove(this.currIngredientSelected);
+        shoppingListAdapter.notifyDataSetChanged();
     }
 
     /**
