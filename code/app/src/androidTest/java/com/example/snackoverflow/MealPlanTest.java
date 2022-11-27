@@ -5,11 +5,13 @@ import static org.junit.Assert.assertTrue;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;
@@ -38,13 +40,16 @@ public class MealPlanTest {
         View fab = rule.getActivity().findViewById(R.id.add_mealplan);
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnView(fab);
-        TextView date = fab.findViewById(R.id.text_view_date);
+        TextView date = rule.getActivity().findViewById(R.id.text_view_date);
         date.setText("2022-11-03");
         solo.clickOnRadioButton(0);
-        onView()
+        Spinner spinner = fab.findViewById(R.id.spinner);
+        spinner.setSelection(1);
+        String title = (String) spinner.getAdapter().getItem(1);
+        solo.enterText(((TextInputLayout)solo.getView(R.id.unit)).getEditText(), "2" );
         solo.clickOnButton("Add");
 
-        assertTrue(solo.waitForText("Butter", 1, 2000));
+        assertTrue(solo.waitForText(title, 1, 2000));
     }
 
 }
