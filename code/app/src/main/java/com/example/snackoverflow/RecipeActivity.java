@@ -297,7 +297,10 @@ public class RecipeActivity extends AppCompatActivity {
         }
         recipeArrayAdapter.notifyDataSetChanged();
     }
-
+    /**
+     * loads an image from firestore for a specific recipe
+     * @param recipe the recipe that we are trying to get image for
+     * */
     public void loadImage(Recipe recipe) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipe.getId()+".jpg");
         try {

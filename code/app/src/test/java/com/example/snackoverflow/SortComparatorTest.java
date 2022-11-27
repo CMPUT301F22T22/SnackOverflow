@@ -33,5 +33,5 @@ public class SortComparatorTest {
         Assert.assertEquals(new SortComparator.CategoryComparator().compare(recipe1, recipe2), -1);
         Assert.assertEquals(new SortComparator.CategoryComparator().compare(recipe2, recipe1), 1);
     }
-    
+
 }

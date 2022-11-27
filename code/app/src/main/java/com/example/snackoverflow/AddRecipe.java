@@ -39,8 +39,6 @@ import kotlin.jvm.functions.Function1;
  * @see Recipe
  * @see RecipeActivity
  * */
-// TODO: How to request user permission for gallery access with the new
-// Android API
 public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
@@ -330,7 +328,10 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     }
 
     // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
-
+    /**
+     * Sets the height of the ingredients listview based on the number of children it has
+     * @param listView the listview it checks to set height
+     * */
     private void setListViewHeightBasedOnChildren(ListView listView) {
         Log.e("Listview Size ", "" + listView.getCount());
         ListAdapter listAdapter = listView.getAdapter();

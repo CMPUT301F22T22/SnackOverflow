@@ -432,6 +432,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         deleteButton.setEnabled(state);
     }
 
+    /**
+     * Fetches ingredients for this particular recipe from firestore
+     * */
     public void fetchIngredients() {
         FirebaseFirestore.getInstance()
                 .collection("recipe")
@@ -462,6 +465,9 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         // Set ingredients text view
     }
 
+    /**
+     * Get a value from firestore which notifies our app that the image has been changed.
+     * */
     public void getImageTracker() {
         FirebaseFirestore.getInstance()
                 .collection("recipe")
@@ -497,6 +503,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
     // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
 
+    /**
+     * Sets the height of the ingredients listview based on the number of children it has
+     * @param listView the listview it checks to set height
+     * */
     private void setListViewHeightBasedOnChildren(ListView listView) {
         Log.e("Listview Size ", "" + listView.getCount());
         ListAdapter listAdapter = listView.getAdapter();
