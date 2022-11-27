@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -19,6 +20,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     ExpandableListView mealslist;
     ArrayList<Mealday> meals = new ArrayList<>();
     ExpandableListAdapter mealdayAdapter;
+    TextView week;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +74,18 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
                 return false;
             }
         });
+        week = findViewById(R.id.date_textview);
+        Calendar cal = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("MMM dd");
+        String startDate = dateFormat.format(cal.getTime());
+        cal.add(Calendar.DAY_OF_MONTH,6);
+        String endDate = dateFormat.format(cal.getTime());
+        week.setText(startDate+" - "+endDate);
         mealslist = (ExpandableListView) findViewById(R.id.mealplanner_list);
+
         FloatingActionButton addMeal = findViewById(R.id.add_mealplan);
 //        data();
+
 
         FragmentManager fm = getSupportFragmentManager();
         mealdayAdapter = new MealdayAdapter(this,meals,fm);
