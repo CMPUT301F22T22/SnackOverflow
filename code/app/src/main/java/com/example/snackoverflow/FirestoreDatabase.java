@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -164,89 +165,6 @@ public class FirestoreDatabase {
         });
     };
 
-
-
-    static void fetchRecipesForMealPlan(ArrayList<Recipe> recipes) {
-        ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                recipes.clear();
-                try {
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        String id = doc.getId();
-                        System.out.println(id);
-                        Map<String, Object> data = doc.getData();
-                        String title = data.get("title").toString();
-                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
-                        float servings = Float.parseFloat(data.get("servings").toString());
-                        String category = data.get("category").toString();
-                        String instructions = data.get("instructions").toString();
-                        String comments = data.get("comments").toString();
-
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
-                        int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
-                        try {
-                            File localFile = File.createTempFile("tempfile", ".jpg");
-                            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                            category, comments, instructions, imgBitmap);
-                                    recipes.add(recipe);
-//                                    recipeArrayAdapter.notifyDataSetChanged();
-//                                handleSortBy(0);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
-                                            category, comments, instructions, null);
-                                    recipes.add(recipe);
-//                                    recipeArrayAdapter.notifyDataSetChanged();
-//                                handleSortBy(0);
-                                }
-                            });
-                        } catch (IOException e) {
-
-                        }
-                    }
-//                    recipeArrayAdapter.notifyDataSetChanged();
-                } catch (NullPointerException e) {
-                }
-            }
-
-//        recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-//                    FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    Log.w(IngredientsTAG, "Failed to fetch ingredients.",error);
-//                    return;
-//                }
-//                recipes.clear();
-//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-//                {
-//                    Log.d(IngredientsTAG, "Ingredients retrieved successfully");
-//                    String id = doc.getId();
-//                    String title = (String) doc.getData().get("title");
-//                    String location = (String) doc.getData().get("location");
-//                    int amount = doc.getLong("amount").intValue();
-//                    int unit = doc.getLong("unit").intValue();
-//                    Date bestBefore = doc.getDate("bestBefore");
-//                    String category = (String) doc.getData().get("category");
-//                    Ingredient ingredientItem = new Ingredient(title, bestBefore, location, amount, unit, category);
-//                    ingredientItem.id = id;
-//                    recipes.add(ingredientItem); // Adding the ingredients from FireStore
-//                }
-//                // Notifying the adapter to render any new data fetched
-//                recipeArrayAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
-//            }
-//        });
-
-        });
-    }
-
     /**
      * Add an ShoppingList Item to the Firebase Storage
      * */
@@ -294,7 +212,12 @@ public class FirestoreDatabase {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
-                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    if (uri != null) {
+                        FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    } else {
+                        Uri defaultUri = Uri.parse("android.resource://com.example.snackoverflow/drawable/food_icon");
+                        FirestoreDatabase.uploadImage(defaultUri, documentReference.getId());
+                    }
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
@@ -304,7 +227,7 @@ public class FirestoreDatabase {
                 }
             });
     };
-
+    
     /**
      * deletes a recipe from the storage
      * @param id id of the recipe to be deleted
@@ -348,7 +271,7 @@ public class FirestoreDatabase {
 
     };
 
-    static void modifyMealPlan(Mealday mealday) {
+        static void modifyMealPlan(Mealday mealday) {
 //            System.out.println("Im here ar modify");
 //            Map<String,Object> city = new HashMap<>();
 //            city.put("name","LA");
@@ -469,7 +392,17 @@ public class FirestoreDatabase {
             String filename = id;
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
-            storageReference.putFile(uri);
+            storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    System.out.println("Working");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println("Not working");
+                }
+            });
         }
     };
 
