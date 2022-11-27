@@ -31,6 +31,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -143,7 +144,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         //Inflate the layout
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.mealplanner_add_meal_fragment, null);
         spinner = view.findViewById(R.id.spinner);
-        TextViewDate = view.findViewById(R.id.text_view_date);
+        TextInputEditText TextViewDate = view.findViewById(R.id.text_view_date);
         ingredientRadioButton = view.findViewById(R.id.radio_button_ingredient);
         recipeRadioButton = view.findViewById(R.id.radio_button_recipe);
         ingredientsView = view.findViewById(R.id.ingredients_view);
