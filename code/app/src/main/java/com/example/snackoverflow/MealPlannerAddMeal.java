@@ -19,9 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -82,9 +84,11 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     ArrayAdapter<CharSequence> spinnerAdapter;
     private TextView TextViewDate;
     private RadioButton ingredientRadioButton;
+    private LinearLayout linearLayout;
     private RadioButton recipeRadioButton;
     private ListView ingredientsView;
     private TextInputLayout unit;
+    private TextInputEditText unit_editText;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private Button button;
     private TextInputLayout title;
@@ -325,6 +329,9 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         ingredientRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
+//                params.addRule(RelativeLayout.BELOW,R.id.ingredients_view);
+
                 spinner.setVisibility(View.VISIBLE);
                 spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, ingredientsNames);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -335,6 +342,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 unit.setHint("Unit");
                 button.setVisibility(View.VISIBLE);
                 title.setVisibility(View.VISIBLE);
+
                 ingredientsView.setVisibility(View.VISIBLE);
             }
         });
@@ -342,6 +350,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
         recipeRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
+//                params.addRule(RelativeLayout.BELOW,R.id.radiogroup);
                 spinner.setVisibility(View.VISIBLE);
                 spinnerAdapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, recipeNames);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -366,6 +376,8 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 addedIngredients.add(foo);
                 ingredientArrayAdapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(ingredientsView);
+                spinner.setSelection(0);
+                unit.clearFocus();
             }
         });
 

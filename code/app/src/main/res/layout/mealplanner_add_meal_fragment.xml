@@ -74,54 +74,70 @@
 
             </RadioGroup>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/text_input_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="140dp"
-                android:visibility="gone">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Title" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <ListView
-                android:id="@+id/ingredients_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/text_input_title"
-                android:layout_marginTop="15dp"
-                android:visibility="gone">
-
-            </ListView>
 
             <LinearLayout
+
                 android:id="@+id/linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ingredients_view"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/radiogroup"
+
                 android:baselineAligned="true"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:weightSum="100">
 
 
-                <Spinner
-                    android:id="@+id/spinner"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="13dp"
-                    android:layout_weight="35"
-                    android:background="#E1E3E5"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Title" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ListView
+                    android:id="@+id/ingredients_view"
+                    android:layout_width="349dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_input_title"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:visibility="gone">
+
+                </ListView>
+            <LinearLayout
+
+                android:id="@+id/linear2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/radiogroup"
+
+                android:baselineAligned="true"
+                android:orientation="horizontal"
+                android:weightSum="100">
+                <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="35"
+                        android:background="#E1E3E5"
+                        android:visibility="gone" />
+
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/unit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_weight="65"
                     android:visibility="gone">
 
@@ -131,7 +147,7 @@
                         android:hint="Unit"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
-
+            </LinearLayout>
             </LinearLayout>
 
             <Button
