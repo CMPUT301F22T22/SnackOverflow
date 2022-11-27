@@ -432,7 +432,7 @@ public class FirestoreDatabase {
                                     loadImage(recipe);
                                 }
                                 catch(Exception e){
-                                    mealsfortheDay.add(recipe);
+                                    //mealsfortheDay.add(recipe);
                                 }
                                 mealsfortheDay.add(recipe);
                             }

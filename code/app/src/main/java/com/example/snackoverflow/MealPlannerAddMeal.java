@@ -170,15 +170,21 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
                         getContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        onDateSetListener,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // on below line we are setting date to our edit text.
+                                TextViewDate.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
+                            }
+                        },
                         year, month, day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 518400000L);
-                dialog.getDatePicker().setMinDate(cal.getTimeInMillis());
-                dialog.show();
+
+                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+                datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis() + 518400000L);
+                datePickerDialog.show();
             }
         });
         onDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -267,7 +273,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 //                                    for (int i =1;i<=recipeDataList.size();i++){
 //                                        recipeNames.add(recipeDataList.get(i-1).getTitle());
 //                                    }
-//                                    spinnerAdapter.notifyDataSetChanged();
+                                    spinnerAdapter.notifyDataSetChanged();
 //                                    spinner.setAdapter(spinnerAdapter);
 //                                    spinner.setSelection(Arrays.asList(recipeNames).indexOf(recipe.getTitle()));
 //                                    spinnerAdapter.notifyDataSetChanged();

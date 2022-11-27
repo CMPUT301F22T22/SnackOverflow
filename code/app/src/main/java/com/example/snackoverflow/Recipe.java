@@ -44,18 +44,6 @@ public class Recipe implements Serializable, Parcelable {
         this.imageBitmap = imgBitmap;
     }
 
-    public Recipe(String id, String title, int prepTime, float servings, String category, String comments, String instructions,ArrayList<Ingredient> ingredients, @Nullable Bitmap imgBitmap) {
-        this.id = id;
-        this.title = title;
-        this.preptime = prepTime;
-        this.servings = servings;
-        this.recipeCategory = category;
-        this.instructions = instructions;
-        this.comments = comments;
-        this.ingredients = ingredients;
-        this.imageBitmap = imgBitmap;
-    }
-
     protected Recipe(Parcel in) {
         id = in.readString();
         title = in.readString();
@@ -78,6 +66,18 @@ public class Recipe implements Serializable, Parcelable {
             return new Recipe[size];
         }
     };
+
+    public Recipe(String id, String title, int prep_time, float servings, String category, String comments, String instructions, ArrayList<Ingredient> ingredients, Bitmap imgBitmap) {
+        this.id = id;
+        this.title = title;
+        this.preptime = prep_time;
+        this.servings = servings;
+        this.recipeCategory = category;
+        this.instructions = instructions;
+        this.comments = comments;
+        this.ingredients = ingredients;
+        this.imageBitmap = imgBitmap;
+    }
 
     public String getId() {
         return id;
