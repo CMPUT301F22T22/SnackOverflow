@@ -9,8 +9,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -23,9 +30,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.EventListener;
 
 import java.lang.ref.Reference;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -40,10 +51,15 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
     private ListView shoppingList;
     private ArrayAdapter<Ingredient> shoppingListAdapter;
     private ArrayList<Ingredient> shoppingItems;
-    private final static ArrayList<String> firebase_ingredient_meal_plan_list = new ArrayList<>();
-    private final static ArrayList<String> firebase_ingredient_storage_list = new ArrayList<>();
-    private final static ArrayList<String> shoppingItemsString = new ArrayList<>();
-
+    private final static ArrayList<Ingredient> firebase_ingredient_meal_plan_list = new ArrayList<>();
+    private final static ArrayList<Ingredient> firebase_ingredient_storage_list = new ArrayList<>();
+    private final static ArrayList<String> toRemove = new ArrayList<>();
+    private final static ArrayList<String> checkedList = new ArrayList<>();
+    private final static ArrayList<Integer> mealServing = new ArrayList<>();
+    private final static HashMap<String, Integer> firebase_ingredient_meal_plan_hashmap = new HashMap<>();
+    private final static HashMap<String, Integer> firebase_ingredient_storage_hashmap = new HashMap<>();
+    private String currSortOrder = "inc";
+    private Ingredient currIngredientSelected;
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -54,9 +70,6 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
         shoppingItems = new ArrayList<>();
-        // Adding two demo ingredients to demonstrate functionality
-        shoppingItems.add(new Ingredient("Apple", 3, 4, "Fresh"));
-        shoppingItems.add(new Ingredient("Bread", 3, 1, "Bakery"));
 
         // Linking the listview to an arraylist and setting adapter
         shoppingList = findViewById(R.id.shopping_list_storage_list);
@@ -66,6 +79,7 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         FirebaseFirestore db_instance = FirebaseFirestore.getInstance();
         CollectionReference ingredientsCol = db_instance.collection("ingredient");
         CollectionReference MealPlanCol = db_instance.collection("meal_plan");
+        CollectionReference checkedCol = db_instance.collection("shopping_list");
 
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -76,14 +90,18 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     return;
                 }
                 firebase_ingredient_storage_list.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     Log.d("lol", "Ingredients retrieved successfully");
                     String id = doc.getId();
                     String title = (String) doc.getData().get("title");
-                    firebase_ingredient_storage_list.add(title); // Adding the ingredients from FireStore
+                    String category = doc.get("category").toString();
+                    Integer unit = Integer.parseInt(doc.get("unit").toString());
+                    Integer amount = Integer.parseInt(doc.get("amount").toString());
+                    firebase_ingredient_storage_list.add(new Ingredient(title, amount, unit, category)); // Adding the ingredients from FireStore
                 }
+
             }
+
         });
 
         MealPlanCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -94,35 +112,182 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
                     //Log.w(IngredientsTAG, "Failed to fetch ingredients.", error);
                     return;
                 }
+                toRemove.clear();
                 firebase_ingredient_meal_plan_list.clear();
-                shoppingItemsString.clear();
+                shoppingItems.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     ArrayList<Object> mealsForDay = (ArrayList<Object>) doc.getData().get("meals");
-                    for (Object obj : mealsForDay) {
-                        Map<String, Object> mapping = (Map<String, Object>) obj;
-                        ArrayList<String> mealplaningredients = (ArrayList<String>) mapping.get("ingredients");
-                        for (String mealplaningredient : mealplaningredients) {
-                            firebase_ingredient_meal_plan_list.add(mealplaningredient);
+                    for (Object meal : mealsForDay) {
+                        Map<String, Object> mealMap = (Map<String, Object>) meal;
+//                        String id = mealMap.get("id").toString();
+                        Object servings = (Object) mealMap.get("servings");
+                        //Integer servingsInt = servings.intValue();
+                        ArrayList<Object> ingredients = (ArrayList<Object>) mealMap.get("ingredients");
+                        //ArrayList<Ingredient> ingredients2 = new ArrayList<>();
+                        for (Object ing: ingredients) {
+                            Map<String, Object> ingredMap = (Map<String, Object>) ing;
+                            String title = ingredMap.get("title").toString();
+                            String category = ingredMap.get("category").toString();
+                            Integer unit = Integer.parseInt(ingredMap.get("unit").toString());
+                            Integer amount = Integer.parseInt(ingredMap.get("amount").toString());
+                            firebase_ingredient_meal_plan_list.add(new Ingredient(title, amount, unit, category));
                         }
                     }
                 }
-                for (Ingredient ingredientShoppingItems: shoppingItems) {
-                    shoppingItemsString.add(ingredientShoppingItems.getTitle());
+                Log.d("arrlist", firebase_ingredient_meal_plan_list.toString());
+                firebase_ingredient_meal_plan_hashmap.clear();
+                firebase_ingredient_storage_hashmap.clear();
+
+
+                for (Ingredient ing: firebase_ingredient_meal_plan_list) {
+                    int count = firebase_ingredient_meal_plan_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_meal_plan_hashmap.get(ing.getTitle()) : 0;
+                    firebase_ingredient_meal_plan_hashmap.put(ing.getTitle(), count + ing.getUnit());
                 }
-                for (String ing: firebase_ingredient_meal_plan_list) {
-                    if (!firebase_ingredient_storage_list.contains(ing)) {
-                        if (!shoppingItemsString.contains(ing)) {
-                            shoppingItems.add(new Ingredient(ing, 3, 4, "Fresh"));
+
+                for (Ingredient ing: firebase_ingredient_storage_list) {
+                    int count = firebase_ingredient_storage_hashmap.containsKey(ing.getTitle()) ? firebase_ingredient_storage_hashmap.get(ing.getTitle()) : 0;
+                    firebase_ingredient_storage_hashmap.put(ing.getTitle(), count + ing.getUnit());
+                }
+
+                Log.d("mapmeal", firebase_ingredient_meal_plan_hashmap.toString());
+                Log.d("mapstorage", firebase_ingredient_storage_hashmap.toString());
+                Log.d("mapingredient", firebase_ingredient_storage_hashmap.toString());
+                Log.d("shoppinglistbefore", String.valueOf(shoppingItems.size()));
+
+                // Handle duplicated ingredients which are present in storage
+                String ingCatStorage = "unknown";
+                int ingAmountStorage = 0;
+                for (String ingMeal: firebase_ingredient_meal_plan_hashmap.keySet()) {
+                    for (String ingStorage: firebase_ingredient_storage_hashmap.keySet()) {
+                        if (ingMeal.equals(ingStorage)) {
+                            Log.d("itsequalbro", ingMeal);
+                            if (firebase_ingredient_meal_plan_hashmap.get(ingMeal) > firebase_ingredient_storage_hashmap.get(ingMeal)) {
+                                Log.d("itsmorebro", ingMeal);
+                                for (Ingredient ingObject: firebase_ingredient_storage_list) {
+                                    Log.d("why", firebase_ingredient_meal_plan_hashmap.get(ingMeal).toString());
+                                    if (ingMeal.equals(ingObject.getTitle()) && !toRemove.contains(ingMeal)) {
+                                        ingCatStorage = ingObject.getCategory();
+                                        ingAmountStorage = ingObject.getAmount();
+                                        toRemove.add(ingMeal);
+                                        shoppingItems.add(new Ingredient(ingMeal, ingAmountStorage, firebase_ingredient_meal_plan_hashmap.get(ingMeal) - firebase_ingredient_storage_hashmap.get(ingMeal), ingCatStorage));
+                                        Log.d("hey", "lol");
+                                        shoppingListAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                            else {
+                                toRemove.add(ingMeal);
+                            }
+                        }
+                }
+                Log.d("shoppinglistafter", String.valueOf(shoppingItems.size()));
+                Log.d("toremove", String.valueOf(toRemove.toString()));
+
+                }
+                for (String removeob: toRemove) {
+                    firebase_ingredient_meal_plan_hashmap.remove(removeob);
+                }
+
+                // Handle ingredients (duplicated and non-duplicated in meal plan) which are NOT in storage
+                for (String ing: firebase_ingredient_meal_plan_hashmap.keySet()) {
+                    String ingCat = "Unknown";
+                    Integer ingAmount = 0;
+                    for (Ingredient ingMeal: firebase_ingredient_meal_plan_list) {
+                        if (ing == ingMeal.getTitle()) {
+                            ingCat = ingMeal.getCategory();
+                            ingAmount = ingMeal.getAmount();
+                        }
+                    }
+                    shoppingItems.add(new Ingredient(ing, ingAmount, firebase_ingredient_meal_plan_hashmap.get(ing), ingCat));
+                    shoppingListAdapter.notifyDataSetChanged();
+                }
+                Log.d("shoppinglistafter1", String.valueOf(shoppingItems.size()));
+
+
+                checkedCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        checkedList.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            Object isCheckedItem = doc.getData().get("title");
+                            Log.d("founditem", isCheckedItem.toString());
+                            checkedList.add(isCheckedItem.toString());
+                        }
+                    }
+                });
+
+                Log.d("checkedlistafter2", String.valueOf(checkedList.size()));
+                Log.d("shoppinglistafter2", String.valueOf(shoppingItems.size()));
+
+                for (Ingredient ing: shoppingItems) {
+                    Log.d("whyman", ing.getTitle());
+                    for (String ing1: checkedList) {
+                        Log.d("whyman1", ing.getTitle());
+                        if (ing.getTitle().equals(ing1)) {
+                            Log.d("iminherebro", String.valueOf(shoppingItems.indexOf(ing)));
+                            ing.setIsCheckedShoppingList(true);
                             shoppingListAdapter.notifyDataSetChanged();
+
                         }
                     }
                 }
+
+            }
+
+        });
+        String[] sortBySpinnerList = new String[] {"Title", "Category"};
+        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
+        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
+        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortOrderSpinner.setAdapter(sortOrderAdapter);
+
+        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
+        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
+
+        sortByLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBySpinner.performClick();
             }
         });
 
-        //ArrayList<Ingredient> firebaseIngredients = FirestoreDatabase.getIngredientsStorageList();
-        Log.d("debugging", String.valueOf(firebase_ingredient_meal_plan_list));
-        Log.d("debugging", String.valueOf(firebase_ingredient_storage_list));
+        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortOrderSpinner.performClick();
+            }
+        });
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortBy(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSortOrder(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // Setting up NavBar
         NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
@@ -172,6 +337,54 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
 
     }
 
+    public void handleSortBy(int position) {
+        switch (position) {
+            case 0:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(shoppingItems, new SortComparator.TitleComparator().reversed());
+                } else {
+                    Collections.sort(shoppingItems, new SortComparator.TitleComparator());
+                }
+                break;
+            case 1:
+                if (currSortOrder.equals("dec")) {
+                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator().reversed());
+                } else {
+                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator());
+                }
+                break;
+        }
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
+    public void handleSortOrder(int position) {
+        if (position == 1 && currSortOrder.equals("inc")) {
+            Collections.reverse(shoppingItems);
+            currSortOrder = "dec";
+        } else if (position == 0 && currSortOrder.equals("dec")) {
+            Collections.reverse(shoppingItems);
+            currSortOrder = "inc";
+        }
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
+    public void addSelectedIngredientToStorage(View v) {
+        int position = shoppingList.getPositionForView((View) v.getParent());
+        Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
+        currIngredientSelected = selectedIngredient;
+        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "ADD_SHOPPING_ITEMS");
+
+    }
+
+    /**
+     * Function to update shopping list ingredients after
+     * the user adds ingredient to ingredient storage
+     */
+    public void removeIngredient(){
+        shoppingItems.remove(this.currIngredientSelected);
+        shoppingListAdapter.notifyDataSetChanged();
+    }
+
     /**
      * Add ingredient to the listview when the OK button is pressed in the user-friendly fragment
      * @param selectedIngredient
@@ -181,4 +394,29 @@ public class ShoppingListActivity extends AppCompatActivity implements ShoppingL
         // Add ingredient to list when 'OK' is pressed in the fragment
         shoppingListAdapter.add(selectedIngredient);
     }
+
+    public void onCheckChange(View view) {
+        String ingTitle;
+        String ingCat;
+        Integer ingAmount;
+        Integer ingUnit;
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+        int position = shoppingList.getPositionForView((View) view.getParent());
+
+        // Check which checkbox was clicked
+        if (checked) {
+            ingTitle = shoppingItems.get(position).getTitle();
+            HashMap<String, Object> sendToFirebase = new HashMap<>();
+            sendToFirebase.put("title", ingTitle);
+            sendToFirebase.put("isChecked", true);
+            FirestoreDatabase.addShoppingItem(sendToFirebase);
+        }
+        else {
+            ingTitle = shoppingItems.get(position).getTitle();
+            FirestoreDatabase.deleteShoppingItem(ingTitle);
+        }
+
+    }
+
 }

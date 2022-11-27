@@ -114,7 +114,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         imageViewRadius = imageView.getLayoutParams().width;
         //
 
-        imageTracker = intent.getIntExtra("imageTracker", 0);
+        getImageTracker();
         // Register activity result to handle the Image the user selected
         ActivityResultLauncher selectImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -188,7 +188,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
         ingredients = new ArrayList<Ingredient>();
 
-        fetchIngredients(recipeId);
+        fetchIngredients();
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -236,9 +236,39 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 String prepTime = prepField.getText().toString();
                 String instructions = instructionsField.getText().toString();
                 String comments = commentsField.getText().toString();
-                if (titleField.equals("") || category.equals("") || servings.equals("") ||
-                        ingredients.equals("") || comments.equals("")) {
-                } else {
+
+                boolean invalidInput = false;
+
+                if (title.isEmpty()) {
+                    invalidInput = true;
+                    setErrorMessage(titleField, "Title must not be empty");
+                }
+                if (category.isEmpty() ) {
+                    invalidInput = true;
+                    setErrorMessage(categoryField, "Category must not be empty");
+                }
+                if (servings.isEmpty() || Float.parseFloat(servings) == 0) {
+                    invalidInput = true;
+                    setErrorMessage(servingsField,
+                            "Serving size must be a number greater than zero");
+                }
+                if (prepTime.isEmpty() || Integer.parseInt(prepTime) == 0) {
+                    invalidInput = true;
+                    setErrorMessage(prepField,
+                            "Prep time must be a number greater than zero");
+                }
+                if (instructions.isEmpty()) {
+                    System.out.println("in instructions empty");
+                    invalidInput = true;
+                    setErrorMessage(instructionsField,
+                            "Instructions must not be empty");
+                }
+                if(ingredients.isEmpty()) {
+                    invalidInput = true;
+                    addIngredient.setError("At least one ingredient is required");
+                }
+                
+                if (!invalidInput){
                     Intent modifyIntent = new Intent();
                     modifyIntent.putExtra("ACTION_TYPE", "EDIT");
                     modifyIntent.putExtra("recipeId", recipeId);
@@ -265,13 +295,13 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putStringArrayListExtra("ingredientCategory", ingredientCategory);
                     setResult(RESULT_OK, modifyIntent);
                     finish();
+
                 }
             }
         });
 
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients, "recipe_ingredient_preview");
         ingredientsView.setAdapter(ingredientArrayAdapter);
-        setListViewHeightBasedOnChildren(ingredientsView);
 
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,6 +339,15 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 finish();
             }
         });
+    }
+
+    /**
+     * Sets Error for EditText view
+     * @param edt the EditText view
+     * @param errorMessage the error message
+     * */
+    private void setErrorMessage(EditText edt, String errorMessage) {
+        edt.setError(errorMessage);
     }
 
     /**
@@ -394,7 +433,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         deleteButton.setEnabled(state);
     }
 
-    public void fetchIngredients(String recipeId) {
+    public void fetchIngredients() {
         FirebaseFirestore.getInstance()
                 .collection("recipe")
                 .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -424,6 +463,18 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         // Set ingredients text view
     }
 
+    public void getImageTracker() {
+        FirebaseFirestore.getInstance()
+                .collection("recipe")
+                .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        Map<String, Object> data = doc.getData();
+                        imageTracker = Integer.parseInt(data.get("image_tracker").toString());
+                    }
+                });
+    }
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {
