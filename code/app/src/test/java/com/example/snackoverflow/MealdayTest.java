@@ -16,12 +16,12 @@ public class MealdayTest {
     private Mealday MockMeal(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Recipe> MockRecipe = new ArrayList<Recipe>();
-        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
-        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ));
+        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", new ArrayList<Ingredient>() ));
+        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ,new ArrayList<Ingredient>()));
+        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat" ,new ArrayList<Ingredient>() ));
+        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", new ArrayList<Ingredient>() ));
+        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat", new ArrayList() ));
+        MockRecipe.add(new Recipe("nidal", 120,2.5f,"Lunch","nice","Heat",new ArrayList<Ingredient>() ));
 
         Mealday MockMeal = null;
         try {
@@ -35,7 +35,7 @@ public class MealdayTest {
         Ingredient eggs = new Ingredient("Eggs", new Date(),"Pantry",12,2,"Vegetarian");
         Ingredient milk = new Ingredient("Milk",new Date(),"Fridge",2,2,"Vegetarian");
 
-        Recipe random = new Recipe("Pizza",120,2.5f,"Lunch","Tasty","Boil" );
+        Recipe random = new Recipe("Pizza",120,2.5f,"Lunch","Tasty","Boil", new ArrayList<Ingredient>() );
         random.addIngredient(eggs);
         random.addIngredient(milk);
 
