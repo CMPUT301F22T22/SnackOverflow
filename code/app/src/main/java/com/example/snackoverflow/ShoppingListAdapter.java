@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -54,9 +53,6 @@ public class ShoppingListAdapter extends ArrayAdapter<Ingredient>{
 
         TextView itemCategory = view.findViewById(R.id.shopping_list_item_category);
         itemCategory.setText(ingredient.getCategory());
-
-        CheckBox checkBox = view.findViewById(R.id.check_shopping_list_item);
-        checkBox.setChecked(ingredient.getCheckedShoppingList());
 
         return view;
     }

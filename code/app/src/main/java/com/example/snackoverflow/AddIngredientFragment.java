@@ -264,12 +264,7 @@ public class AddIngredientFragment extends DialogFragment {
                             initialIngredient.setUnit(ingredientUnitInt);
                             initialIngredient.setCategory(ingredientCategoryString);
                             initialIngredient.setLocation(ingredientLocationString);
-                            if (finalIsShoppingListItem) {
-                                FirestoreDatabase.addIngredient(initialIngredient);
-                                FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
-                            } else {
-                                FirestoreDatabase.modifyIngredient(initialIngredient);
-                            }
+                            FirestoreDatabase.modifyIngredient(initialIngredient);
                         }
                     }).create();
 
