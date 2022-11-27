@@ -21,7 +21,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -204,7 +206,12 @@ public class FirestoreDatabase {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d(RecipeTag, "Recipe document snapshot written with ID: " + documentReference.getId());
-                    FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    if (uri != null) {
+                        FirestoreDatabase.uploadImage(uri, documentReference.getId());
+                    } else {
+                        Uri defaultUri = Uri.parse("android.resource://com.example.snackoverflow/drawable/food_icon");
+                        FirestoreDatabase.uploadImage(defaultUri, documentReference.getId());
+                    }
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
@@ -341,7 +348,17 @@ public class FirestoreDatabase {
             String filename = id;
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference().child("recipe/"+filename+".jpg");
-            storageReference.putFile(uri);
+            storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    System.out.println("Working");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println("Not working");
+                }
+            });
         }
     };
 
