@@ -30,7 +30,7 @@ import java.util.Collections;
  * @see IngredientAdapter
  * @see IngredientDetailsActivity
  * */
-public class IngredientStorageActivity extends AppCompatActivity implements AddIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
+public class IngredientStorageActivity extends AppCompatActivity implements DeleteConformationFragment.OnFragmentInteractionListener{
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
@@ -215,11 +215,6 @@ public class IngredientStorageActivity extends AppCompatActivity implements AddI
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
         new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
-    }
-
-    @Override
-    public void onOkPressed(Ingredient selectedIngredient) {
-        FirestoreDatabase.addIngredient(selectedIngredient);
     }
 
     @Override
