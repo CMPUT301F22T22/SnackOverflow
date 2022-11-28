@@ -15,7 +15,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
+/**
+ * MealPlannerAdapter to view the meals in Recycler view
+ * @see Mealday
+ * @see MealdayAdapter
+ * */
  public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.ViewHolder> {
 
     private Context context;
@@ -24,6 +28,12 @@ import java.util.ArrayList;
     private ArrayList<Double> servings;
     private FragmentManager fm;
 
+     /**
+      * Constuctor for MealPlannerAdapter
+      * @param mealDay The day of the week and the included recipes
+      * @see Context
+      * @see FragmentManager
+      * */
     public MealPlannerAdapter(Context context, Mealday mealDay, FragmentManager fm) {
         this.context = context;
         this.mealDay = mealDay;
