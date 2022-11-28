@@ -9,77 +9,60 @@
 
     <!-- Using CardView for CircularImageView -->
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/servingsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="37dp"
+        android:paddingBottom="10dp"
+        android:text="Servings:"
+        android:textSize="15sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/recipe_servings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="37dp"
+        android:hint="9"
+        android:paddingBottom="10dp"
+        android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/categoryTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="67dp"
-                android:layout_marginTop="42dp"
-                android:text="Category: "
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+    <TextView
+        android:id="@+id/categoryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="37dp"
+        android:paddingBottom="10dp"
+        android:text="Category:"
+        android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/recipe_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="40dp"
-                android:textColor="@color/black"
-                android:hint="Lunch"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/servingsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="67dp"
-                android:paddingBottom="10dp"
-                android:text="Servings:"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/recipe_servings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="5dp"
-                android:hint="9"
-                android:paddingBottom="10dp"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-        </LinearLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/recipe_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="233dp"
+        android:layout_marginTop="37dp"
+        android:hint="Lunch"
+        android:paddingBottom="10dp"
+        android:textSize="15sp" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/recipe_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="13dp"
         android:layout_marginStart="18dp"
         android:paddingBottom="10dp"
         app:cardCornerRadius="200dp">
@@ -101,10 +84,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="67dp"
         android:layout_marginTop="9dp"
-        android:paddingLeft="5dp"
         android:text="Title"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/black"
         android:textSize="21sp" />
 
     <TextView
@@ -114,30 +94,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="95dp"
-        android:textColor="@color/black"
+        android:layout_marginEnd="35dp"
+        android:text="PrepTime"
         android:textSize="19sp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="55dp"
-        android:textColor="@color/black"
-        android:text=" min"
-        android:textSize="19sp" />
-    <ImageView
-        style="@style/Widget.AppCompat.ActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:src="@drawable/ic_baseline_timer_24"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:textSize="19sp"/>
 
 </RelativeLayout>

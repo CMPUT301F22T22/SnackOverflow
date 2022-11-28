@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -28,6 +29,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
@@ -141,9 +144,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
                     new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
-                    imageTracker += 1;
-                    Uri defaultUri = Uri.parse("android.resource://com.example.snackoverflow/drawable/food_icon");
-                    uploadImage(defaultUri, recipeId);
+                    imageTracker = 0;
                 }
                 else {
                     if (applyButton.getVisibility() == View.VISIBLE) {
@@ -247,7 +248,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     modifyIntent.putExtra("servings", Float.valueOf(servings));
                     modifyIntent.putExtra("prep_time", Integer.valueOf(prepTime));
                     modifyIntent.putExtra("instructions", instructions);
-                    modifyIntent.putExtra("image_tracker", imageTracker+2);
+                    modifyIntent.putExtra("image_tracker", imageTracker);
                     ArrayList<String> ingredientTitles = new ArrayList<>();
                     ArrayList<String> ingredientUnit = new ArrayList<>();
                     ArrayList<String> ingredientAmount = new ArrayList<>();
@@ -390,10 +391,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         deleteButton.setEnabled(state);
     }
 
-    /**
-     * Fetches ingredients for this particular recipe from firestore
-     * */
-    public void fetchIngredients() {
+    public void fetchIngredients(String recipeId) {
         FirebaseFirestore.getInstance()
                 .collection("recipe")
                 .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -423,21 +421,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         // Set ingredients text view
     }
 
-    /**
-     * Get a value from firestore which notifies our app that the image has been changed.
-     * */
-    public void getImageTracker() {
-        FirebaseFirestore.getInstance()
-                .collection("recipe")
-                .document(recipeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-                        Map<String, Object> data = doc.getData();
-                        imageTracker = Integer.parseInt(data.get("image_tracker").toString());
-                    }
-                });
-    }
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {
@@ -455,6 +438,18 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 ((CircleImageView) object).setBackground(imageViewBackground);
                 ((CircleImageView) object).setImageDrawable(imageViewDrawable);
                 ((CircleImageView) object).setPadding(4,7,6,10);
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipeId+".jpg");
+                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        System.out.println("File Deleted Successfully");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println(e);
+                    }
+                });
             }
             else{
                 Intent modifyIntent = new Intent();
@@ -468,10 +463,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
 
     // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
 
-    /**
-     * Sets the height of the ingredients listview based on the number of children it has
-     * @param listView the listview it checks to set height
-     * */
     private void setListViewHeightBasedOnChildren(ListView listView) {
         Log.e("Listview Size ", "" + listView.getCount());
         ListAdapter listAdapter = listView.getAdapter();

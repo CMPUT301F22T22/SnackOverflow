@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Recipe Activity class used to display existing recipes created by the user along with images
@@ -207,7 +205,8 @@ public class RecipeActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 recipeDataList.clear();
                 try {
-                    for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
+                    for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                    {
                         String id = doc.getId();
                         System.out.println(id);
                         Map<String, Object> data = doc.getData();
@@ -219,9 +218,13 @@ public class RecipeActivity extends AppCompatActivity {
                         String comments = data.get("comments").toString();
                         Recipe recipe = new Recipe(id, title, prep_time, servings,
                                 category, comments, instructions, null);
-                        recipeDataList.add(recipe);
-                        loadImage(recipe);
-                    }
+                        imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                        if (imageTrackingData > 0) {
+                            loadImage(recipe);
+                        } else {
+                            recipeDataList.add(recipe);
+                        }
+                        }
                     recipeArrayAdapter.notifyDataSetChanged();
                     handleSortBy(0);
                 } catch (NullPointerException e) {
@@ -299,10 +302,7 @@ public class RecipeActivity extends AppCompatActivity {
         }
         recipeArrayAdapter.notifyDataSetChanged();
     }
-    /**
-     * loads an image from firestore for a specific recipe
-     * @param recipe the recipe that we are trying to get image for
-     * */
+
     public void loadImage(Recipe recipe) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipe.getId()+".jpg");
         try {
@@ -311,19 +311,15 @@ public class RecipeActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    recipeDataList.get(recipeDataList.indexOf(recipe)).setImageBitmap(imgBitmap);
+                    recipe.setImageBitmap(imgBitmap);
+                    recipeDataList.add(recipe);
                     recipeArrayAdapter.notifyDataSetChanged();
                     handleSortBy(0);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                        loadImage(recipe);
-                    } catch (InterruptedException ex) {
-
-                    }
+                    loadImage(recipe);
                 }
             });
         } catch (IOException e) {
