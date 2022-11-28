@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,7 +25,7 @@ import java.util.Collections;
  * extends AppCompactActivity
  * implements AddingredientFragment.OnFragementInteractionListener
  * @see Ingredient
- * @see AddIngredientFragment
+ * @see AddEditIngredientFragment
  * @see IngredientAdapter
  * @see IngredientDetailsActivity
  * */
@@ -36,7 +35,6 @@ public class IngredientStorageActivity extends AppCompatActivity {
     private ArrayList<Ingredient> ingredients;
     private String currSortOrder = "inc";
 
-    // TODO: Error Check if the user adds an ingredient with incomplete details
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +80,7 @@ public class IngredientStorageActivity extends AppCompatActivity {
         sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleSortBy(position);
+                SortComparator.handleSortIngredientsBy(position, currSortOrder, ingredients, ingredientArrayAdapter);
             }
 
             @Override
@@ -94,7 +92,7 @@ public class IngredientStorageActivity extends AppCompatActivity {
         sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleSortOrder(position);
+                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, ingredients, ingredientArrayAdapter);
             }
 
             @Override
@@ -122,7 +120,7 @@ public class IngredientStorageActivity extends AppCompatActivity {
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddIngredientFragment().show(getSupportFragmentManager(), "ADD_INGREDIENT");
+                new AddEditIngredientFragment().show(getSupportFragmentManager(), "ADD_INGREDIENT");
             }
         });
 
@@ -155,50 +153,6 @@ public class IngredientStorageActivity extends AppCompatActivity {
 
     }
 
-    public void handleSortBy(int position) {
-        switch (position) {
-            case 0:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(ingredients, new SortComparator.TitleComparator().reversed());
-                } else {
-                    Collections.sort(ingredients, new SortComparator.TitleComparator());
-                }
-                break;
-            case 1:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(ingredients, new SortComparator.BestBeforeComparator().reversed());
-                } else {
-                    Collections.sort(ingredients, new SortComparator.BestBeforeComparator());
-                }
-                break;
-            case 2:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(ingredients, new SortComparator.LocationComparator().reversed());
-                } else {
-                    Collections.sort(ingredients, new SortComparator.LocationComparator());
-                }
-                break;
-            case 3:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(ingredients, new SortComparator.CategoryComparator().reversed());
-                } else {
-                    Collections.sort(ingredients, new SortComparator.CategoryComparator());
-                }
-                break;
-        }
-        ingredientArrayAdapter.notifyDataSetChanged();
-    }
-
-    public void handleSortOrder(int position) {
-        if (position == 1 && currSortOrder.equals("inc")) {
-            Collections.reverse(ingredients);
-            currSortOrder = "dec";
-        } else if (position == 0 && currSortOrder.equals("dec")) {
-            Collections.reverse(ingredients);
-            currSortOrder = "inc";
-        }
-        ingredientArrayAdapter.notifyDataSetChanged();
-    }
 
     /**
      * Deletes the particular ingredient when prompted by the delete icon
@@ -218,6 +172,6 @@ public class IngredientStorageActivity extends AppCompatActivity {
     public void editIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
-        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
+        new AddEditIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
     }
 }

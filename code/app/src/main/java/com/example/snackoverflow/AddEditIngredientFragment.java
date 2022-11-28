@@ -3,7 +3,6 @@ package com.example.snackoverflow;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,15 +13,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -39,7 +35,7 @@ import java.util.Objects;
  * Extends DialogFragment
  * @see Ingredient
  * */
-public class AddIngredientFragment extends DialogFragment {
+public class AddEditIngredientFragment extends DialogFragment {
 
     private TextInputLayout ingredientDescLayout, ingredientCategoryLayout, ingredientUnitLayout, ingredientDateLayout, ingredientAmountLayout;
     private EditText ingredientDesc;
@@ -65,11 +61,11 @@ public class AddIngredientFragment extends DialogFragment {
      * @param ingredient the ingredient passed in or selected
      * @return None
      */
-    static AddIngredientFragment newInstance(Ingredient ingredient) {
+    static AddEditIngredientFragment newInstance(Ingredient ingredient) {
         // Creates a bundle and passes it tot he Add Ingredient fragment
         Bundle args = new Bundle();
         args.putSerializable("ingredient", ingredient);
-        AddIngredientFragment fragment = new AddIngredientFragment();
+        AddEditIngredientFragment fragment = new AddEditIngredientFragment();
         fragment.setArguments(args);
         return fragment;
     }
