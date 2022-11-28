@@ -18,6 +18,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
+        
+    - name: Decode google-services.json
+      env:
+        FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
+      run: echo $FIREBASE_SECRET > ./code/app/google-services.json
 
     - name: Grant execute permission for gradlew
       working-directory: ./code
