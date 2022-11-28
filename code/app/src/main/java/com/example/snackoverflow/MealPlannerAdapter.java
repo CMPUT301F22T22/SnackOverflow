@@ -28,6 +28,8 @@ import java.util.ArrayList;
      /**
       * Constuctor for MealPlannerAdapter
       * @param mealDay The day of the week and the included recipes
+      * @param context
+      * @param fm Fragment Manager
       * @see Context
       * @see FragmentManager
       * */

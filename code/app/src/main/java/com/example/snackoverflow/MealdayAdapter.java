@@ -34,6 +34,8 @@ public class MealdayAdapter extends BaseExpandableListAdapter {
     /**
      * Constuctor for MealdayAdapter
      * @param mealdays All planned meals for the week
+     * @param context
+     * @param fm Fragment Manager
      * @see Context
      * @see FragmentManager
      * */
