@@ -189,7 +189,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                     invalidInput = true;
                     setErrorMessage(editCategoryText, "Category must not be empty");
                 }
-                if (servingItem.isEmpty() || Integer.parseInt(servingItem) == 0){
+                if (servingItem.isEmpty() || Float.parseFloat(servingItem) == 0){
                     invalidInput = true;
                     setErrorMessage(editServingText,
                             "Serving size must be a number greater than zero");
@@ -214,7 +214,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                     HashMap<String, Object> data = new HashMap<String,Object>();
                     data.put("title",titleItem);
                     data.put("category",categoryItem);
-                    data.put("servings",Integer.parseInt(servingItem));
+                    data.put("servings",Float.parseFloat(servingItem));
                     data.put("prep_time",Integer.parseInt(prepTimeItem));
                     data.put("instructions",instructionsItem);
                     data.put("comments",commentsItem);
