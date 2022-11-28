@@ -477,6 +477,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     }
                 });
     }
+    /**
+     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
+     * @param object object that is to be deleted
+     * */
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {

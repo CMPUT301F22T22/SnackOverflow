@@ -195,11 +195,9 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
 //    }
 
     /**
-     * deletes the meal when prompted by the MealPlannerAddMeal Dialog
+     * deletes the mealplan when on meals for the day exist
      * @param mealDay the day user wants to delete from the meal planner
      * */
-
-
     @Override
     public void deleteMeal(Mealday mealDay) {
         //checking the existence of this meal
@@ -211,7 +209,11 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
         ((BaseExpandableListAdapter)mealdayAdapter).notifyDataSetChanged();
     }
 
-
+    /**
+     * deletes the mealplan when prompted by the MealPlannerAddMeal Dialog
+     * @param mealday the day user wants to delete from the meal planner
+     * @param recipe the recipe to be deleted
+     * */
     @Override
     public void deleteMealPlan(Mealday mealday, Recipe recipe) {
         Integer pos = mealday.getMeals().indexOf(recipe);

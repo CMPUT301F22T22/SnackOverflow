@@ -539,7 +539,11 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
+    // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
+    /**
+     * Sets the height of the ingredients listview based on the number of children it has
+     * @param listView the listview it checks to set height
+     * */
     private void setListViewHeightBasedOnChildren(ListView listView) {
         Log.e("Listview Size ", "" + listView.getCount());
         ListAdapter listAdapter = listView.getAdapter();
