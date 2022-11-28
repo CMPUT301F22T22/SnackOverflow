@@ -84,6 +84,7 @@ public class Recipe implements Serializable, Parcelable {
         //ingredients = in.createStringArrayList();
     }
 
+    // Creator for Recipe
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
         @Override
         public Recipe createFromParcel(Parcel in) {
@@ -95,6 +96,19 @@ public class Recipe implements Serializable, Parcelable {
             return new Recipe[size];
         }
     };
+
+    /**
+     * Constructor for Recipes
+     * @param id
+     * @param title
+     * @param prep_time
+     * @param servings
+     * @param category
+     * @param comments
+     * @param instructions
+     * @param ingredients
+     * @param imgBitmap
+     */
     public Recipe(String id, String title, int prep_time, float servings, String category, String comments, String instructions, ArrayList<Ingredient> ingredients, Bitmap imgBitmap) {
         this.id = id;
         this.title = title;
@@ -243,6 +257,10 @@ public class Recipe implements Serializable, Parcelable {
         this.imageBitmap = imageBitmap;
     }
 
+    /**
+     * Describe the contents of the Recipe
+     * @return
+     */
     public int describeContents() {
         return 0;
     }

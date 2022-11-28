@@ -35,9 +35,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 
@@ -464,10 +462,11 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     }
                 });
     }
+
     /**
-     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
-     * @param object object that is to be deleted
-     * */
+     * Deletes the object passed in
+     * @param object
+     */
     @Override
     public void deleteObject(Object object) {
         if (object.getClass() == Ingredient.class) {
@@ -488,8 +487,6 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             }
         }
     }
-
-    // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
 
     /**
      * Sets the height of the ingredients listview based on the number of children it has
