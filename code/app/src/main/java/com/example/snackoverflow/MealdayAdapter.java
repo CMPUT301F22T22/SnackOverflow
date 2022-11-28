@@ -38,6 +38,7 @@ public class MealdayAdapter extends BaseExpandableListAdapter {
      * @param fm Fragment Manager
      * @see Context
      * @see FragmentManager
+     * 
      * */
     public MealdayAdapter(Context context, ArrayList<Mealday> mealdays, FragmentManager fm){
         this.context = context;
