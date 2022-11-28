@@ -95,12 +95,25 @@ public class Recipe implements Serializable, Parcelable {
             return new Recipe[size];
         }
     };
+    public Recipe(String id, String title, int prep_time, float servings, String category, String comments, String instructions, ArrayList<Ingredient> ingredients, Bitmap imgBitmap) {
+        this.id = id;
+        this.title = title;
+        this.preptime = prep_time;
+        this.servings = servings;
+        this.recipeCategory = category;
+        this.instructions = instructions;
+        this.comments = comments;
+        this.ingredients = ingredients;
+        this.imageBitmap = imgBitmap;
+    }
+
 
     /**
      * Getter for id
      * returns the firebase id of the current recipe
      * @return the string with the firebase id of current recipe
      * */
+
     public String getId() {
         return id;
     }
