@@ -191,7 +191,7 @@ public class AddIngredientFragment extends DialogFragment {
      * @param view
      * @return Ingredient Object
      */
-    public Ingredient parseFilledValues(View view, boolean isNull) {
+    public Ingredient parseFilledValues(View view) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Integer ingredientAmountInt, ingredientUnitInt;
         String ingredientDescString = ingredientDesc.getText().toString();
@@ -223,8 +223,9 @@ public class AddIngredientFragment extends DialogFragment {
 
         int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
         ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
+        String ingredientLocationString;
         try {
-            String ingredientLocationString = ingredientLocation.getText().toString();
+            ingredientLocationString = ingredientLocation.getText().toString();
         } catch (NullPointerException e) {
             ingredientLocationString = "";
             isNull = true;
@@ -281,55 +282,8 @@ public class AddIngredientFragment extends DialogFragment {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String ingredientDescString = ingredientDesc.getText().toString();
-                            int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
-                            ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
-                            try {
-                                ingredientLocationString = ingredientLocation.getText().toString();
-                            } catch (NullPointerException e) {
-                                ingredientLocationString = "";
-                                isNull = true;
-                            }
-                            String ingredientCategoryString = ingredientCategory.getText().toString();
-                            int ingredientAmountInt;
-                            int ingredientUnitInt;
-
-                            if (ingredientDescString.length() == 0) {
-                                ingredientDescLayout.setError("Cannot be empty");
-                                isNull = true;
-                            }
-
-                            try {
-                                ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
-                            } catch (NumberFormatException e) {
-                                ingredientAmountInt = 0;
-                                ingredientAmountLayout.setError("Cannot be empty");
-                                isNull = true;
-                            }
-                            try {
-                                ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
-                            } catch (NumberFormatException e) {
-                                ingredientUnitInt = 0;
-                                ingredientUnitLayout.setError("Cannot be empty");
-                                isNull = true;
-                            }
-                            String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
-                            Date ingredientBestBeforeDate = null;
-                            try {
-                                ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
-                            } catch (ParseException e) {
-                                ingredientDateLayout.setError("Cannot be empty");
-                                isNull = true;
-                                e.printStackTrace();
-                            }
-
-                            if (ingredientCategoryString.length() == 0) {
-                                ingredientCategoryLayout.setError("Cannot be empty");
-                                isNull = true;
-                            }
-
+                            Ingredient newIngredient = parseFilledValues(view);
                             if (!isNull) {
-                                Ingredient newIngredient = parseFilledValues(view);
                                 FirestoreDatabase.addIngredient(newIngredient);
                             }
                         }
@@ -355,38 +309,26 @@ public class AddIngredientFragment extends DialogFragment {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            
+
+                            Ingredient updatedIngredient = parseFilledValues(view);
 
                             if (!isNull) {
-                                initialIngredient.setTitle(ingredientDescString);
-                                initialIngredient.setAmount(ingredientAmountInt);
-                                initialIngredient.setBestBefore(ingredientBestBeforeDate);
-                                initialIngredient.setUnit(ingredientUnitInt);
-                                initialIngredient.setCategory(ingredientCategoryString);
-                                initialIngredient.setLocation(ingredientLocationString);
-                                if (finalIsShoppingListItem) {
+                                // Modify initial ingredient
+                                initialIngredient.setTitle(updatedIngredient.getTitle());
+                                initialIngredient.setAmount(updatedIngredient.getAmount());
+                                initialIngredient.setBestBefore(updatedIngredient.getBestBefore());
+                                initialIngredient.setUnit(updatedIngredient.getUnit());
+                                initialIngredient.setCategory(updatedIngredient.getCategory());
+                                initialIngredient.setLocation(updatedIngredient.getLocation());
+                                if (isShoppingListItem) {
+                                    // If the item is from shopping list, add it to the database
                                     FirestoreDatabase.addIngredient(initialIngredient);
                                     FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
                                     ((ShoppingListActivity) getActivity()).removeIngredient();
                                 } else {
+                                    // Modify the existing ingredient in the database
                                     FirestoreDatabase.modifyIngredient(initialIngredient);
                                 }
-
-                            // Modify initial ingredient
-                            initialIngredient.setTitle(updatedIngredient.getTitle());
-                            initialIngredient.setAmount(updatedIngredient.getAmount());
-                            initialIngredient.setBestBefore(updatedIngredient.getBestBefore());
-                            initialIngredient.setUnit(updatedIngredient.getUnit());
-                            initialIngredient.setCategory(updatedIngredient.getCategory());
-                            initialIngredient.setLocation(updatedIngredient.getLocation());
-                            if (isShoppingListItem) {
-                                // If the item is from shopping list, add it to the database
-                                FirestoreDatabase.addIngredient(initialIngredient);
-                                FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
-                                ((ShoppingListActivity) getActivity()).removeIngredient();
-                            } else {
-                                // Modify the existing ingredient in the database
-                                FirestoreDatabase.modifyIngredient(initialIngredient);
                             }
                         }
                     }).create();
