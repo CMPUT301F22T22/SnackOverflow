@@ -28,6 +28,7 @@
                 android:paddingRight="6dp"
                 android:paddingBottom="10dp"
                 android:src="@drawable/ic_baseline_add_a_photo_24"
+                android:clickable="false"
                 app:layout_constraintBottom_toTopOf="@id/recipe_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -152,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:minHeight="40dp"
                     android:text="Show More" />
 
