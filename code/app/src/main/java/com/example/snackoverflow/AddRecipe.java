@@ -287,7 +287,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     }
 
     /**
-     * changes the enabilty of add views
+     * changes the enability of add views
      * @param state is the state all views enability is set too
      */
     private void changeClickState(boolean state){
