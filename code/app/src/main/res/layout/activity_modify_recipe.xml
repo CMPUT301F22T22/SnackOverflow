@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:textColor="@color/black"
-                    android:inputType="number" />
+                    android:inputType="numberDecimal" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
