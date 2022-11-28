@@ -294,27 +294,25 @@ public class FirestoreDatabase {
                         Log.w(MealsTag, "Error updating document", e);
                     }
                 });
-    };
-    static void modifyMealServings(Mealday mealday) {
-//            System.out.println("Im here ar modify");
+            //            System.out.println("Im here ar modify");
 //            Map<String,Object> city = new HashMap<>();
 //            city.put("name","LA");
 //
 //            MealPlanCol.document("Modi").set(city));
-        MealPlanCol
-                .document(mealday.getDate().toString()).update("servings", mealday.getServings())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(MealsTag, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(MealsTag, "Error updating document", e);
-                    }
-                });
+            MealPlanCol
+                    .document(mealday.getDate().toString()).update("servings", mealday.getServings())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(MealsTag, "Error updating document", e);
+                        }
+                    });
     };
 
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
@@ -382,6 +380,69 @@ public class FirestoreDatabase {
                 });
     };
 
+    static void fetchRecipestoMealPlanSpinner(ArrayAdapter<CharSequence> spinnerAdapter,ArrayList<CharSequence> recipeNames){
+        ArrayList<Recipe> recipeDataList = new ArrayList<Recipe>();
+        recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                recipeDataList.clear();
+                try {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String id = doc.getId();
+                        Map<String, Object> data = doc.getData();
+                        String title = data.get("title").toString();
+                        int prep_time = Integer.valueOf(data.get("prep_time").toString());
+                        float servings = Float.parseFloat(data.get("servings").toString());
+                        String category = data.get("category").toString();
+                        String instructions = data.get("instructions").toString();
+                        String comments = data.get("comments").toString();
+                        ArrayList<Object> ingredientArray = (ArrayList<Object>) data.get("ingredients");
+                        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+                        for (int i = 0; i < ingredientArray.size(); i++) {
+                            Map<String, Object> ingredientMap = (Map<String, Object>) ingredientArray.get(i);
+                            ingredients.add(new Ingredient(ingredientMap.get("title").toString(), Integer.valueOf(ingredientMap.get("amount").toString()),
+                                    Integer.valueOf(ingredientMap.get("unit").toString()), ingredientMap.get("category").toString()));
+                        }
+//
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/" + id + ".jpg");
+                        int imageTrackingData = Integer.valueOf(data.get("image_tracker").toString());
+                        try {
+                            File localFile = File.createTempFile("tempfile", ".jpg");
+                            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions,ingredients, imgBitmap);
+                                    recipeDataList.add(recipe);
+                                    for (int i =1;i<=recipeDataList.size();i++){
+                                        if(!recipeNames.contains(recipeDataList.get(i-1).getTitle())) {
+                                            recipeNames.add(recipeDataList.get(i - 1).getTitle());
+                                        }
+                                    }
+                                    spinnerAdapter.notifyDataSetChanged();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Recipe recipe = new Recipe(id, title, prep_time, servings,
+                                            category, comments, instructions,ingredients, null);
+                                    recipeDataList.add(recipe);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        } catch (IOException e) {
+
+                        }
+                    }
+                } catch (NullPointerException e) {
+                }
+            }
+
+        });
+    }
+
     static void addShoppingList() {};
 
     static void addToShoppingList() {};
@@ -423,6 +484,9 @@ public class FirestoreDatabase {
                     if(!Objects.equals(recipe.getId(), "00000000000000")){
                         Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         recipe.setImageBitmap(imgBitmap);
+                    }
+                    else{
+
                     }
 
 //                    recipeDataList.add(recipe);
