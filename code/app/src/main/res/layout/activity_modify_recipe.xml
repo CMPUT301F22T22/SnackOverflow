@@ -123,6 +123,21 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/recipe_ingredients_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="           Ingredients"
+                android:textAlignment="viewStart"
+                android:textColor="@color/purple_500"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_preptime" />
+
             <ListView
                 android:id="@+id/ingredient_preview"
                 android:layout_width="match_parent"
@@ -133,7 +148,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recipe_preptime" />
+                app:layout_constraintTop_toBottomOf="@id/recipe_ingredients_title" />
 
             <LinearLayout
                 android:id="@+id/linearLayout"
