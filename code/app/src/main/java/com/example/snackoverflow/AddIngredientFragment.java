@@ -20,6 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.w3c.dom.Text;
@@ -286,6 +289,13 @@ public class AddIngredientFragment extends DialogFragment {
                             if (!isNull) {
                                 FirestoreDatabase.addIngredient(newIngredient);
                             }
+                            else {
+                                View root = getActivity().findViewById(R.id.ingredient_storage_frame_layout);
+                                NavigationBarView nview = (NavigationBarView) getActivity().findViewById(R.id.bottom_navigation);
+                                Snackbar snack = Snackbar.make(root, "Fields cannot be empty!", Snackbar.LENGTH_LONG);
+                                snack.setAnchorView(nview);
+                                snack.show();
+                            }
                         }
                     }).create();
         } else {
@@ -328,6 +338,22 @@ public class AddIngredientFragment extends DialogFragment {
                                 } else {
                                     // Modify the existing ingredient in the database
                                     FirestoreDatabase.modifyIngredient(initialIngredient);
+                                }
+                            }
+                            else {
+                                if (isShoppingListItem) {
+                                    View root = getActivity().findViewById(R.id.shopping_frame_layout);
+                                    NavigationBarView nview = (NavigationBarView) getActivity().findViewById(R.id.bottom_navigation);
+                                    Snackbar snack = Snackbar.make(root, "Fields cannot be empty!", Snackbar.LENGTH_LONG);
+                                    snack.setAnchorView(nview);
+                                    snack.show();
+                                }
+                                else {
+                                    View root = getActivity().findViewById(R.id.ingredient_storage_frame_layout);
+                                    NavigationBarView nview = (NavigationBarView) getActivity().findViewById(R.id.bottom_navigation);
+                                    Snackbar snack = Snackbar.make(root, "Fields cannot be empty!", Snackbar.LENGTH_LONG);
+                                    snack.setAnchorView(nview);
+                                    snack.show();
                                 }
                             }
                         }

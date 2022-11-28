@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -76,11 +77,14 @@ public class ShoppingListActivity extends AppCompatActivity {
         shoppingListAdapter = new ShoppingListAdapter(this, shoppingItems);
         shoppingList.setAdapter(shoppingListAdapter);
 
+        // Initializing database instances
         FirebaseFirestore db_instance = FirebaseFirestore.getInstance();
         CollectionReference ingredientsCol = db_instance.collection("ingredient");
         CollectionReference MealPlanCol = db_instance.collection("meal_plan");
         CollectionReference checkedCol = db_instance.collection("shopping_list");
 
+        // Adding a listener for the ingredient storage database so that, every time a change is
+        // made in the ingredient storage, it is updated real-time
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
