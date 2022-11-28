@@ -2,11 +2,13 @@ package com.example.snackoverflow;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +56,7 @@ public class FirestoreDatabase {
     private final static String IngredientsTAG = "Ingredient Storage Activity";
     private final static String MealsTag = "Meal Plan";
     private final static String RecipeTag = "Recipe";
+
 
     /**
      * Add an Ingredient to the Firebase Storage
@@ -417,8 +420,11 @@ public class FirestoreDatabase {
             storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    recipe.setImageBitmap(imgBitmap);
+                    if(!Objects.equals(recipe.getId(), "00000000000000")){
+                        Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        recipe.setImageBitmap(imgBitmap);
+                    }
+
 //                    recipeDataList.add(recipe);
 //                    recipeArrayAdapter.notifyDataSetChanged();
 //                    handleSortBy(0);
@@ -426,6 +432,7 @@ public class FirestoreDatabase {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+
                 }
             });
         } catch (IOException e) {

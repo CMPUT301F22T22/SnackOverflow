@@ -35,17 +35,17 @@
                     android:focusableInTouchMode="false"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <TextView
                 android:id="@+id/mealType_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meal Type"
-                android:textSize="12dp"
-                android:layout_marginTop="70dp"
-                android:layout_marginRight="0dp"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/design_default_color_primary"/>
-
+                android:layout_marginTop="65dp"
+                android:layout_marginRight="0dp"
+                android:text="Meal Type"
+                android:textColor="@color/design_default_color_primary"
+                android:textSize="15sp" />
 
             <RadioGroup
                 android:id="@+id/radiogroup"
@@ -173,15 +173,6 @@
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear3"
-                android:layout_marginTop="10dp"
-                android:text="Add Ingredient"
-                android:visibility="gone" />
 
 <!--            <com.google.android.material.textfield.TextInputLayout-->
 <!--                android:id="@+id/text_input_title"-->

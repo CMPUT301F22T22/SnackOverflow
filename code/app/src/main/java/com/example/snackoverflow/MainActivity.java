@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     ArrayList<Mealday> meals = new ArrayList<>();
     ExpandableListAdapter mealdayAdapter;
     TextView week;
+    ImageView mealImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
                 return false;
             }
         });
+
+
         week = findViewById(R.id.date_textview);
         Calendar cal = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("MMM dd");
