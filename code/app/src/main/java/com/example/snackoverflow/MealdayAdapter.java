@@ -187,11 +187,16 @@ public class MealdayAdapter extends BaseExpandableListAdapter {
         return 0;
     }
 
-
+    /**
+     * Responsible for holding the Recycler view for expandable view.
+     */
     private static class ChildHolder{
         static RecyclerView horizontalListView;
     }
 
+    /**
+     * Holds data displayed by the childview
+     */
     private static class ParentHolder{
         TextView mealday;
         ImageView indicator;
