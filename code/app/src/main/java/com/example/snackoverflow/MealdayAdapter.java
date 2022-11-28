@@ -21,13 +21,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * MealdayAdapter to view the meals in ExpandableList view
+ * @see Mealday
+ * */
 public class MealdayAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<Mealday> mealdays = new ArrayList<Mealday>();
     private FragmentManager fm;
 
+    /**
+     * Constuctor for MealdayAdapter
+     * @param mealdays All planned meals for the week
+     * @see Context
+     * @see FragmentManager
+     * */
     public MealdayAdapter(Context context, ArrayList<Mealday> mealdays, FragmentManager fm){
         this.context = context;
         this.mealdays = mealdays;
