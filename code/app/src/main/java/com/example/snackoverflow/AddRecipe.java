@@ -39,7 +39,7 @@ import kotlin.jvm.functions.Function1;
  * @see Recipe
  * @see RecipeActivity
  * */
-public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
+public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConfirmationFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
     private Drawable imageViewDrawable;
@@ -128,7 +128,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
-                    new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                    new DeleteConfirmationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
                 }
                 else {
                     ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);

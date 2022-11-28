@@ -109,7 +109,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
                 deleteIngredient.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new DeleteConformationFragment<Ingredient>(ingredient, ingredient.getTitle()).show(((FragmentActivity) context).getSupportFragmentManager(), "Delete_Ingredient");
+                        new DeleteConfirmationFragment<Ingredient>(ingredient, ingredient.getTitle()).show(((FragmentActivity) context).getSupportFragmentManager(), "Delete_Ingredient");
                     }
                 });
             }

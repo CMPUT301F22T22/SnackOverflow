@@ -29,7 +29,7 @@ import java.util.Collections;
  * @see IngredientAdapter
  * @see IngredientDetailsActivity
  * */
-public class IngredientStorageActivity extends AppCompatActivity implements DeleteConformationFragment.OnFragmentInteractionListener {
+public class IngredientStorageActivity extends AppCompatActivity implements DeleteConfirmationFragment.OnFragmentInteractionListener {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
@@ -176,7 +176,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
     public void deleteIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
-        new DeleteConformationFragment<Ingredient>(selectedIngredient, selectedIngredient.getTitle()).show(getSupportFragmentManager(), "Delete_Ingredient");
+        new DeleteConfirmationFragment<Ingredient>(selectedIngredient, selectedIngredient.getTitle()).show(getSupportFragmentManager(), "Delete_Ingredient");
     }
 
     /**
