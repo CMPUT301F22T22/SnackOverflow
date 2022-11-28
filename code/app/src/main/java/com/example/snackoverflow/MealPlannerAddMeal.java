@@ -366,7 +366,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
                 mealplannerCategory.setVisibility(View.GONE);
                 unit.setVisibility(View.VISIBLE);
                 unit.setHint("Servings");
-                button.setVisibility(View.GONE);
+//                button.setVisibility(View.GONE);
             }
         });
 
