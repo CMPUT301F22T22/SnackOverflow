@@ -17,7 +17,8 @@ public class Mealday {
     /**
      * Constructor for the creating a new meal day
      * @param date the date for which the meal day is initialized
-     * @param meals the meals to add to the day
+     * @param meals the meals to add to the
+     * @param servings the servings for the recipe
      * */
     public Mealday(Date date, ArrayList<Recipe> meals, ArrayList<Double> servings) {
         this.meals = meals;

@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+/**
+ * Displays the logo at app start
+ */
 public class LogoActivity extends AppCompatActivity {
 
     @Override

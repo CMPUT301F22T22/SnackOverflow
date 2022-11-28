@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     ExpandableListAdapter mealdayAdapter;
     TextView week;
 
+    /**
+     * Set ip for bottom navigation bar
+     */
     private void navbarSetup() {
         NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.mealplanner);

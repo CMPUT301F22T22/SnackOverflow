@@ -189,6 +189,10 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
         new AddEditIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
     }
 
+    /**
+     * Deletes the object passed in
+     * @param object
+     */
     @Override
     public void deleteObject(Object object) {
         FirestoreDatabase.deleteIngredient((Ingredient) object);

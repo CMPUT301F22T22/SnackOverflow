@@ -40,8 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Class toring all the Firestore Database related functionality
- *
+ * Class storing all the Firestore Database related functionality
  * */
 public class FirestoreDatabase {
 
@@ -382,6 +381,12 @@ public class FirestoreDatabase {
                 });
     };
 
+    /**
+     * fetches recipes to be used in the meal plan spinner
+     * @param spinnerAdapter
+     * @param recipeNames array list that holds the recipe names
+     * @see android.widget.SpinnerAdapter
+     */
     static void fetchRecipestoMealPlanSpinner(ArrayAdapter<CharSequence> spinnerAdapter,ArrayList<CharSequence> recipeNames){
         ArrayList<Recipe> recipeDataList = new ArrayList<Recipe>();
         recipeCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
