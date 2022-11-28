@@ -29,7 +29,11 @@ import java.util.Collections;
  * @see IngredientAdapter
  * @see IngredientDetailsActivity
  * */
+<<<<<<< HEAD
 public class IngredientStorageActivity extends AppCompatActivity implements DeleteConformationFragment.OnFragmentInteractionListener{
+=======
+public class IngredientStorageActivity extends AppCompatActivity {
+>>>>>>> parent of 930e14b (delete conformations)
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
@@ -161,7 +165,7 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
     public void deleteIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
-        new DeleteConformationFragment<Ingredient>(selectedIngredient, selectedIngredient.getTitle()).show(getSupportFragmentManager(), "Delete_Ingredient");
+        FirestoreDatabase.deleteIngredient(selectedIngredient);
     }
 
     /**
@@ -172,11 +176,15 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
     public void editIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);
+<<<<<<< HEAD
         new AddEditIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
     }
 
     @Override
     public void deleteObject(Object object) {
         FirestoreDatabase.deleteIngredient((Ingredient) object);
+=======
+        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "EDIT_INGREDIENT");
+>>>>>>> parent of 930e14b (delete conformations)
     }
 }
