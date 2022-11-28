@@ -331,6 +331,12 @@ public class ShoppingListActivity extends AppCompatActivity {
         shoppingListAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Function to add a shopping list item to ingredient storage. It displays
+     * an 'add ingredient' fragment, which assists the user in filling out the missing
+     * fields of the selected ingredient
+     * @param v
+     */
     public void addSelectedIngredientToStorage(View v) {
         int position = shoppingList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
@@ -348,6 +354,12 @@ public class ShoppingListActivity extends AppCompatActivity {
         shoppingListAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Function to add a checked item to database, or remove an
+     * unchecked item from the database. This function is triggered when
+     * an item in the shopping list is checked or unchecked
+     * @param view
+     */
     public void onCheckChange(View view) {
         String ingTitle;
         // Is the view now checked?
