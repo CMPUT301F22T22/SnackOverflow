@@ -5,10 +5,13 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
+ import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -17,7 +20,10 @@ import static org.junit.Assert.assertFalse;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ShoppingListTest {
     private Solo solo;
 
@@ -31,24 +37,65 @@ public class ShoppingListTest {
     }
 
     @Test
-    public void start() throws Exception {
+    public void step1_start() throws Exception {
         Activity activity = rule.getActivity();
     }
 
     @Test
-    public void checkList() {
-        View fab = rule.getActivity().findViewById(R.id.add_to_shopping_list_button);
+    public void step2_checkCancelAddIngredient() {
         solo.assertCurrentActivity("Wrong Activity", ShoppingListActivity.class);
-        solo.clickOnView(fab);
-        solo.enterText((EditText) solo.getView(R.id.shopping_item_description_editText), "Butter");
-        //solo.clearEditText((EditText) solo.getView(R.id.shopping_item_description_editText));
-        //assertFalse(solo.waitForText("Butter"));
-        //solo.enterText((EditText) solo.getView(R.id.shopping_item_description_editText), "Butter");
-        solo.enterText((EditText) solo.getView(R.id.shopping_item_category_editText), "Baking");
-        solo.enterText((EditText) solo.getView(R.id.shopping_item_amount_editText), "3");
-        solo.enterText((EditText) solo.getView(R.id.shopping_item_unit_editText), "1");
-        solo.clickOnButton("OK");
+        ListView listView = (ListView)solo.getView(R.id.shopping_list_storage_list);
+        View view = listView.getChildAt(0);
+        ImageButton addButton=(ImageButton)view.findViewById(R.id.add_shopping_list_item);
+        solo.clickOnView(addButton);
+        EditText title =  (EditText) solo.getView(R.id.ingredient_description_editText);
+        String titleText = title.getText().toString();
+        solo.clickOnButton("Cancel");
+        Assert.assertTrue(solo.waitForText(titleText, 1, 2000));
+    }
 
+    @Test
+    public void step3_checkAddIngredient() {
+        solo.assertCurrentActivity("Wrong Activity", ShoppingListActivity.class);
+        solo.sleep(2000);
+        ListView listView = (ListView)solo.getView(R.id.shopping_list_storage_list);
+        View view = listView.getChildAt(0);
+        ImageButton addButton=(ImageButton)view.findViewById(R.id.add_shopping_list_item);
+        solo.clickOnView(addButton);
+        EditText title =  (EditText) solo.getView(R.id.ingredient_description_editText);
+        String titleText = title.getText().toString();
+
+        solo.clickOnRadioButton(0);
+        View dateTextBox = solo.getView(R.id.ingredient_bestBefore_editText);
+        solo.clickOnView(dateTextBox);
+        solo.sleep(1500);
+        solo.setDatePicker(0, 2025, 1, 1);
+        solo.clickOnButton(3);
+        solo.sleep(2000);
+        System.out.println("these are my btns");
+        System.out.println(solo.getButton(0));
+        System.out.println(solo.getButton(1));
+        System.out.println(solo.getButton(2));
+        System.out.println(solo.getButton(3));
+        System.out.println(solo.getButton(4));
+        System.out.println(solo.getButton(5));
+        System.out.println(solo.getButton(6));
+        System.out.println(solo.getButton(7));
+        System.out.println(solo.getButton(8));
+        System.out.println(solo.getButton(9));
+        System.out.println(solo.getButton(10));
+        System.out.println(solo.getButton(11));
+        System.out.println(solo.getButton(12));
+        System.out.println(solo.getButton(13));
+        System.out.println(solo.getButton(14));
+        System.out.println(solo.getButton(15));
+        System.out.println(solo.getButton(16));
+        System.out.println(solo.getButton(17));
+        //System.out.println(solo.getButton(-1));
+
+        solo.clickOnButton("OK");
+        solo.sleep(2000);
+        Assert.assertFalse(solo.waitForText(titleText, 1, 2000));
     }
 
     @After
