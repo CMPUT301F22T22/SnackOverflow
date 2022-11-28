@@ -39,8 +39,6 @@ import kotlin.jvm.functions.Function1;
  * @see Recipe
  * @see RecipeActivity
  * */
-// TODO: How to request user permission for gallery access with the new
-// Android API
 public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
@@ -69,8 +67,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     EditText editPrepText;
     EditText editInstructionsText;
     EditText editCommentsText;
-
-    private int imageTracker = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +118,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                             imageView.setImageURI(uri);
                             imageView.setBackgroundResource(0);
                             imageView.setPadding(0, 0, 0, 0);
-                            imageTracker += 1;
                         }
                     }
                 });
@@ -134,7 +129,6 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
                     new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
-                    imageTracker = 0;
                 }
                 else {
                     ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);
@@ -225,7 +219,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                     data.put("instructions",instructionsItem);
                     data.put("comments",commentsItem);
                     data.put("ingredients",ingredients);
-                    data.put("image_tracker",imageTracker);
+                    data.put("image_tracker",1);
 
                     FirestoreDatabase.addRecipe(data,uri);
                     finish();
@@ -328,7 +322,10 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
     }
 
     // Stack Overflow https://stackoverflow.com/questions/29512281/how-to-make-listviews-height-to-grow-after-adding-items-to-it
-
+    /**
+     * Sets the height of the ingredients listview based on the number of children it has
+     * @param listView the listview it checks to set height
+     * */
     private void setListViewHeightBasedOnChildren(ListView listView) {
         Log.e("Listview Size ", "" + listView.getCount());
         ListAdapter listAdapter = listView.getAdapter();
