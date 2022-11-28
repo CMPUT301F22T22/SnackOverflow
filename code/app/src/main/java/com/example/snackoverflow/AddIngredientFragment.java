@@ -285,6 +285,8 @@ public class AddIngredientFragment extends DialogFragment {
                             if (isShoppingListItem) {
                                 // If the item is from shopping list, add it to the database
                                 FirestoreDatabase.addIngredient(initialIngredient);
+                                FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
+                                ((ShoppingListActivity) getActivity()).removeIngredient();
                             } else {
                                 // Modify the existing ingredient in the database
                                 FirestoreDatabase.modifyIngredient(initialIngredient);

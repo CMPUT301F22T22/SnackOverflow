@@ -50,6 +50,7 @@
                     android:id="@+id/edit_recipe_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:enabled="false"
                     android:inputType="text" />
 
@@ -72,6 +73,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_recipe_category"
                     android:layout_width="match_parent"
+                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
                     android:enabled="false" />
 
@@ -94,6 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
+                    android:textColor="@color/black"
                     android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -114,6 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Prep time"
+                    android:textColor="@color/black"
                     android:enabled="false"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -123,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -135,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -180,6 +184,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
+                    android:textColor="@color/black"
                     android:gravity="top"
                     android:inputType="textMultiLine"
                     android:lines="7" />
@@ -202,6 +207,7 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:gravity="top"
+                    android:textColor="@color/black"
                     android:inputType="textMultiLine"
                     android:lines="4" />
 
