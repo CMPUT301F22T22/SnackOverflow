@@ -24,14 +24,5 @@
             android:text="TextView"
             android:textColor="@color/black"
             android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/unit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:text="TextView"
-            android:textSize="15sp" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

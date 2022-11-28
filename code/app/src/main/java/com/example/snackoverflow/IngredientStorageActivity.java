@@ -29,7 +29,7 @@ import java.util.Collections;
  * @see IngredientAdapter
  * @see IngredientDetailsActivity
  * */
-public class IngredientStorageActivity extends AppCompatActivity implements DeleteConformationFragment.OnFragmentInteractionListener{
+public class IngredientStorageActivity extends AppCompatActivity implements DeleteConformationFragment.OnFragmentInteractionListener {
     private ListView ingredientStorageList;
     private ArrayAdapter<Ingredient> ingredientArrayAdapter;
     private ArrayList<Ingredient> ingredients;
