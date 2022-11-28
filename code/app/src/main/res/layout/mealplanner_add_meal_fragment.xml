@@ -99,6 +99,7 @@
                         android:visibility="gone">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ingredient_desc_edit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Ingredient Description"
@@ -124,6 +125,7 @@
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/unit_add_meal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Unit"
@@ -150,6 +152,7 @@
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/mealplanner_category_text_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Category"
@@ -167,6 +170,7 @@
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/mealplanner_amount_text_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Amount"
