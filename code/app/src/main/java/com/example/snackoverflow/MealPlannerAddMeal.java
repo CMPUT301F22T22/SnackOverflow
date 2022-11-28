@@ -8,18 +8,14 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -456,26 +452,4 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
 
     }
 
-    private void setListViewHeightBasedOnChildren(ListView listView) {
-        Log.e("Listview Size ", "" + listView.getCount());
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        if (listAdapter.getCount() >= 3){
-            return;
-        }
-
-        View listItem = listAdapter.getView(0, null, listView);
-        listItem.measure(0, 0);
-        int totalHeight = listItem.getMeasuredHeight()*(listAdapter.getCount());
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-
-    }
 }

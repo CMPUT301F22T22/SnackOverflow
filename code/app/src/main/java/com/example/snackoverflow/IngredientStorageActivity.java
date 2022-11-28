@@ -35,6 +35,9 @@ public class IngredientStorageActivity extends AppCompatActivity {
     private ArrayList<Ingredient> ingredients;
     private String currSortOrder = "inc";
 
+    /**
+     * Implements the Sorting
+     */
     private void implementSorting() {
         String[] sortBySpinnerList = new String[] {"Title", "Best Before", "Location", "Category"};
         String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
@@ -91,6 +94,9 @@ public class IngredientStorageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up the NavBar
+     */
     private void navbarSetup() {
         NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.ingredients);
