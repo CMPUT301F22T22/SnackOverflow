@@ -337,6 +337,10 @@ public class FirestoreDatabase {
                                 int preptime = Integer.parseInt(mealMap.get("preptime").toString());
                                 float servings = Float.parseFloat(mealMap.get("servings").toString());
                                 String recipeCategory = mealMap.get("recipeCategory").toString();
+                                if (mealMap.get("recipeCategory").toString().charAt(0)=='!'){
+                                    recipeCategory = mealMap.get("recipeCategory").toString().substring(1);
+                                }
+
                                 String comments = mealMap.get("comments").toString();
 //                        String id = mealMap.get("id").toString();
                                 ArrayList<Object> ingredientArray = (ArrayList<Object>) mealMap.get("ingredients");
@@ -422,7 +426,6 @@ public class FirestoreDatabase {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    loadImage(recipe);
                 }
             });
         } catch (IOException e) {
