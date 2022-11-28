@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,15 +31,18 @@ import java.util.Objects;
  * implements MealPlannerAddMeal.OnFragmentInteractionListener
  * @see Mealday
  * @see MealdayAdapter
- * @see MealPlannerAddMeal
+ * @see MealPlannerAddMealFragment
  * */
-public class MainActivity extends AppCompatActivity implements MealPlannerAddMeal.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements MealPlannerAddMealFragment.OnFragmentInteractionListener{
 
     ExpandableListView mealList;
     ArrayList<Mealday> meals = new ArrayList<>();
     ExpandableListAdapter mealdayAdapter;
     TextView week;
 
+    /**
+     * Set ip for bottom navigation bar
+     */
     private void navbarSetup() {
         NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.mealplanner);
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
             @Override
             public void onClick(View view) {
                 // TODO add recipe data
-                new MealPlannerAddMeal().show(getSupportFragmentManager(),"Add_meal");
+                new MealPlannerAddMealFragment().show(getSupportFragmentManager(),"Add_meal");
                 mealList.setAdapter(mealdayAdapter);
                 FirestoreDatabase.fetchMealPlans(mealdayAdapter,meals);
 

@@ -1,6 +1,5 @@
 package com.example.snackoverflow;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
+/**
+ * MealPlannerAdapter to view the meals in Recycler view
+ * @see Mealday
+ * @see MealdayAdapter
+ * */
  public class MealPlannerAdapter extends RecyclerView.Adapter<MealPlannerAdapter.ViewHolder> {
 
     private Context context;
@@ -24,6 +25,14 @@ import java.util.ArrayList;
     private ArrayList<Double> servings;
     private FragmentManager fm;
 
+     /**
+      * Constuctor for MealPlannerAdapter
+      * @param mealDay The day of the week and the included recipes
+      * @param context
+      * @param fm Fragment Manager
+      * @see Context
+      * @see FragmentManager
+      * */
     public MealPlannerAdapter(Context context, Mealday mealDay, FragmentManager fm) {
         this.context = context;
         this.mealDay = mealDay;
@@ -57,7 +66,7 @@ import java.util.ArrayList;
         mealImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MealPlannerAddMeal(mealDay, meals.get(position), (double)servings.get(position)).show(fm,"Edit_meal");
+                new MealPlannerAddMealFragment(mealDay, meals.get(position), (double)servings.get(position)).show(fm,"Edit_meal");
             }
         });
 

@@ -23,6 +23,11 @@ public class DeleteConfirmationFragment<T> extends DialogFragment {
     // Listener for activity
     private OnFragmentInteractionListener listener;
 
+    /**
+     * Constructor for Delete confirmation fragment
+     * @param object object to be deleted
+     * @param title title of the object
+     */
     public DeleteConfirmationFragment(T object, String title){
         this.object = object;
         this.title = title;
