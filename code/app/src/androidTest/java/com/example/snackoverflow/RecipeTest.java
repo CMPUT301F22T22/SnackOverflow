@@ -51,7 +51,13 @@ public class RecipeTest {
 
     @Test
     public void step3_checkShowIngredients() {
-        step2_checkRecipe();
+        View fab = rule.getActivity().findViewById(R.id.add_recipe_button);
+        solo.assertCurrentActivity("Wrong Activity", RecipeActivity.class);
+        solo.clickOnView(fab);
+
+        assertTrue("Failed to switch to AddRecipe activity",
+                solo.waitForActivity(AddRecipe.class, 2000));
+
         View addIngredient = solo.getView("recipe_add_ingredient");
         solo.clickOnView(addIngredient);
 
@@ -75,7 +81,32 @@ public class RecipeTest {
 
     @Test
     public void step4_checkEditIngredient() {
-        step3_checkShowIngredients();
+        View fab = rule.getActivity().findViewById(R.id.add_recipe_button);
+        solo.assertCurrentActivity("Wrong Activity", RecipeActivity.class);
+        solo.clickOnView(fab);
+
+        assertTrue("Failed to switch to AddRecipe activity",
+                solo.waitForActivity(AddRecipe.class, 2000));
+
+        View addIngredient = solo.getView("recipe_add_ingredient");
+        solo.clickOnView(addIngredient);
+
+        solo.waitForFragmentByTag("Add_Ingredient",2000);
+
+        // Fill in ingredient fragment
+        solo.typeText((EditText)solo.getView("edit_ingredient_description"),"Tomato");
+        solo.typeText((EditText)solo.getView("edit_ingredient_amount"),"11");
+        solo.typeText((EditText)solo.getView("edit_ingredient_unit"),"13");
+        solo.typeText((EditText)solo.getView("edit_ingredient_category"),"vegetable");
+
+        // Add ingredient
+        solo.clickOnButton("Ok");
+
+        View showMore = solo.getView("recipe_showmore");
+        solo.clickOnView(showMore);
+
+        assertTrue(solo.waitForText("Tomato", 1, 6000));
+
         ListView listView = (ListView)solo.getView(R.id.list);
         View view = listView.getChildAt(0);
         ImageButton editButton=(ImageButton)view.findViewById(R.id.edit_ingredient);
@@ -90,10 +121,33 @@ public class RecipeTest {
 
     @Test
     public void step5_checkDeleteIngredient() {
-        step3_checkShowIngredients();
+        View fab = rule.getActivity().findViewById(R.id.add_recipe_button);
+        solo.assertCurrentActivity("Wrong Activity", RecipeActivity.class);
+        solo.clickOnView(fab);
+
+        assertTrue("Failed to switch to AddRecipe activity",
+                solo.waitForActivity(AddRecipe.class, 2000));
+
+        View addIngredient = solo.getView("recipe_add_ingredient");
+        solo.clickOnView(addIngredient);
+
+        solo.waitForFragmentByTag("Add_Ingredient",2000);
+
+        // Fill in ingredient fragment
+        solo.typeText((EditText)solo.getView("edit_ingredient_description"),"Tomato");
+        solo.typeText((EditText)solo.getView("edit_ingredient_amount"),"11");
+        solo.typeText((EditText)solo.getView("edit_ingredient_unit"),"13");
+        solo.typeText((EditText)solo.getView("edit_ingredient_category"),"vegetable");
+
+        // Add ingredient
+        solo.clickOnButton("Ok");
+
+        View showMore = solo.getView("recipe_showmore");
+        solo.clickOnView(showMore);
+
+        assertTrue(solo.waitForText("Tomato", 1, 6000));
+
         ListView listView = (ListView)solo.getView(R.id.list);
-        System.out.println("this is the initial sice");
-        System.out.println( listView.getAdapter().getCount() );
         View view = listView.getChildAt(0);
         ImageButton deleteButton=(ImageButton)view.findViewById(R.id.delete_ingredient);
         solo.clickOnView(deleteButton);
@@ -110,7 +164,13 @@ public class RecipeTest {
 
     @Test
     public void step6_checkAddRecipe() {
-        step2_checkRecipe();
+        View fab = rule.getActivity().findViewById(R.id.add_recipe_button);
+        solo.assertCurrentActivity("Wrong Activity", RecipeActivity.class);
+        solo.clickOnView(fab);
+        // Check if switch to new activity occurs
+        assertTrue("Failed to switch to AddRecipe activity",
+                solo.waitForActivity(AddRecipe.class, 2000));
+
         View addIngredient = solo.getView("recipe_add_ingredient");
         View addRecipe = solo.getView("recipe_add_recipe");
 
@@ -146,6 +206,9 @@ public class RecipeTest {
         View view = listView.getChildAt(0);
         solo.clickOnView(view);
 
+        assertTrue("Failed to switch to ModifyRecipe activity",
+                solo.waitForActivity(ModifyRecipe.class, 2000));
+
         View editRecipe = solo.getView("edit_recipe_button");
         solo.clickOnView(editRecipe);
 
@@ -167,6 +230,9 @@ public class RecipeTest {
         ListView listView = (ListView)solo.getView(R.id.recipe_list);
         View view = listView.getChildAt(0);
         solo.clickOnView(view);
+
+        assertTrue("Failed to switch to ModifyRecipe activity",
+                solo.waitForActivity(ModifyRecipe.class, 2000));
 
         View deleteRecipe = solo.getView("delete_recipe_button");
         solo.clickOnView(deleteRecipe);
