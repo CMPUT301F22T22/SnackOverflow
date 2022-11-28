@@ -46,7 +46,7 @@ import kotlin.jvm.functions.Function1;
 /**
  * Modify Recipe Class to modify existing recipes and the ingredients present in the recipes
  * extends AppCompatActivity
- * implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConfirmationFragment.OnFragmentInteractionListener
  * @see RecipeActivity
  * @see Recipe
  * @see Ingredient

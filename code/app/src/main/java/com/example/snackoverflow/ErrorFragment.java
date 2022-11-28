@@ -17,6 +17,10 @@ import androidx.fragment.app.DialogFragment;
 public class ErrorFragment extends DialogFragment {
     private String errorMessage;
 
+    /**
+     * Constructor for Error Message
+     * @param errorMessage
+     */
     public ErrorFragment(String errorMessage){
         this.errorMessage = errorMessage;
     }

@@ -35,7 +35,7 @@ import kotlin.jvm.functions.Function1;
  * Add Recipe Class for adding new Recipe to Recipes storage
  * extends AppCompatActivity
  * implements RecipeIngredientFragment.OnFragmentInteractionListener
- * implements DeleteConformationFragment.OnFragmentInteractionListener
+ * implements DeleteConfirmationFragment.OnFragmentInteractionListener
  * @see Recipe
  * @see RecipeActivity
  * */
@@ -303,7 +303,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         return;
     }
     /**
-     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
+     * Deletes the particular ingredient when prompted by the DeleteConfirmationFragment
      * @param object object that is to be deleted
      * */
     @Override

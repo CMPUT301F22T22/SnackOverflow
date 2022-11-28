@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:gravity="center_horizontal|center_vertical"
-            android:text="Are you sure you want to delete"
+            android:text="Are you sure you want to delete this item?"
             android:textSize="20sp" />
 
         <TextView
@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="50dp"
             android:gravity="center_horizontal|center_vertical"
             android:textSize="20sp" />

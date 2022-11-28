@@ -61,6 +61,10 @@ public class Mealday {
         this.meals = meals;
     }
 
+    /**
+     * Get all the meals without the Image
+     * @return
+     */
     public ArrayList<Recipe> getMealsWithoutImage() {
         ArrayList<Recipe> mealsList = getMeals();
         for (int i = 0; i < mealsList.size(); i++ ) {

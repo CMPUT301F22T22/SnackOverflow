@@ -18,7 +18,6 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Ingredient Storage Activity to display the list of ingredients in the storage
