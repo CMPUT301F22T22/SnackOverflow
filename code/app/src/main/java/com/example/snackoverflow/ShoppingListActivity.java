@@ -51,6 +51,98 @@ public class ShoppingListActivity extends AppCompatActivity {
     private String currSortOrder = "inc";
     private Ingredient currIngredientSelected;
 
+    private void implementSorting(){
+        String[] sortBySpinnerList = new String[] {"Title", "Category"};
+        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
+        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
+        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortOrderSpinner.setAdapter(sortOrderAdapter);
+
+        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
+        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
+
+        sortByLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBySpinner.performClick();
+            }
+        });
+
+        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortOrderSpinner.performClick();
+            }
+        });
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SortComparator.handleSortShoppingListBy(position, currSortOrder,shoppingItems, shoppingListAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, shoppingItems, shoppingListAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void navbarSetup(){
+        NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
+        navigationBarView.setSelectedItemId(R.id.shoppinglist);
+        navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            /**
+             * Start corresponding activity when any button in the navbar is clicked. It uses the existing
+             * application context to start the activity, so that all previous changes made to that activity
+             * are saved
+             * @param item
+             * @return true if a valid button is clicked and the activity starts, false if invalid
+             */
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Switch to corresponding activity when a button is clicked
+                switch ((item.getItemId())) {
+                    case R.id.ingredients:
+                        startActivity(new Intent(getApplicationContext(),IngredientStorageActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.shoppinglist:
+                        return true;
+                    case R.id.mealplanner:
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.recipes:
+                        startActivity(new Intent(getApplicationContext(),RecipeActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                // Return false otherwise
+                return false;
+            }
+        });
+    }
+
     /**
      * Used to start the ShoppingListActivity. If the activity needs to be recreated, it can be passed to onCreate as a bundle
      * to recreate the activity. The method is also called, when the orientation of the device change, termination of the app.
@@ -200,94 +292,12 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         });
 
-        String[] sortBySpinnerList = new String[] {"Title", "Category"};
-        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
-        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
-        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
-        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
-        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
-        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        sortBySpinner.setAdapter(sortByAdapter);
-        sortOrderSpinner.setAdapter(sortOrderAdapter);
-
-        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
-        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
-
-        sortByLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortBySpinner.performClick();
-            }
-        });
-
-        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortOrderSpinner.performClick();
-            }
-        });
-        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SortComparator.handleSortShoppingListBy(position, currSortOrder,shoppingItems, shoppingListAdapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, shoppingItems, shoppingListAdapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        // Add the Sorting functionality
+        implementSorting();
 
         // Setting up NavBar
-        NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
-        navigationBarView.setSelectedItemId(R.id.shoppinglist);
-        navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            /**
-             * Start corresponding activity when any button in the navbar is clicked. It uses the existing
-             * application context to start the activity, so that all previous changes made to that activity
-             * are saved
-             * @param item
-             * @return true if a valid button is clicked and the activity starts, false if invalid
-             */
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // Switch to corresponding activity when a button is clicked
-                switch ((item.getItemId())) {
-                    case R.id.ingredients:
-                        startActivity(new Intent(getApplicationContext(),IngredientStorageActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.shoppinglist:
-                        return true;
-                    case R.id.mealplanner:
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.recipes:
-                        startActivity(new Intent(getApplicationContext(),RecipeActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                // Return false otherwise
-                return false;
-            }
-        });
+        navbarSetup();
+
     }
 
 
