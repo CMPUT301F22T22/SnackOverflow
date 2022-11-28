@@ -99,9 +99,6 @@ public class MealdayAdapter extends BaseExpandableListAdapter {
         }
 
         parentHolder.mealday = (TextView) convertView.findViewById(R.id.text_meal);
-        System.out.println("meal day of week");
-        System.out.println(mealday.getDate().toString());
-        System.out.println(getDayStringOld(mealday.getDate(),new Locale("en")));
         parentHolder.mealday.setText(getDayStringOld(mealday.getDate(),new Locale("en")));
 
         parentHolder.indicator = (ImageView) convertView.findViewById(R.id.image_indicator);

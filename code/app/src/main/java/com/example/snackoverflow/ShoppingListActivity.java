@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -66,11 +67,14 @@ public class ShoppingListActivity extends AppCompatActivity {
         shoppingListAdapter = new ShoppingListAdapter(this, shoppingItems);
         shoppingList.setAdapter(shoppingListAdapter);
 
+        // Initializing database instances
         FirebaseFirestore db_instance = FirebaseFirestore.getInstance();
         CollectionReference ingredientsCol = db_instance.collection("ingredient");
         CollectionReference MealPlanCol = db_instance.collection("meal_plan");
         CollectionReference checkedCol = db_instance.collection("shopping_list");
 
+        // Adding a listener for the ingredient storage database so that, every time a change is
+        // made in the ingredient storage, it is updated real-time
         ingredientsCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
@@ -286,6 +290,13 @@ public class ShoppingListActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Function to add a shopping list item to ingredient storage. It displays
+     * an 'add ingredient' fragment, which assists the user in filling out the missing
+     * fields of the selected ingredient
+     * @param v
+     */
     public void addSelectedIngredientToStorage(View v) {
         int position = shoppingList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
@@ -303,6 +314,12 @@ public class ShoppingListActivity extends AppCompatActivity {
         shoppingListAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Function to add a checked item to database, or remove an
+     * unchecked item from the database. This function is triggered when
+     * an item in the shopping list is checked or unchecked
+     * @param view
+     */
     public void onCheckChange(View view) {
         String ingTitle;
         // Is the view now checked?

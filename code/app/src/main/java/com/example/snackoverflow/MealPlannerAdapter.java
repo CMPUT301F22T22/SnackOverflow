@@ -21,6 +21,7 @@ import java.util.ArrayList;
     private Context context;
     private Mealday mealDay;
     private ArrayList<Recipe> meals;
+    private ArrayList<Double> servings;
     private FragmentManager fm;
 
     public MealPlannerAdapter(Context context, Mealday mealDay, FragmentManager fm) {
@@ -28,6 +29,7 @@ import java.util.ArrayList;
         this.mealDay = mealDay;
         this.meals = mealDay.getMeals();
         this.fm = fm;
+        this.servings = mealDay.getServings();
     }
 
     @Override
@@ -35,7 +37,7 @@ import java.util.ArrayList;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View cardView = layoutInflater.inflate(R.layout.mealplanner_child,null,false);
         ViewHolder viewHolder = new ViewHolder(cardView);
-        //viewHolder.mealImage = (ImageView) cardView.findViewById(R.id.meal_image);
+        viewHolder.mealImage = (ImageView) cardView.findViewById(R.id.meal_image);
         viewHolder.category = (TextView) cardView.findViewById(R.id.meal_category);
         viewHolder.title = (TextView) cardView.findViewById(R.id.meal_title);
         return viewHolder;
@@ -45,7 +47,7 @@ import java.util.ArrayList;
     @Override
     public void onBindViewHolder(@NonNull MealPlannerAdapter.ViewHolder holder, int position) {
         ImageView mealImageView = (ImageView) holder.mealImage;
-//        mealImageView.setImageResource(meals.get(position).imageResource);
+        mealImageView.setImageBitmap(meals.get(position).getImageBitmap());
         TextView categoryTextView = (TextView) holder.category;
         categoryTextView.setText(meals.get(position).getRecipeCategory());
 
@@ -55,7 +57,7 @@ import java.util.ArrayList;
         mealImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MealPlannerAddMeal(mealDay, meals.get(position)).show(fm,"Edit_meal");
+                new MealPlannerAddMeal(mealDay, meals.get(position), (double)servings.get(position)).show(fm,"Edit_meal");
             }
         });
 
