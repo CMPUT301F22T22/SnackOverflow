@@ -18,15 +18,17 @@
         android:theme="@style/Theme.SnackOverflow"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="Meal Planner">
+            android:name=".LogoActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="Meal Planner" />
         <activity
             android:name=".ShoppingListActivity"
             android:exported="false"
@@ -34,23 +36,23 @@
         <activity
             android:name=".ModifyRecipe"
             android:exported="true"
-            android:label="Modify Recipe"/>
+            android:label="Modify Recipe" />
         <activity
             android:name=".AddRecipe"
             android:exported="false"
-            android:label="Add Recipe"/>
+            android:label="Add Recipe" />
         <activity
             android:name=".IngredientDetailsActivity"
             android:exported="false"
-            android:label="Ingredient"/>
+            android:label="Ingredient" />
         <activity
             android:name=".IngredientStorageActivity"
             android:exported="false"
-            android:label="Ingredients"/>
+            android:label="Ingredients" />
         <activity
             android:name=".RecipeActivity"
             android:exported="false"
-            android:label="Recipes"/>
+            android:label="Recipes" />
     </application>
 
 </manifest>
