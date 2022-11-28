@@ -1,6 +1,5 @@
 package com.example.snackoverflow;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,7 +64,7 @@ import java.util.ArrayList;
         mealImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MealPlannerAddMeal(mealDay, meals.get(position), (double)servings.get(position)).show(fm,"Edit_meal");
+                new MealPlannerAddMealFragment(mealDay, meals.get(position), (double)servings.get(position)).show(fm,"Edit_meal");
             }
         });
 

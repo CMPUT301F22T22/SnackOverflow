@@ -59,7 +59,7 @@ import java.util.Objects;
  * @see Mealday
  * @see MealdayAdapter
  * */
-public class MealPlannerAddMeal extends DialogFragment implements AdapterView.OnItemSelectedListener {
+public class MealPlannerAddMealFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
     // Check if we are editing data
     private boolean view;
     final static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -93,7 +93,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
     /**
      * Constructor for the add meal
      * */
-    public MealPlannerAddMeal() {
+    public MealPlannerAddMealFragment() {
         view = false;
     }
 
@@ -102,7 +102,7 @@ public class MealPlannerAddMeal extends DialogFragment implements AdapterView.On
      * @param mealDay the meal day
      * @param recipe the recipe to be added
      * */
-    public MealPlannerAddMeal(Mealday mealDay, Recipe recipe, Double serving){
+    public MealPlannerAddMealFragment(Mealday mealDay, Recipe recipe, Double serving){
         this.view = true;
         this.mealDay = mealDay;
         this.recipe = recipe;
