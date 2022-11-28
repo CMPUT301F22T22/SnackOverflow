@@ -17,13 +17,13 @@ import androidx.fragment.app.DialogFragment;
  * delete an Object
  * Extends DialogFragment
  * */
-public class DeleteConformationFragment<T> extends DialogFragment {
+public class DeleteConfirmationFragment<T> extends DialogFragment {
     private T object;
     private String title;
     // Listener for activity
     private OnFragmentInteractionListener listener;
 
-    public DeleteConformationFragment(T object, String title){
+    public DeleteConfirmationFragment(T object, String title){
         this.object = object;
         this.title = title;
     }
