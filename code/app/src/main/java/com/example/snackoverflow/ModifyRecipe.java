@@ -80,6 +80,8 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
     private int imageTracker;
     private String recipeId;
 
+    private boolean isEditable = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Set variables to data stored in recipe object
@@ -139,14 +141,14 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             public void onClick(View view) {
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
-                if (imageView.getDrawable() != imageViewDrawable){
+                if (imageView.getDrawable() != imageViewDrawable && isEditable){
                     new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
                     imageTracker += 1;
                     Uri defaultUri = Uri.parse("android.resource://com.example.snackoverflow/drawable/food_icon");
                     uploadImage(defaultUri, recipeId);
                 }
                 else {
-                    if (applyButton.getVisibility() == View.VISIBLE) {
+                    if (isEditable) {
                         ImagePicker.Builder with = ImagePicker.with(ModifyRecipe.this);
                         with.crop(1f, 1f);
                         with.compress(1024);        //Final image size will be less than 1 MB
@@ -194,36 +196,24 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                titleField.setEnabled(true);
-                prepField.setEnabled(true);
-                categoryField.setEnabled(true);
-                servingsField.setEnabled(true);
-                showMore.setEnabled(true);
-                addIngredient.setEnabled(true);
-                instructionsField.setEnabled(true);
-                commentsField.setEnabled(true);
+                changeClickState(true);
 
                 editButton.setVisibility(View.GONE);
                 applyButton.setVisibility(View.VISIBLE);
                 viewButton.setVisibility(View.VISIBLE);
+                isEditable = true;
             }
         });
 
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                titleField.setEnabled(false);
-                prepField.setEnabled(false);
-                categoryField.setEnabled(false);
-                servingsField.setEnabled(false);
-                showMore.setEnabled(false);
-                addIngredient.setEnabled(false);
-                instructionsField.setEnabled(false);
-                commentsField.setEnabled(false);
+                changeClickState(false);
 
                 editButton.setVisibility(View.VISIBLE);
                 viewButton.setVisibility(View.GONE);
                 applyButton.setVisibility(View.GONE);
+                isEditable = false;
             }
         });
 
@@ -321,7 +311,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
             public void onClick(View view) {
                 IngredientsView = new RecipeIngredientViewFragment(ingredients);
                 findViewById(R.id.constraintLayout).setVisibility(View.INVISIBLE);
-                changeClickState(false);
+                changeClickState(isEditable);
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.Main, IngredientsView)
@@ -376,7 +366,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                     .remove(IngredientsView)
                     .commit();
             IngredientsView = null;
-            changeClickState(true);
+            changeClickState(isEditable);
             refreshIngredientsShown();
             findViewById(R.id.constraintLayout).setVisibility(View.VISIBLE);
         }
@@ -417,16 +407,10 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
         prepField.setEnabled(state);
         categoryField.setEnabled(state);
         servingsField.setEnabled(state);
-        showMore.setEnabled(state);
         addIngredient.setEnabled(state);
         instructionsField.setEnabled(state);
         commentsField.setEnabled(state);
         addIngredient.setEnabled(state);
-        showMore.setEnabled(state);
-        viewButton.setEnabled(state);
-        editButton.setEnabled(state);
-        applyButton.setEnabled(state);
-        deleteButton.setEnabled(state);
     }
 
     /**

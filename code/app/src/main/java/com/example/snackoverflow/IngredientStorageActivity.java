@@ -36,7 +36,6 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
     private ArrayList<Ingredient> ingredients;
     private String currSortOrder = "inc";
 
-    // TODO: Maybe change location to radio buttons for user to select
     // TODO: Error Check if the user adds an ingredient with incomplete details
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +45,8 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
         ingredients = new ArrayList<>();
 
         ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
-
         ingredientStorageList.setAdapter(ingredientArrayAdapter);
+
         FirestoreDatabase.fetchIngredients(ingredientArrayAdapter, ingredients);
 
         String[] sortBySpinnerList = new String[] {"Title", "Best Before", "Location", "Category"};
@@ -211,6 +210,11 @@ public class IngredientStorageActivity extends AppCompatActivity implements Dele
         new DeleteConformationFragment<Ingredient>(selectedIngredient, selectedIngredient.getTitle()).show(getSupportFragmentManager(), "Delete_Ingredient");
     }
 
+    /**
+     * Edits the selected ingredient by popping a fragment for the user
+     * to edit the details and modifies it in the storage as well.
+     * @param v view that the icon is present on
+     */
     public void editIngredientAtPosition(View v) {
         int position = ingredientStorageList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) ingredientStorageList.getItemAtPosition(position);

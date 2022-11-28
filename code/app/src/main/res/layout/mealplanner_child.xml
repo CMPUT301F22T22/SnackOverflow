@@ -11,7 +11,7 @@
         android:layout_height="66dp"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
-        android:src="@drawable/ic_launcher_background"/>
+        android:src="@drawable/grocery"/>
 
 
     <TextView

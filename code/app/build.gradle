@@ -16,6 +16,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        lintOptions {
+            abortOnError false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -43,4 +46,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'
+    testImplementation 'org.mockito:mockito-core:4.8.1'
+    androidTestImplementation 'org.mockito:mockito-android:4.8.1'
+
 }

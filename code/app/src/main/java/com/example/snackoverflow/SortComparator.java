@@ -12,7 +12,7 @@ public class SortComparator {
                 return ((Recipe) o1).getTitle().toLowerCase().compareTo(((Recipe)o2).getTitle().toLowerCase());
             }
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Ingredient")) {
-                return ((Ingredient) o1).getTitle().compareTo(((Ingredient)o2).getTitle());
+                return ((Ingredient) o1).getTitle().toLowerCase().compareTo(((Ingredient)o2).getTitle().toLowerCase());
             }
 
             return -1;
@@ -34,7 +34,7 @@ public class SortComparator {
                 return ((Recipe) o1).getRecipeCategory().toLowerCase().compareTo(((Recipe)o2).getRecipeCategory().toLowerCase());
             }
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Ingredient")) {
-                return ((Ingredient) o1).getCategory().compareTo(((Ingredient)o2).getCategory());
+                return ((Ingredient) o1).getCategory().toLowerCase().compareTo(((Ingredient)o2).getCategory().toLowerCase());
             }
             return -1;
         }
@@ -105,7 +105,7 @@ public class SortComparator {
         public int compare(Object o1, Object o2) {
             String objectType = o1.getClass().toString();
             if (objectType.substring(objectType.lastIndexOf('.')+1).equals("Ingredient")) {
-                return ((Ingredient) o1).getLocation().compareTo(((Ingredient)o2).getLocation());
+                return ((Ingredient) o1).getLocation().toLowerCase().compareTo(((Ingredient)o2).getLocation().toLowerCase());
             }
             return -1;
         }

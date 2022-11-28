@@ -22,6 +22,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,13 +33,15 @@ import java.util.Objects;
 
 /**
  * Add Ingredient Fragment that pops up when a user wants to add an
- * Ingredient to the storage
+ * Ingredient to the storage, edit an already present ingredient in the storage
+ * and when a user shops for ingredients in the shopping list and confims to add it to storage.
+ *
  * Extends DialogFragment
  * @see Ingredient
  * */
 public class AddIngredientFragment extends DialogFragment {
-    private TextInputLayout ingredientDescLayout;
-    private TextInputLayout ingredientCategoryLayout;
+
+    private TextInputLayout ingredientDescLayout, ingredientCategoryLayout, ingredientUnitLayout, ingredientDateLayout, ingredientAmountLayout;
     private EditText ingredientDesc;
     private EditText ingredientAmount;
     private EditText ingredientUnit;
@@ -45,17 +49,43 @@ public class AddIngredientFragment extends DialogFragment {
     private RadioButton ingredientLocation;
     private RadioGroup locationRadioGroup;
     private EditText ingredientCategory;
+    private String ingredientLocationString;
+    private boolean isNull = false;
 
+    /**
+     * For Starting the fragment.
+     */
     @Override
     public void onStart() {
         super.onStart();
     }
 
+    /**
+     * Constructor for Edit functionality for Ingredients.
+     * @param ingredient the ingredient passed in or selected
+     * @return None
+     */
+    static AddIngredientFragment newInstance(Ingredient ingredient) {
+        // Creates a bundle and passes it tot he Add Ingredient fragment
+        Bundle args = new Bundle();
+        args.putSerializable("ingredient", ingredient);
+        AddIngredientFragment fragment = new AddIngredientFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * Sets the Calendar pop up for the Best Before Date field.
+     * @param ingredientBestBefore Edit Text for the BEst Before field
+     * @param currentDate The date to be set on the calendar
+     */
     public void setCalendarForBestBefore(EditText ingredientBestBefore, Date currentDate) {
+        // Sets the calendar View on click
         ingredientBestBefore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
+                // Gets the current date and sets it on calendar
                 if (currentDate != null) {
                     c.setTime(currentDate);
                 }
@@ -63,6 +93,7 @@ public class AddIngredientFragment extends DialogFragment {
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
+                // Implements the Date Picker Dialog for the user to select a date
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         getContext(),
                         new DatePickerDialog.OnDateSetListener() {
@@ -74,44 +105,156 @@ public class AddIngredientFragment extends DialogFragment {
                             }
                         },
                         year, month, day);
-
+                // Disable the past dates on the dialog
                 datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+                // Shows th Dialog for the user to select the date
                 datePickerDialog.show();
             }
         });
     }
 
+    /**
+     * Sets the limits on Text Fields, limiting them to 30 characters
+     * @param field The Exit Text field to put the check on
+     * @param layout The Layout for the Edit Text field
+     */
     public void setErrors(EditText field, TextInputLayout layout) {
         field.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
 
+                // Set the error if the chaarcter count is greater the max length allowed.
                 if (s.length() > layout.getCounterMaxLength()) {
                     layout.setError("Max character length is " + layout.getCounterMaxLength());
-                } else {
-                    layout.setError(null);
+                }
+                else if (s.length() == 0) {
+                    layout.setError("Title cannot be empty");
                 }
             }
         });
     }
 
+    /**
+     * Sets the Locaton Radio Button based on the value of Location
+     * @param view
+     * @param locationValue The string value of the location of the ingredient
+     */
+    public void setLocationButton(View view, String locationValue){
+        // Finds the Radio button and selects it corresponding to the locationValue
+        if (Objects.equals(locationValue, "Freezer")) {
+            RadioButton location = view.findViewById(R.id.location_freezer);
+            location.setChecked(true);
+        } else if (Objects.equals(locationValue, "Fridge")) {
+            RadioButton location = view.findViewById(R.id.location_fridge);
+            location.setChecked(true);
+        } else if (Objects.equals(locationValue, "Pantry")) {
+            RadioButton location = view.findViewById(R.id.location_pantry);
+            location.setChecked(true);
+        }
+    }
+
+    /**
+     * Parses the initial fields and sets the values for the corresponding Edit Text Fields.
+     * @param view
+     * @param initialIngredient the Initial Ingredient that is selected.
+     * @return True: if the ingredient is from shopping list
+     *         False: if it is from the Storage.
+     */
+    public boolean parseInitialFields(View view, Ingredient initialIngredient){
+        // Sets the Fields in the Fragments from the initial ingredient
+        boolean isShoppingListItem = false;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        ingredientDesc.setText(initialIngredient.getTitle());
+        try {
+            ingredientBestBefore.setText(dateFormat.format(initialIngredient.getBestBefore()));
+        } catch (NullPointerException e) {
+            isShoppingListItem = true;
+            ingredientBestBefore.setText("");
+        }
+        ingredientUnit.setText(String.valueOf(initialIngredient.getUnit()));
+        ingredientAmount.setText(String.valueOf(initialIngredient.getAmount()));
+        ingredientCategory.setText(initialIngredient.getCategory());
+        setLocationButton(view, initialIngredient.getLocation());
+        setCalendarForBestBefore(ingredientBestBefore, initialIngredient.getBestBefore());
+        return isShoppingListItem;
+    }
+
+    /**
+     * Returns an ingredient object from the all the values filled in by the user
+     * in the fragment
+     * @param view
+     * @return Ingredient Object
+     */
+    public Ingredient parseFilledValues(View view) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Integer ingredientAmountInt, ingredientUnitInt;
+        String ingredientDescString = ingredientDesc.getText().toString();
+        try {
+            ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
+        } catch (NumberFormatException e) {
+            ingredientAmountInt = 0;
+            isNull = true;
+        }
+        try {
+            ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
+        } catch (NumberFormatException e) {
+            ingredientUnitInt = 0;
+            isNull = true;
+        }
+
+        String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
+
+        if (ingredientBestBeforeString.length() == 0) {
+            isNull = true;
+        }
+        Date ingredientBestBeforeDate = null;
+        try {
+            ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
+        } catch (ParseException e) {
+            isNull = true;
+            e.printStackTrace();
+        }
+
+        int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
+        ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
+        String ingredientLocationString;
+        try {
+            ingredientLocationString = ingredientLocation.getText().toString();
+        } catch (NullPointerException e) {
+            ingredientLocationString = "";
+            isNull = true;
+        }
+
+        String ingredientCategoryString = ingredientCategory.getText().toString();
+
+        if (ingredientCategoryString.length() == 0) {
+            isNull = true;
+        }
+        // return the new ingredient created from the values inputted by the user
+        return new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientAmountInt, ingredientUnitInt, ingredientCategoryString);
+    }
+
+    /**
+     * Handles the creation and actions for the Add Ingredient Fragment.
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        // Find the views defined in the XML files
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_ingredient_fragment_layout, null);
         ingredientDescLayout = view.findViewById(R.id.ingredient_description_layout);
         ingredientCategoryLayout = view.findViewById(R.id.ingredient_category_layout);
+        ingredientUnitLayout = view.findViewById(R.id.ingredient_unit_layout);
+        ingredientDateLayout = view.findViewById(R.id.ingredient_bestBefore_layout);
+        ingredientAmountLayout = view.findViewById(R.id.ingredient_amount_layout);
         ingredientDesc = view.findViewById(R.id.ingredient_description_editText);
         ingredientBestBefore = view.findViewById(R.id.ingredient_bestBefore_editText);
         locationRadioGroup = view.findViewById(R.id.ingredient_location_radioGroup);
@@ -121,14 +264,15 @@ public class AddIngredientFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
+        // Set Errors for description and Category field
         setErrors(ingredientDesc, ingredientDescLayout);
-
         setErrors(ingredientCategory, ingredientCategoryLayout);
 
+        // Get the initial bundle if any
         Bundle initialBundle = getArguments();
 
         if (initialBundle == null) {
-
+            // Sets the calendar view for best before Date
             setCalendarForBestBefore(ingredientBestBefore, null);
 
             return builder
@@ -138,54 +282,19 @@ public class AddIngredientFragment extends DialogFragment {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String ingredientDescString = ingredientDesc.getText().toString();
-                            Integer ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
-                            Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
-                            String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
-                            Date ingredientBestBeforeDate = null;
-                            try {
-                                ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                            Ingredient newIngredient = parseFilledValues(view);
+                            if (!isNull) {
+                                FirestoreDatabase.addIngredient(newIngredient);
                             }
-
-                            int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
-                            ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
-                            String ingredientLocationString = ingredientLocation.getText().toString();
-
-                            String ingredientCategoryString = ingredientCategory.getText().toString();
-                            FirestoreDatabase.addIngredient(new Ingredient(ingredientDescString, ingredientBestBeforeDate, ingredientLocationString, ingredientUnitInt, ingredientAmountInt, ingredientCategoryString));
                         }
                     }).create();
         } else {
+            // Get the initial Bundle
             Ingredient initialIngredient = (Ingredient) initialBundle.get("ingredient");
-            boolean isShoppingListItem = false;
-            ingredientDesc.setText(initialIngredient.getTitle());
-            try {
-                ingredientBestBefore.setText(dateFormat.format(initialIngredient.getBestBefore()));
-            } catch (NullPointerException e) {
-                isShoppingListItem = true;
-                ingredientBestBefore.setText("");
-            }
+            // Parse the initial fields form the selected ingredient
+            boolean isShoppingListItem = parseInitialFields(view, initialIngredient);
 
-            ingredientUnit.setText(String.valueOf(initialIngredient.getUnit()));
-            ingredientAmount.setText(String.valueOf(initialIngredient.getAmount()));
-            ingredientCategory.setText(initialIngredient.getCategory());
-            String locationValue = initialIngredient.getLocation();
-
-            setCalendarForBestBefore(ingredientBestBefore, initialIngredient.getBestBefore());
-
-            if (Objects.equals(locationValue, "Freezer")) {
-                RadioButton location = view.findViewById(R.id.location_freezer);
-                location.setChecked(true);
-            } else if (Objects.equals(locationValue, "Fridge")) {
-                RadioButton location = view.findViewById(R.id.location_fridge);
-                location.setChecked(true);
-            } else if (Objects.equals(locationValue, "Pantry")) {
-                RadioButton location = view.findViewById(R.id.location_pantry);
-                location.setChecked(true);
-            }
-
+            // Define the Title of the fragment
             String fragmentTitle;
             if (isShoppingListItem) {
                 fragmentTitle = "Add Ingredient to Storage";
@@ -193,7 +302,6 @@ public class AddIngredientFragment extends DialogFragment {
                 fragmentTitle = "Edit Ingredient";
             }
 
-            boolean finalIsShoppingListItem = isShoppingListItem;
             return builder
                     .setView(view)
                     .setTitle(fragmentTitle)
@@ -201,48 +309,29 @@ public class AddIngredientFragment extends DialogFragment {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String ingredientDescString = ingredientDesc.getText().toString();
-                            Integer ingredientAmountInt = (int) Double.parseDouble(ingredientAmount.getText().toString());
-                            Integer ingredientUnitInt = Integer.parseInt(ingredientUnit.getText().toString());
-                            String ingredientBestBeforeString = ingredientBestBefore.getText().toString();
-                            Date ingredientBestBeforeDate = null;
-                            try {
-                                ingredientBestBeforeDate = dateFormat.parse(ingredientBestBeforeString);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
 
-                            int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
-                            ingredientLocation = (RadioButton) view.findViewById(selectedLocation);
-                            String ingredientLocationString = ingredientLocation.getText().toString();
+                            Ingredient updatedIngredient = parseFilledValues(view);
 
-                            String ingredientCategoryString = ingredientCategory.getText().toString();
-
-                            initialIngredient.setTitle(ingredientDescString);
-                            initialIngredient.setAmount(ingredientAmountInt);
-                            initialIngredient.setBestBefore(ingredientBestBeforeDate);
-                            initialIngredient.setUnit(ingredientUnitInt);
-                            initialIngredient.setCategory(ingredientCategoryString);
-                            initialIngredient.setLocation(ingredientLocationString);
-                            if (finalIsShoppingListItem) {
-                                FirestoreDatabase.addIngredient(initialIngredient);
-                                FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
-                                ((ShoppingListActivity) getActivity()).removeIngredient();
-                            } else {
-                                FirestoreDatabase.modifyIngredient(initialIngredient);
+                            if (!isNull) {
+                                // Modify initial ingredient
+                                initialIngredient.setTitle(updatedIngredient.getTitle());
+                                initialIngredient.setAmount(updatedIngredient.getAmount());
+                                initialIngredient.setBestBefore(updatedIngredient.getBestBefore());
+                                initialIngredient.setUnit(updatedIngredient.getUnit());
+                                initialIngredient.setCategory(updatedIngredient.getCategory());
+                                initialIngredient.setLocation(updatedIngredient.getLocation());
+                                if (isShoppingListItem) {
+                                    // If the item is from shopping list, add it to the database
+                                    FirestoreDatabase.addIngredient(initialIngredient);
+                                    FirestoreDatabase.deleteShoppingItem(initialIngredient.getTitle());
+                                    ((ShoppingListActivity) getActivity()).removeIngredient();
+                                } else {
+                                    // Modify the existing ingredient in the database
+                                    FirestoreDatabase.modifyIngredient(initialIngredient);
+                                }
                             }
                         }
                     }).create();
         }
     }
-
-    static AddIngredientFragment newInstance(Ingredient ingredient) {
-        Bundle args = new Bundle();
-        args.putSerializable("ingredient", ingredient);
-
-        AddIngredientFragment fragment = new AddIngredientFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
 }
