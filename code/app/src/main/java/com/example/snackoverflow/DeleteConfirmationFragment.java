@@ -17,13 +17,13 @@ import androidx.fragment.app.DialogFragment;
  * delete an Object
  * Extends DialogFragment
  * */
-public class DeleteConformationFragment<T> extends DialogFragment {
+public class DeleteConfirmationFragment<T> extends DialogFragment {
     private T object;
     private String title;
     // Listener for activity
     private OnFragmentInteractionListener listener;
 
-    public DeleteConformationFragment(T object, String title){
+    public DeleteConfirmationFragment(T object, String title){
         this.object = object;
         this.title = title;
     }
@@ -36,7 +36,6 @@ public class DeleteConformationFragment<T> extends DialogFragment {
     }
     @Override
     public  void onAttach(Context context){
-        // from lab
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener){
             listener = (OnFragmentInteractionListener) context;
@@ -49,14 +48,14 @@ public class DeleteConformationFragment<T> extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //Inflate the layout
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.delete_conformation_fragment, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.delete_confirmation_fragment, null);
         TextView objectTitle = view.findViewById(R.id.textView_object);
         objectTitle.setText(title);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Delete conformation")
+                .setTitle("Delete Confirmation")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

@@ -46,12 +46,12 @@ import kotlin.jvm.functions.Function1;
 /**
  * Modify Recipe Class to modify existing recipes and the ingredients present in the recipes
  * extends AppCompatActivity
- * implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener
+ * implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConfirmationFragment.OnFragmentInteractionListener
  * @see RecipeActivity
  * @see Recipe
  * @see Ingredient
  * */
-public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
+public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConfirmationFragment.OnFragmentInteractionListener{
     private EditText titleField;
     private EditText categoryField;
     private EditText servingsField;
@@ -139,7 +139,7 @@ public class ModifyRecipe extends AppCompatActivity implements RecipeIngredientF
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable && isEditable){
-                    new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                    new DeleteConfirmationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
                     imageTracker += 1;
                     Uri defaultUri = Uri.parse("android.resource://com.example.snackoverflow/drawable/food_icon");
                     uploadImage(defaultUri, recipeId);

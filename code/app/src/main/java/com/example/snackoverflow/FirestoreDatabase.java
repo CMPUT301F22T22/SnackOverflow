@@ -238,14 +238,6 @@ public class FirestoreDatabase {
                 }
             });
     };
-    
-    /**
-     * deletes a recipe from the storage
-     * @param id id of the recipe to be deleted
-     * */
-    static void deleteRecipe(String id) {
-        recipeCol.document(id).delete();
-    };
 
     /**
      * Add Meal Plan to the databse
@@ -452,18 +444,6 @@ public class FirestoreDatabase {
 
         });
     }
-
-    static void addShoppingList() {};
-
-    static void addToShoppingList() {};
-
-    static void modifyShoppingList() {};
-
-    static void deleteShoppingList() {};
-
-    static void deleteFromShoppingList() {};
-
-    static void fetchShoppingList() {};
 
     /**
      * Upload image to the database
