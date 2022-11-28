@@ -20,6 +20,7 @@
             android:layout_height="wrap_content">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textview_date"
                 android:layout_width="match_parent"
@@ -197,6 +198,9 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+=======
+</LinearLayout>
+>>>>>>> parent of 930e14b (delete conformations)
 =======
 </LinearLayout>
 >>>>>>> parent of 930e14b (delete conformations)
