@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
 
+
     <ExpandableListView
         android:id="@+id/mealplanner_list"
         android:layout_width="match_parent"
@@ -43,5 +44,27 @@
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
         app:menu="@menu/menu_navigation" />
+
+    <ImageView
+        android:layout_width="34dp"
+        android:layout_height="33dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/ic_baseline_calendar_month_24" />
+
+    <TextView
+        android:id="@+id/date_textview"
+        android:layout_width="206dp"
+        android:layout_height="58dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="@color/purple_500"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
