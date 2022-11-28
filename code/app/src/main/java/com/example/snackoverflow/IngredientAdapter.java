@@ -129,9 +129,6 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
                         Ingredient ingredient = ingredients.get(position);
                         TextView title = view.findViewById(R.id.title_text);
                         title.setText(ingredient.getTitle());
-                        TextView unit = view.findViewById(R.id.unit_text);
-                        Integer text = ingredient.getUnit();
-                        unit.setText(text.toString());
                     }
                 }
                 else{
@@ -148,9 +145,6 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
                     Ingredient ingredient = ingredients.get(position);
                     TextView title = view.findViewById(R.id.title_text);
                     title.setText(ingredient.getTitle());
-                    TextView unit = view.findViewById(R.id.unit_text);
-                    Integer text = ingredient.getUnit();
-                    unit.setText(text.toString());
                 }
             }
         }
