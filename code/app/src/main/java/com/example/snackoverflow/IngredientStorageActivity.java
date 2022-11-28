@@ -35,18 +35,7 @@ public class IngredientStorageActivity extends AppCompatActivity {
     private ArrayList<Ingredient> ingredients;
     private String currSortOrder = "inc";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ingredient_storage);
-        ingredientStorageList = findViewById(R.id.ingredient_storage_list);
-        ingredients = new ArrayList<>();
-
-        ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
-        ingredientStorageList.setAdapter(ingredientArrayAdapter);
-
-        FirestoreDatabase.fetchIngredients(ingredientArrayAdapter, ingredients);
-
+    private void implementSorting() {
         String[] sortBySpinnerList = new String[] {"Title", "Best Before", "Location", "Category"};
         String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
         Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
@@ -100,30 +89,9 @@ public class IngredientStorageActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        ingredientStorageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*
-                Title: How to Send Data From One Activity to Second Activity in Android?
-                URL: https://www.geeksforgeeks.org/how-to-send-data-from-one-activity-to-second-activity-in-android/
-                Date Received: 25 September 2022
-                License: CCBY-SA
-                 */
-                Intent intent = new Intent(IngredientStorageActivity.this, IngredientDetailsActivity.class);
-                intent.putExtra("selectedIngredient", (Serializable) ingredientStorageList.getItemAtPosition(position));
-                startActivity(intent);
-            }
-        });
-
-        final FloatingActionButton addIngredientButton = findViewById(R.id.add_ingredient_button);
-        addIngredientButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AddEditIngredientFragment().show(getSupportFragmentManager(), "ADD_INGREDIENT");
-            }
-        });
-
+    private void navbarSetup() {
         NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.ingredients);
         navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -148,6 +116,47 @@ public class IngredientStorageActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_ingredient_storage);
+        ingredientStorageList = findViewById(R.id.ingredient_storage_list);
+        ingredients = new ArrayList<>();
+
+        ingredientArrayAdapter = new IngredientAdapter(this, ingredients);
+        ingredientStorageList.setAdapter(ingredientArrayAdapter);
+
+        FirestoreDatabase.fetchIngredients(ingredientArrayAdapter, ingredients);
+
+        // Setup NavBar
+        navbarSetup();
+        // Implementing Sorting
+        implementSorting();
+
+        ingredientStorageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*
+                Title: How to Send Data From One Activity to Second Activity in Android?
+                URL: https://www.geeksforgeeks.org/how-to-send-data-from-one-activity-to-second-activity-in-android/
+                Date Received: 25 September 2022
+                License: CCBY-SA
+                 */
+                Intent intent = new Intent(IngredientStorageActivity.this, IngredientDetailsActivity.class);
+                intent.putExtra("selectedIngredient", (Serializable) ingredientStorageList.getItemAtPosition(position));
+                startActivity(intent);
+            }
+        });
+
+        final FloatingActionButton addIngredientButton = findViewById(R.id.add_ingredient_button);
+        addIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AddEditIngredientFragment().show(getSupportFragmentManager(), "ADD_INGREDIENT");
             }
         });
 

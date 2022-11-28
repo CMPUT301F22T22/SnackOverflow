@@ -59,12 +59,104 @@ public class RecipeActivity extends AppCompatActivity {
     ArrayList<Recipe> recipeDataList;
     String currSortOrder = "inc";
 
+    /**
+     * Implements Sorting
+     */
+    private void implementSorting(){
+        String[] sortBySpinnerList = new String[] {"Title", "Prep Time", "Servings", "Category"};
+        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
+        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
+        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sortBySpinner.setAdapter(sortByAdapter);
+        sortOrderSpinner.setAdapter(sortOrderAdapter);
+
+        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
+        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
+
+        sortByLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBySpinner.performClick();
+            }
+        });
+
+        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortOrderSpinner.performClick();
+            }
+        });
+        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SortComparator.handleSortRecipesBy(position, currSortOrder, recipeDataList, recipeArrayAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, recipeDataList, recipeArrayAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    /**
+     * Navbar setup
+     */
+    private void navbarSetup() {
+        NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
+        navigationBarView.setSelectedItemId(R.id.recipes);
+        navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId())
+                {
+                    case R.id.shoppinglist:
+                        startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.recipes:
+                        return true;
+                    case R.id.ingredients:
+                        startActivity(new Intent(getApplicationContext(),IngredientStorageActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.mealplanner:
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
+        // NavBar Setup
+        navbarSetup();
 
         ActivityResultLauncher<Intent> getModifiedData = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -120,86 +212,8 @@ public class RecipeActivity extends AppCompatActivity {
         recipeArrayAdapter = new RecipeAdapter(this, recipeDataList);
         recipeList.setAdapter(recipeArrayAdapter);
 
-        NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
-        navigationBarView.setSelectedItemId(R.id.recipes);
-        navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch(item.getItemId())
-                {
-                    case R.id.shoppinglist:
-                        startActivity(new Intent(getApplicationContext(),ShoppingListActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.recipes:
-                        return true;
-                    case R.id.ingredients:
-                        startActivity(new Intent(getApplicationContext(),IngredientStorageActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.mealplanner:
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
-            }
-        });
-
-        String[] sortBySpinnerList = new String[] {"Title", "Prep Time", "Servings", "Category"};
-        String[] sortOrderSpinnerList = new String[] {"Low-High/A-Z", "High-Low/Z-A"};
-        Spinner sortBySpinner = (Spinner) findViewById(R.id.sort_by_spinner);
-        Spinner sortOrderSpinner = (Spinner) findViewById(R.id.sort_order_spinner);
-        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, sortBySpinnerList);
-        ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, sortOrderSpinnerList);
-        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        sortBySpinner.setAdapter(sortByAdapter);
-        sortOrderSpinner.setAdapter(sortOrderAdapter);
-
-        LinearLayout sortByLayout = (LinearLayout) findViewById(R.id.sort_by_layout);
-        LinearLayout sortOrderLayout = (LinearLayout) findViewById(R.id.sort_order_layout);
-
-        sortByLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortBySpinner.performClick();
-            }
-        });
-
-        sortOrderLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortOrderSpinner.performClick();
-            }
-        });
-        sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SortComparator.handleSortRecipesBy(position, currSortOrder, recipeDataList, recipeArrayAdapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, recipeDataList, recipeArrayAdapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        // Implement Sorting
+        implementSorting();
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -237,7 +251,7 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
-        //Modify Button //TODO: Replace functionality or change when tests done
+        //Modify Button
         FloatingActionButton modifyRecipeTestButton = findViewById(R.id.add_recipe_button);
         modifyRecipeTestButton.setOnClickListener(new View.OnClickListener() {
             @Override

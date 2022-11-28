@@ -40,13 +40,8 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     ArrayList<Mealday> meals = new ArrayList<>();
     ExpandableListAdapter mealdayAdapter;
     TextView week;
-    ImageView mealImage;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    private void navbarSetup() {
         NavigationBarView navigationBarView=findViewById(R.id.bottom_navigation);
         navigationBarView.setSelectedItemId(R.id.mealplanner);
         navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -73,7 +68,15 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
                 return false;
             }
         });
+    }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Setup Navbar
+        navbarSetup();
 
         //The displays the starting date from which the user is able to create mealplans for
         week = findViewById(R.id.date_textview);
@@ -155,8 +158,6 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
      * deletes the meal when prompted by the MealPlannerAddMeal Dialog
      * @param mealDay the day user wants to delete from the meal planner
      * */
-
-
     @Override
     public void deleteMeal(Mealday mealDay) {
         //checking the existence of this meal
@@ -174,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
      * last one in that day
      * @param mealday the day user wants to delete from the meal planner
      * */
-
     @Override
     public void deleteMealPlan(Mealday mealday, Recipe recipe) {
         Integer pos = mealday.getMeals().indexOf(recipe);

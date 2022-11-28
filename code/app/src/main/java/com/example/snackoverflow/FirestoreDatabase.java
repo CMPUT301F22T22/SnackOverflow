@@ -189,6 +189,10 @@ public class FirestoreDatabase {
             });
     }
 
+    /**
+     * Deletes the shopping Item
+     * @param data
+     */
     static void deleteShoppingItem(String data) {
         ShoppingListCol
                 .document(data)
@@ -207,7 +211,11 @@ public class FirestoreDatabase {
                 });
     };
 
-
+    /**
+     * Add Recipe to the Database
+     * @param data
+     * @param uri
+     */
     static void addRecipe(HashMap<String, Object> data, Uri uri) {
         recipeCol
             .add(data)
@@ -239,6 +247,10 @@ public class FirestoreDatabase {
         recipeCol.document(id).delete();
     };
 
+    /**
+     * Add Meal Plan to the databse
+     * @param mealDay
+     */
     static void addMealPlan(Mealday mealDay) {
         MealPlanCol
                 .document(mealDay.getDate().toString()).set(mealDay)
@@ -255,8 +267,10 @@ public class FirestoreDatabase {
                     }});
     };
 
-
-
+    /**
+     * Delete Meal Plan from the Database
+     * @param mealDay
+     */
     static void deleteMealPlan(Mealday mealDay) {
         MealPlanCol.document(mealDay.getDate().toString()).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -274,14 +288,27 @@ public class FirestoreDatabase {
 
     };
 
-        static void modifyMealPlan(Mealday mealday) {
-//            System.out.println("Im here ar modify");
-//            Map<String,Object> city = new HashMap<>();
-//            city.put("name","LA");
-//
-//            MealPlanCol.document("Modi").set(city));
+    /**
+     * Modifies the Meal Plan
+     * @param mealday
+     */
+    static void modifyMealPlan(Mealday mealday) {
+    MealPlanCol
+            .document(mealday.getDate().toString()).update("meals", mealday.getMealsWithoutImage())
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(MealsTag, "DocumentSnapshot successfully updated!");
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(MealsTag, "Error updating document", e);
+                }
+            });
         MealPlanCol
-                .document(mealday.getDate().toString()).update("meals", mealday.getMealsWithoutImage())
+                .document(mealday.getDate().toString()).update("servings", mealday.getServings())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -294,27 +321,13 @@ public class FirestoreDatabase {
                         Log.w(MealsTag, "Error updating document", e);
                     }
                 });
-            //            System.out.println("Im here ar modify");
-//            Map<String,Object> city = new HashMap<>();
-//            city.put("name","LA");
-//
-//            MealPlanCol.document("Modi").set(city));
-            MealPlanCol
-                    .document(mealday.getDate().toString()).update("servings", mealday.getServings())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(MealsTag, "DocumentSnapshot successfully updated!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(MealsTag, "Error updating document", e);
-                        }
-                    });
     };
 
+    /**
+     * fetch the meal plans from the Database
+     * @param mealdayAdapter
+     * @param meals
+     */
     static void fetchMealPlans(ExpandableListAdapter mealdayAdapter,
                                ArrayList<Mealday> meals) {
         MealPlanCol
@@ -343,7 +356,6 @@ public class FirestoreDatabase {
                                 }
 
                                 String comments = mealMap.get("comments").toString();
-//                        String id = mealMap.get("id").toString();
                                 ArrayList<Object> ingredientArray = (ArrayList<Object>) mealMap.get("ingredients");
                                 ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
                                 for (int i = 0; i < ingredientArray.size(); i++) {
@@ -360,12 +372,10 @@ public class FirestoreDatabase {
                                     loadImage(recipe);
                                 }
                                 catch(Exception e){
-                                    //mealsfortheDay.add(recipe);
                                 }
                                 mealsfortheDay.add(recipe);
                             }
 
-//                  meals.add(new Mealday( date,  mealsForDay)); // Adding the meal days from FireStore
                             //for(QueryDocumentSnapshot meal: doc.getData().get("meals"))
                             meals.add(new Mealday( date,  mealsfortheDay, mealServings));
                             Collections.sort(meals, new Comparator<Mealday>() {
@@ -455,6 +465,11 @@ public class FirestoreDatabase {
 
     static void fetchShoppingList() {};
 
+    /**
+     * Upload image to the database
+     * @param uri
+     * @param id
+     */
     static void uploadImage(Uri uri, String id) {
         if (uri != null){
             String filename = id;
@@ -474,6 +489,10 @@ public class FirestoreDatabase {
         }
     };
 
+    /**
+     * Loads the image from database
+     * @param recipe
+     */
     public static void loadImage(Recipe recipe) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("recipe/"+recipe.getId()+".jpg");
         try {
@@ -488,10 +507,6 @@ public class FirestoreDatabase {
                     else{
 
                     }
-
-//                    recipeDataList.add(recipe);
-//                    recipeArrayAdapter.notifyDataSetChanged();
-//                    handleSortBy(0);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
