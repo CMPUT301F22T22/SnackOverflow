@@ -35,11 +35,11 @@ import kotlin.jvm.functions.Function1;
  * Add Recipe Class for adding new Recipe to Recipes storage
  * extends AppCompatActivity
  * implements RecipeIngredientFragment.OnFragmentInteractionListener
- * implements DeleteConformationFragment.OnFragmentInteractionListener
+ * implements DeleteConfirmationFragment.OnFragmentInteractionListener
  * @see Recipe
  * @see RecipeActivity
  * */
-public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConformationFragment.OnFragmentInteractionListener{
+public class AddRecipe extends AppCompatActivity implements RecipeIngredientFragment.OnFragmentInteractionListener, DeleteConfirmationFragment.OnFragmentInteractionListener{
 
     public CircleImageView imageView;
     private Drawable imageViewDrawable;
@@ -128,7 +128,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
                 // Allow user to select a picture from the gallery
                 // or take a picture using the camera
                 if (imageView.getDrawable() != imageViewDrawable){
-                    new DeleteConformationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
+                    new DeleteConfirmationFragment<CircleImageView>(imageView, "Image").show(getSupportFragmentManager(), "Delete image");
                 }
                 else {
                     ImagePicker.Builder with = ImagePicker.with(AddRecipe.this);
@@ -303,7 +303,7 @@ public class AddRecipe extends AppCompatActivity implements RecipeIngredientFrag
         return;
     }
     /**
-     * Deletes the particular ingredient when prompted by the DeleteConformationFragment
+     * Deletes the particular ingredient when prompted by the DeleteConfirmationFragment
      * @param object object that is to be deleted
      * */
     @Override
