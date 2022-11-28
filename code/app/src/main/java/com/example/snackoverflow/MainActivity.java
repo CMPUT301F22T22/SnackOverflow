@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements MealPlannerAddMea
     }
 
     /**
-     * deletes the meal when prompted by the MealPlannerAddMeal Dialog
+     * deletes the mealplan when on meals for the day exist
      * @param mealDay the day user wants to delete from the meal planner
      * */
     @Override

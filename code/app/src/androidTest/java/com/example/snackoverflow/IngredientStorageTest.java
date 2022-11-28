@@ -91,6 +91,8 @@ public class IngredientStorageTest {
         View view = listView.getChildAt(0);
         ImageButton deleteButton=(ImageButton)view.findViewById(R.id.delete_ingredient);
         solo.clickOnView(deleteButton);
+        solo.waitForFragmentByTag("Delete_Ingredient",6000);
+        solo.clickOnButton("Yes");
 
         assertFalse(solo.waitForText("Apple", 1, 2000));
     }
