@@ -234,13 +234,11 @@ public class ShoppingListActivity extends AppCompatActivity {
                         if (ingMeal.equals(ingStorage)) {
                             if (firebase_ingredient_meal_plan_hashmap.get(ingMeal) > firebase_ingredient_storage_hashmap.get(ingMeal)) {
                                 for (Ingredient ingObject: firebase_ingredient_storage_list) {
-                                    Log.d("why", firebase_ingredient_meal_plan_hashmap.get(ingMeal).toString());
                                     if (ingMeal.equals(ingObject.getTitle()) && !toRemove.contains(ingMeal)) {
                                         ingCatStorage = ingObject.getCategory();
                                         ingAmountStorage = ingObject.getAmount();
                                         toRemove.add(ingMeal);
                                         shoppingItems.add(new Ingredient(ingMeal, ingAmountStorage, firebase_ingredient_meal_plan_hashmap.get(ingMeal) - firebase_ingredient_storage_hashmap.get(ingMeal), ingCatStorage));
-                                        Log.d("hey", "lol");
                                         shoppingListAdapter.notifyDataSetChanged();
                                     }
                                 }
