@@ -180,7 +180,7 @@ public class RecipeActivity extends AppCompatActivity {
         sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleSortBy(position);
+                SortComparator.handleSortRecipesBy(position, currSortOrder, recipeDataList, recipeArrayAdapter);
             }
 
             @Override
@@ -192,7 +192,7 @@ public class RecipeActivity extends AppCompatActivity {
         sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleSortOrder(position);
+                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, recipeDataList, recipeArrayAdapter);
             }
 
             @Override
@@ -222,7 +222,7 @@ public class RecipeActivity extends AppCompatActivity {
                         loadImage(recipe);
                     }
                     recipeArrayAdapter.notifyDataSetChanged();
-                    handleSortBy(0);
+                    SortComparator.handleSortRecipesBy(0, currSortOrder, recipeDataList, recipeArrayAdapter);
                 } catch (NullPointerException e) {
                 }
             }
@@ -253,50 +253,6 @@ public class RecipeActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     };
 
-    public void handleSortBy(int position) {
-        switch (position) {
-            case 0:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(recipeDataList, new SortComparator.TitleComparator().reversed());
-                } else {
-                    Collections.sort(recipeDataList, new SortComparator.TitleComparator());
-                }
-                break;
-            case 1:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(recipeDataList, new SortComparator.PrepTimeComparator().reversed());
-                } else {
-                    Collections.sort(recipeDataList, new SortComparator.PrepTimeComparator());
-                }
-                break;
-            case 2:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(recipeDataList, new SortComparator.ServingsComparator().reversed());
-                } else {
-                    Collections.sort(recipeDataList, new SortComparator.ServingsComparator());
-                }
-                break;
-            case 3:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(recipeDataList, new SortComparator.CategoryComparator().reversed());
-                } else {
-                    Collections.sort(recipeDataList, new SortComparator.CategoryComparator());
-                }
-                break;
-        }
-        recipeArrayAdapter.notifyDataSetChanged();
-    }
-
-    public void handleSortOrder(int position) {
-        if (position == 1 && currSortOrder.equals("inc")) {
-            Collections.reverse(recipeDataList);
-            currSortOrder = "dec";
-        } else if (position == 0 && currSortOrder.equals("dec")) {
-            Collections.reverse(recipeDataList);
-            currSortOrder = "inc";
-        }
-        recipeArrayAdapter.notifyDataSetChanged();
-    }
     /**
      * loads an image from firestore for a specific recipe
      * @param recipe the recipe that we are trying to get image for
@@ -311,7 +267,8 @@ public class RecipeActivity extends AppCompatActivity {
                     Bitmap imgBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                     recipeDataList.get(recipeDataList.indexOf(recipe)).setImageBitmap(imgBitmap);
                     recipeArrayAdapter.notifyDataSetChanged();
-                    handleSortBy(0);
+                    SortComparator.handleSortRecipesBy(0, currSortOrder, recipeDataList, recipeArrayAdapter);
+//                    handleSortBy(0);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

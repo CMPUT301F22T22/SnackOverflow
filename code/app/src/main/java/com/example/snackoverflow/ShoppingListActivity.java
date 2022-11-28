@@ -12,33 +12,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.EventListener;
 
-import java.lang.ref.Reference;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The main activity page for shopping list. This page shows the ingredients a user needs to buy from the store.
@@ -243,7 +233,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleSortBy(position);
+                SortComparator.handleSortShoppingListBy(position, currSortOrder,shoppingItems, shoppingListAdapter);
             }
 
             @Override
@@ -255,7 +245,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         sortOrderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleSortOrder(position);
+                currSortOrder = SortComparator.handleSortOrder(position, currSortOrder, shoppingItems, shoppingListAdapter);
             }
 
             @Override
@@ -300,36 +290,6 @@ public class ShoppingListActivity extends AppCompatActivity {
         });
     }
 
-    public void handleSortBy(int position) {
-        switch (position) {
-            case 0:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(shoppingItems, new SortComparator.TitleComparator().reversed());
-                } else {
-                    Collections.sort(shoppingItems, new SortComparator.TitleComparator());
-                }
-                break;
-            case 1:
-                if (currSortOrder.equals("dec")) {
-                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator().reversed());
-                } else {
-                    Collections.sort(shoppingItems, new SortComparator.CategoryComparator());
-                }
-                break;
-        }
-        shoppingListAdapter.notifyDataSetChanged();
-    }
-
-    public void handleSortOrder(int position) {
-        if (position == 1 && currSortOrder.equals("inc")) {
-            Collections.reverse(shoppingItems);
-            currSortOrder = "dec";
-        } else if (position == 0 && currSortOrder.equals("dec")) {
-            Collections.reverse(shoppingItems);
-            currSortOrder = "inc";
-        }
-        shoppingListAdapter.notifyDataSetChanged();
-    }
 
     /**
      * Function to add a shopping list item to ingredient storage. It displays
@@ -341,7 +301,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         int position = shoppingList.getPositionForView((View) v.getParent());
         Ingredient selectedIngredient = (Ingredient) shoppingList.getItemAtPosition(position);
         currIngredientSelected = selectedIngredient;
-        new AddIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "ADD_SHOPPING_ITEMS");
+        new AddEditIngredientFragment().newInstance(selectedIngredient).show(getSupportFragmentManager(), "ADD_SHOPPING_ITEMS");
 
     }
 

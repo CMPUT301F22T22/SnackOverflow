@@ -175,10 +175,20 @@ public class Ingredient implements Serializable {
         this.category = category;
     }
 
+    /**
+     * Getter for checked Shopping List
+     * @return a boolean indicating whether the ingredient is checked in
+     * shopping list or not
+     */
     public boolean getCheckedShoppingList() {
         return isCheckedShoppingList;
     }
 
+    /**
+     * Setter for Check Shopping List
+     * @param check a boolean indicating what value to set for the
+     *              ingredient in the shopping list
+     */
     public void setIsCheckedShoppingList(boolean check) {
         isCheckedShoppingList = check;
     }
